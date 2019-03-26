@@ -33,8 +33,11 @@ class GlobalOptimizer:
         X, Y = self.get_XY()
         evalnet = self.fit_evalnet(X, Y)
         args = (X, Y, evalnet)
+        print("Exploit")
         self.add_to_dataset(self.exploit_Xb(X), *args)
+        print("Explore")
         self.add_to_dataset(self.explore_Xb(X), *args)
+        input()
         self.table.update_scores(k=self.exploit)
 
     def save(self):
@@ -116,7 +119,6 @@ class GlobalOptimizer:
         return X[:self.exploit].clone()
 
     def add_to_dataset(self, Xb, X, Y, evalnet):
-        print("here")
         Xb = torch.autograd.Variable(Xb.clone(), requires_grad=True)
         optim = self.create_optimizer([Xb], self.lr)
 
