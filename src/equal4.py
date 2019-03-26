@@ -3,6 +3,7 @@ import torch.utils.data
 
 from NeuralGlobalOptimizer import *
 from MovingAverage import MovingAverage
+import modules
 
 from main import main
 
@@ -48,11 +49,28 @@ class Equal4(NeuralGlobalOptimizer):
 
     def create_evalnet(self, D):
         return torch.nn.Sequential(
-            torch.nn.Linear(D, 64),
-            torch.nn.LeakyReLU(),
-            torch.nn.Linear(64, 64),
-            torch.nn.LeakyReLU(),
-            torch.nn.Linear(64, 1)
+            torch.nn.Linear(D, 32),
+
+            modules.ResNet(
+
+                modules.ResBlock(
+                    block = torch.nn.Sequential(
+                        modules.PrototypeClassifier(32, 32),
+                        modules.polynomial.Activation(32, n_degree=4),
+                        torch.nn.Linear(32, 32)
+                    )
+                ),
+
+                modules.ResBlock(
+                    block = torch.nn.Sequential(
+                        modules.PrototypeClassifier(32, 32),
+                        modules.polynomial.Activation(32, n_degree=4),
+                        torch.nn.Linear(32, 32)
+                    )
+                )
+            ),
+
+            torch.nn.Linear(32, 1)
         )
 
     def train_evalnet(self, evalnet, X, Y):
