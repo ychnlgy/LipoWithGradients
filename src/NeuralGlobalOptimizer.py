@@ -127,7 +127,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
             test_loss = torch.log(
                 lossf(Yh_test, Y_test) + NeuralGlobalOptimizer.EPS
             ).item()
-            feature_count = x.sum().item()
+            feature_count = x.long().sum().item()
             feature_penalty = self.penalize_featurecount(feature_count)
             self.store_losses(data_loss, test_loss, feature_count)
             return -(data_loss + test_loss + feature_penalty)
