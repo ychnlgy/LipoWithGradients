@@ -177,6 +177,7 @@ class GlobalOptimizationTable:
     def update_scores(self, k):
         self.montecarlo.simulate(self.metadata[:self.i])
         self.sort_metadata()
+        print(k)
         self.metadata[:k,GlobalOptimizationTable.METAINDEX_N] += 1
 
     def get_Y(self):
