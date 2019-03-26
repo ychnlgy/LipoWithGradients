@@ -120,7 +120,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         
     def do_expensive_model_eval(self, x):
         X_data, Y_data, X_test, Y_test = self.get_dataset()
-        X_data *= x.unsqueeze(0)
+        X_data *= x.unsqueeze(0).float()
         model = self.make_model(X_data.size(1))
         lossf = self.create_model_lossfunction()
         model.train()
