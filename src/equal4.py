@@ -141,13 +141,13 @@ def main(cycles):
     from matplotlib import pyplot
     fig, axes = pyplot.subplots(nrows=3, sharex=True, figsize=(10, 8))
 
-    axes[0].plot(data_loss)
+    axes[0].plot(data_loss, ".-")
     axes[0].set_ylabel("Training loss")
 
-    axes[1].plot(test_loss)
+    axes[1].plot(test_loss, ".-")
     axes[1].set_ylabel("Validation loss")
 
-    axes[2].plot(feature_counts)
+    axes[2].plot(feature_counts, ".-")
     axes[2].set_ylabel("Feature count")
 
     axes[-1].set_xlabel("Evaluations")
