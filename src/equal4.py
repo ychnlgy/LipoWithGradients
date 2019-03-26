@@ -109,6 +109,8 @@ def main(cycles):
     
     data_loss, test_loss, feature_counts = prog.get_losses()
 
+    import matplotlib
+    matplotlib.use("agg")
     from matplotlib import pyplot
     fig, axes = pyplot.subplots(nrows=3, sharex=True, figsize=(10, 8))
 
