@@ -83,7 +83,12 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
             return shortcut
         else:
             self.network_retrain_count += 1
-            return self.do_expensive_model_eval(x)
+            return self.do_expensive_model_eval(
+                self.discretize_featuremask(x)
+            )
+
+    def discretize_featuremask(self, x):
+        return x > NeuralGlobalOptimizer.SELECTION
 
     def lookup_result(self, x):
         '''
@@ -97,7 +102,11 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
             return None
         
         X, Y = self.get_XY()
-        diff = (x > NeuralGlobalOptimizer.SELECTION) != (X > NeuralGlobalOptimizer.SELECTION)
+        diff = (
+            self.discretize_featuremask(x)
+        ) != (
+            self.discretize_featuremask(X)
+        )
 
         # if there is an entry in which no element is
         # different, then we can use that result.
