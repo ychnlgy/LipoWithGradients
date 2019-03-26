@@ -82,7 +82,7 @@ def main(cycles):
     prog = Equal4(
         init_X = torch.rand(8, features),
         explore = 8,
-        exploit = 2,
+        exploit = 8,
         table = GlobalOptimizationTable(
             capacity = 4000,
             features = features,
