@@ -97,7 +97,6 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
             shortcut - float if x has already been evaluated, otherwise None.
             
         '''
-        return None
         if not len(self.table):
             return None
         
@@ -112,7 +111,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         # different, then we can use that result.
         mark = diff.long().sum(dim=1) == 0
         if mark.long().sum() > 0:
-            shortcut = Y[mark][:1]
+            shortcut = Y[mark]
             assert len(shortcut) == 1
             return shortcut.item()
         else:
@@ -154,9 +153,10 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
         '''
         self._used_gradpenalty = False
+        X = self.discretize_featuremask(X).float()
         evalnet = self.create_evalnet(X.size(1))
         evalnet.train()
-        self.train_evalnet(evalnet, self.discretize_featuremask(X), Y)
+        self.train_evalnet(evalnet, X, Y)
         assert self._used_gradpenalty
         evalnet.eval()
         return evalnet
