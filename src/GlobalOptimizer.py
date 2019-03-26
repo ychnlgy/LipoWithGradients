@@ -142,6 +142,8 @@ class GlobalOptimizer:
         if len(X_targets) > 0:
             Y_targets = self._evaluate(X_targets)
             self.table.insert_xy(X_targets, Y_targets)
+        else:
+            print("Nothing")
 
     def exploit_grads(self, evalnet, X):
         Y = evalnet(X).sum()
