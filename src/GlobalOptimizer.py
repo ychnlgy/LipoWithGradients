@@ -116,6 +116,7 @@ class GlobalOptimizer:
         return X[:self.exploit].clone()
 
     def add_to_dataset(self, Xb, X, Y, evalnet):
+        print("here")
         Xb = torch.autograd.Variable(Xb.clone(), requires_grad=True)
         optim = self.create_optimizer([Xb], self.lr)
 
