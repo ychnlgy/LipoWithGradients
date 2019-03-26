@@ -115,7 +115,7 @@ def main(cycles):
             reduced_size = 3000,
             montecarlo_c = math.sqrt(2)
         ),
-        lipo = Lipo(k=1, d=features, a=0, b=1),
+        lipo = Lipo(k=1, d=features, a=-10, b=10),
         max_retry = 10,
         lr = 1,
         savepath = "equal4.pkl",
