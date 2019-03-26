@@ -4,9 +4,11 @@ import torch.utils.data
 from NeuralGlobalOptimizer import *
 from MovingAverage import MovingAverage
 
+from main import main
+
 class Equal4(NeuralGlobalOptimizer):
 
-    D = 100
+    D = 30
 
     def get_dataset(self):
         N = 500
@@ -72,55 +74,53 @@ class Equal4(NeuralGlobalOptimizer):
             avg.update(loss.item())
             bar.set_description("Fitting evalnet: %.3f" % avg.peek())
 
-    @staticmethod
-    def main():
-        features = Equal4.D
-        prog = Equal4(
-            init_X = torch.rand(8, features),
-            explore = 8,
-            exploit = 2,
-            table = GlobalOptimizationTable(
-                capacity = 4000,
-                features = features,
-                reduced_size = 3000,
-                montecarlo_c = math.sqrt(2)
-            ),
-            lipo = Lipo(k=1, d=features, a=0, b=1),
-            max_retry = 10,
-            lr = 0.1,
-            savepath = "equal4.pkl",
-            prep_visualization = True
-        )
+@main
+def main(cycles):
+    cycles = int(cycles)
+    
+    features = Equal4.D
+    prog = Equal4(
+        init_X = torch.rand(8, features),
+        explore = 8,
+        exploit = 2,
+        table = GlobalOptimizationTable(
+            capacity = 4000,
+            features = features,
+            reduced_size = 3000,
+            montecarlo_c = math.sqrt(2)
+        ),
+        lipo = Lipo(k=1, d=features, a=0, b=1),
+        max_retry = 10,
+        lr = 0.1,
+        savepath = "equal4.pkl",
+        prep_visualization = True
+    )
 
-        for i in range(2):
-            print(" === Epoch %d ===" % i)
-            prog.step()
+    for i in range(cycles):
+        print(" === Epoch %d ===" % i)
+        prog.step()
 
-        X, Y = prog.publish_XY()
+    X, Y = prog.publish_XY()
 
-        best_n = 10
-        x = (X[:best_n] > NeuralGlobalOptimizer.SELECTION).numpy()
-        print(" === Top %d feature selections === " % best_n, x, sep="\n")
-        print(" >>> Number of retraining operations: %d" % prog.count_network_retrains())
-        
-        data_loss, test_loss, feature_counts = prog.get_losses()
+    best_n = 3
+    x = (X[:best_n] > NeuralGlobalOptimizer.SELECTION).numpy()
+    print(" === Top %d feature selections === " % best_n, x, sep="\n")
+    print(" >>> Number of retraining operations: %d" % prog.count_network_retrains())
+    
+    data_loss, test_loss, feature_counts = prog.get_losses()
 
-        from matplotlib import pyplot
-        fig, axes = pyplot.subplots(nrows=3, sharex=True, figsize=(10, 8))
+    from matplotlib import pyplot
+    fig, axes = pyplot.subplots(nrows=3, sharex=True, figsize=(10, 8))
 
-        axes[0].plot(data_loss)
-        axes[0].set_ylabel("Training loss")
+    axes[0].plot(data_loss)
+    axes[0].set_ylabel("Training loss")
 
-        axes[1].plot(test_loss)
-        axes[1].set_ylabel("Validation loss")
+    axes[1].plot(test_loss)
+    axes[1].set_ylabel("Validation loss")
 
-        axes[2].plot(feature_counts)
-        axes[2].set_ylabel("Feature count")
+    axes[2].plot(feature_counts)
+    axes[2].set_ylabel("Feature count")
 
-        axes[-1].set_xlabel("Evaluations")
+    axes[-1].set_xlabel("Evaluations")
 
-        pyplot.savefig("equal4.png")
-
-if __name__ == "__main__":
-
-    Equal4.main()
+    pyplot.savefig("equal4.png")
