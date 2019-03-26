@@ -117,11 +117,11 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
         with torch.no_grad():
             model.eval()
-            Yh_data = model(X_data)
+            Yh_data = model(X_data).squeeze()
             data_loss = torch.log(
                 lossf(Yh_data, Y_data) + NeuralGlobalOptimizer.EPS
             ).item()
-            Yh_test = model(X_test)
+            Yh_test = model(X_test).squeeze()
             test_loss = torch.log(
                 lossf(Yh_test, Y_test) + NeuralGlobalOptimizer.EPS
             ).item()
