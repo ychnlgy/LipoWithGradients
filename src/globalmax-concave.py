@@ -2,7 +2,7 @@ import torch, math
 
 from GlobalOptimizer import *
 
-class Example2D(GlobalOptimizer):
+class Example1D(GlobalOptimizer):
 
     def create_optimizer(self, parameters, lr):
         '''
@@ -23,7 +23,7 @@ class Example2D(GlobalOptimizer):
             y - torch Tensor of shape (1), scores for using x as feature mask.
 
         '''
-        return 1/(1+(x[0]-3)**2+(x[1]+2)**2)
+        return 1/(1+x**2)
 
     def fit_evalnet(self, X, Y):
         '''
@@ -37,26 +37,21 @@ class Example2D(GlobalOptimizer):
                 feature selection to predicted score.
 
         '''
-        return lambda X: self.evaluate(X.transpose(0, 1))
+        return self.evaluate
 
     @staticmethod
     def main():
 
         import tqdm, numpy
-        import matplotlib
-        matplotlib.use("agg")
         from matplotlib import pyplot
-        from mpl_toolkits.mplot3d import Axes3D
-        ax = Axes3D(pyplot.figure(figsize=(10, 8)))
-
-        features = 2
-
+        pyplot.figure(figsize=(10, 8))
+        
+        features = 1
         a = -10
-        b = 10
-        n = 1000
-
-        example2d = Example2D(
-            init_X = torch.rand(8, features),
+        b = 40
+        
+        example1d = Example1D(
+            init_X = torch.rand(1, 1),
             explore = 8,
             exploit = 2,
             table = GlobalOptimizationTable(
@@ -71,27 +66,37 @@ class Example2D(GlobalOptimizer):
             savepath = "globalmax.pkl"
         )
 
-        xb = torch.linspace(a, b, n)
-        x1 = xb.view(-1, 1).repeat(1, n)
-        x2 = xb.view(1, -1).repeat(n, 1)
-        x = torch.stack([x1, x2], dim=0)
-        y = example2d.evaluate(x)
-        ax.plot_surface(x1.numpy(), x2.numpy(), y.numpy(), cmap="hot", label="True function", alpha=0.6)
+        x = torch.linspace(a, b, 1000)
+        y = example1d.evaluate(x)
 
-        for i in range(10):
-            example2d.step()
+        pyplot.plot(x.numpy(), y.numpy(), "r-", label="True function", alpha=0.6)
+        
+        for i in range(20):
+            example1d.step()
 
-        X, Y = example2d.publish_XY()
+        X, Y = example1d.publish_XY()
         X = X.squeeze().numpy()
         Y = Y.squeeze().numpy()
 
-        n = 200
+        pyplot.hist(
+            X,
+            bins=numpy.linspace(a, b, 100),
+            density=True,
+            alpha=0.2,
+            label="Normalized histogram of Monte Carlo choices"
+        )
+
+        n = 50
         x = X[:n]
         y = Y[:n]
-        ax.scatter(x[:,0], x[:,1], y, c="b", label="Top %d sampled points" % n)
+        pyplot.plot(x, y, "b.", label="Top %d sampled points" % n, alpha=0.2)
 
-        pyplot.title("%d evaluations" % example2d.count_evals())
-        pyplot.savefig("simple-2d.png")
+        pyplot.plot(x[:1], y[:1], "bx", label="Candidate global maximum")
+
+        pyplot.title("%d evaluations" % example1d.count_evals())
+        pyplot.legend()
+        pyplot.savefig("simple-1d.png")
 
 if __name__ == "__main__":
-    Example2D.main()
+    Example1D.main()
+    

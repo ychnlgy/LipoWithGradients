@@ -33,12 +33,8 @@ class GlobalOptimizer:
         X, Y = self.get_XY()
         evalnet = self.fit_evalnet(X, Y)
         args = (X, Y, evalnet)
-        print("Exploit")
-        self.add_to_dataset(self.exploit_Xb(X), *args)
-        input()
-        print("Explore")
-        self.add_to_dataset(self.explore_Xb(X), *args)
-        input()
+        self.add_to_dataset(self.exploit_Xb(X), *args, "Exploiting")
+        self.add_to_dataset(self.explore_Xb(X), *args, "Exploring")
         self.table.update_scores(k=self.exploit)
 
     def save(self):
@@ -101,14 +97,14 @@ class GlobalOptimizer:
         return [X, Y]
 
     def initialize_table(self, X):
-        Y = self._evaluate(X)
+        Y = self._evaluate(X, "Random initialization")
         self.table.insert_xy(X, Y)
         self.table.update_scores(k=0)
 
-    def _evaluate(self, X):
+    def _evaluate(self, X, taskname):
         N = len(X)
         Y = torch.zeros(N)
-        for i in tqdm.tqdm(range(N), ncols=80, desc="Evaluating"):
+        for i in tqdm.tqdm(range(N), ncols=80, desc=taskname):
             Y[i] = self.evaluate(X[i])
         self.num_evals += N
         return Y
@@ -119,31 +115,34 @@ class GlobalOptimizer:
     def exploit_Xb(self, X):
         return X[:self.exploit].clone()
 
-    def add_to_dataset(self, Xb, X, Y, evalnet):
-        Xb = torch.autograd.Variable(Xb.clone(), requires_grad=True)
-        optim = self.create_optimizer([Xb], self.lr)
+    def add_to_dataset(self, Xb, X, Y, evalnet, taskname):
+        Xb = Xb.clone()
 
         for i in range(self.max_retry):
 
             # The rows that do not satisfy the LIPO decision rule
             # need to be improved upon by gradient ascent.
-            X_exploit = Xb[~self.lipo.decision_rule(Xb, X, Y)]
+            I = ~self.lipo.decision_rule(Xb, X, Y)
             
-            if len(X_exploit) == 0:
+            if I.long().sum() == 0:
                 break
+
+            X_exploit = torch.autograd.Variable(Xb[I], requires_grad=True)
+            optim = self.create_optimizer([X_exploit], self.lr)
 
             optim.zero_grad()
             self.exploit_grads(evalnet, X_exploit)
             optim.step()
+            Xb[I] = X_exploit
 
         # The rows that now satisfy the LIPO decision rule
         # get to be evaluated.
         X_targets = Xb[self.lipo.decision_rule(Xb, X, Y)].detach()
         if len(X_targets) > 0:
-            Y_targets = self._evaluate(X_targets)
+            Y_targets = self._evaluate(X_targets, taskname)
             self.table.insert_xy(X_targets, Y_targets)
         else:
-            print("Nothing")
+            print("Nothing to optimize!")
 
     def exploit_grads(self, evalnet, X):
         Y = evalnet(X).sum()

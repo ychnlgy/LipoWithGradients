@@ -23,7 +23,7 @@ class Example2D(GlobalOptimizer):
             y - torch Tensor of shape (1), scores for using x as feature mask.
 
         '''
-        return 1/(1+(x[0]-3)**2+(x[1]+2)**2)
+        return torch.sin(x[0])*torch.cos(x[1])/5.0/((x[0]*2-2*math.pi)**2/4 + (x[1]*2-math.pi/2)**2/4+1)
 
     def fit_evalnet(self, X, Y):
         '''
@@ -43,8 +43,6 @@ class Example2D(GlobalOptimizer):
     def main():
 
         import tqdm, numpy
-        import matplotlib
-        matplotlib.use("agg")
         from matplotlib import pyplot
         from mpl_toolkits.mplot3d import Axes3D
         ax = Axes3D(pyplot.figure(figsize=(10, 8)))
@@ -78,20 +76,20 @@ class Example2D(GlobalOptimizer):
         y = example2d.evaluate(x)
         ax.plot_surface(x1.numpy(), x2.numpy(), y.numpy(), cmap="hot", label="True function", alpha=0.6)
 
-        for i in range(10):
+        for i in range(20):
             example2d.step()
-
+            
         X, Y = example2d.publish_XY()
         X = X.squeeze().numpy()
         Y = Y.squeeze().numpy()
 
-        n = 200
+        n = 100
         x = X[:n]
         y = Y[:n]
         ax.scatter(x[:,0], x[:,1], y, c="b", label="Top %d sampled points" % n)
 
         pyplot.title("%d evaluations" % example2d.count_evals())
-        pyplot.savefig("simple-2d.png")
+        pyplot.savefig("example-2d.png")
 
 if __name__ == "__main__":
     Example2D.main()
