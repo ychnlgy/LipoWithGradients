@@ -7,8 +7,9 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
     EPS = 1e-32
     SELECTION = 0.5
 
-    def __init__(self, *args, prep_visualization=False, **kwargs):
+    def __init__(self, gradpenalty_weight, *args, prep_visualization=False, **kwargs):
         self.network_retrain_count = 0
+        self.gradpenalty_weight = gradpenalty_weight
 
         self.prep_visualization = prep_visualization
         if prep_visualization:
@@ -157,7 +158,8 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         Y = evalnet(X).sum()
         T = list(evalnet.parameters()) + [X]
         grads = torch.autograd.grad([Y], T, create_graph=True)
-        return sum(map(NeuralGlobalOptimizer.lipschitz1_loss, grads))
+        gp = sum(map(NeuralGlobalOptimizer.lipschitz1_loss, grads))
+        return gp * self.gradpenalty_weight
 
     @staticmethod
     def lipschitz1_loss(g):

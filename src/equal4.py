@@ -106,6 +106,7 @@ def main(cycles):
     
     features = Equal4.D
     prog = Equal4(
+        gradpenalty_weight = 1e-3,
         init_X = torch.rand(8, features),
         explore = 8,
         exploit = 8,
