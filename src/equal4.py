@@ -66,7 +66,7 @@ class Equal4(NeuralGlobalOptimizer):
         
         for epoch in bar:
             Yh = evalnet(X).squeeze()
-            loss = lossf(Yh, Y) + self.grad_penalty(evalnet, X)
+            loss = lossf(Yh, Y) #+ self.grad_penalty(evalnet, X)
             optim.zero_grad()
             loss.backward()
             optim.step()
