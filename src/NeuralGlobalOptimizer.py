@@ -91,6 +91,9 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
             shortcut - float if x has already been evaluated, otherwise None.
             
         '''
+        if not len(self):
+            return None
+        
         X, Y = self.get_XY()
         diff = (x > NeuralGlobalOptimizer.SELECTION) != (X > NeuralGlobalOptimizer.SELECTION)
 

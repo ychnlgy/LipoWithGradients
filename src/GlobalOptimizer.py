@@ -220,7 +220,6 @@ class GlobalOptimizationTable:
         self.metadata[:,0], self.metadata[:,i] = self.metadata[:,i], self.metadata[:,0]
 
     def get_metadata(self, i):
-        print(self.metadata.shape, self.i, i)
         return self.metadata[:self.i,i]
 
     def sort_metadata(self):
