@@ -63,7 +63,7 @@ class Equal4(NeuralGlobalOptimizer):
         avg = MovingAverage(momentum=0.95)
         
         for epoch in bar:
-            Yh = evalnet(X)
+            Yh = evalnet(X).squeeze()
             loss = lossf(Yh, Y) + self.grad_penalty(evalnet, X)
             optim.zero_grad()
             loss.backward()
