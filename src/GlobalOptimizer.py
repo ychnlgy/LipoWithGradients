@@ -35,6 +35,7 @@ class GlobalOptimizer:
         args = (X, Y, evalnet)
         print("Exploit")
         self.add_to_dataset(self.exploit_Xb(X), *args)
+        input()
         print("Explore")
         self.add_to_dataset(self.explore_Xb(X), *args)
         input()
