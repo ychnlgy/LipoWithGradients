@@ -50,6 +50,13 @@ class Equal4(NeuralGlobalOptimizer):
     def create_evalnet(self, D):
         return torch.nn.Sequential(
             torch.nn.Linear(D, 32),
+            torch.nn.ReLU(),
+            torch.nn.Linear(32, 32),
+            torch.nn.ReLU(),
+            torch.nn.Linear(32, 1)
+        )
+        return torch.nn.Sequential(
+            torch.nn.Linear(D, 32),
 
             modules.ResNet(
 
