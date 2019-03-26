@@ -102,7 +102,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         # different, then we can use that result.
         mark = diff.long().sum(dim=1) == 0
         if mark.long().sum() > 0:
-            shortcut = Y[mark]
+            shortcut = Y[mark][:1]
             assert len(shortcut) == 1
             return shortcut.item()
         else:
