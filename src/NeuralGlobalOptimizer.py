@@ -156,7 +156,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         self._used_gradpenalty = False
         evalnet = self.create_evalnet(X.size(1))
         evalnet.train()
-        self.train_evalnet(evalnet, X, Y)
+        self.train_evalnet(evalnet, self.discretize_featuremask(X), Y)
         assert self._used_gradpenalty
         evalnet.eval()
         return evalnet
@@ -172,4 +172,4 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
     @staticmethod
     def lipschitz1_loss(g):
-        return torch.nn.functional.relu(g.abs()-1).sum()
+        return ((1-g)**2).sum()#torch.nn.functional.relu(g.abs()-1).sum()
