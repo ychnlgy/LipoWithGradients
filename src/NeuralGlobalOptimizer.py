@@ -91,7 +91,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
             shortcut - float if x has already been evaluated, otherwise None.
             
         '''
-        if not len(self):
+        if not len(self.table):
             return None
         
         X, Y = self.get_XY()
