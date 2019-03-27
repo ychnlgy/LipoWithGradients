@@ -34,7 +34,7 @@ class GlobalOptimizer:
         evalnet = self.fit_evalnet(X, Y)
         args = (X, Y, evalnet)
         self.add_to_dataset(self.exploit_Xb(X), *args, "Exploiting")
-        self.add_to_dataset(self.explore_Xb(X), *args, "Exploring")
+        self.add_to_dataset(self.explore_Xb(X), *args, " Exploring")
         self.table.update_scores(k=self.exploit)
 
     def save(self):
@@ -104,8 +104,10 @@ class GlobalOptimizer:
     def _evaluate(self, X, taskname):
         N = len(X)
         Y = torch.zeros(N)
-        for i in tqdm.tqdm(range(N), ncols=80, desc=taskname):
+        bar = tqdm.tqdm(range(N), ncols=80)
+        for i in bar:
             Y[i] = self.evaluate(X[i])
+            bar.set_description("%s (%.3f)" % (taskname, Y[i].item()))
         self.num_evals += N
         return Y
 
