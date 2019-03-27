@@ -45,7 +45,7 @@ class Equal4(NeuralGlobalOptimizer):
         return torch.nn.MSELoss()
 
     def penalize_featurecount(self, count):
-        return 1e-1 * count**2
+        return 1e4 * count**2
 
     def create_evalnet(self, D):
         return torch.nn.Sequential(
