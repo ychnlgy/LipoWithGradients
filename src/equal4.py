@@ -129,7 +129,7 @@ def main(cycles):
         init_X = torch.rand(32, features),
         explore = 8,
         exploit = 8,
-        mutation_rate = 0.05,
+        mutation_rate = 0.01,
         table = GlobalOptimizationTable(
             capacity = 60000,
             features = features,
