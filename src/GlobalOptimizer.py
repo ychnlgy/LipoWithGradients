@@ -269,4 +269,6 @@ class Lipo:
         Y  = Y.view(1, -1)
         scores = Y + self.k * (X - Xb).norm(dim=2, p=2)
         V, _ = scores.min(dim=1)
+        print(V.squeeze(), Y.max())
+        input()
         return V > Y.max()
