@@ -21,7 +21,6 @@ class GlobalOptimizer:
 
         self.explore = explore
         self.exploit = exploit
-        self.mutation_rate = mutation_rate
         self.max_retry = max_retry
         self.lr = lr
         self.savepath = savepath
@@ -118,12 +117,7 @@ class GlobalOptimizer:
         return self.lipo.sample(self.explore)
 
     def exploit_Xb(self, X):
-        X = X[:self.exploit].clone()
-        R1 = torch.rand_like(X)
-        R2 = torch.rand_like(X)
-        I = R1 <= self.mutation_rate
-        X[I] = R2[I]
-        return X
+        return X[:self.exploit].clone()
 
     def add_to_dataset(self, Xb, X, Y, evalnet, taskname):
         for i in range(self.max_retry):

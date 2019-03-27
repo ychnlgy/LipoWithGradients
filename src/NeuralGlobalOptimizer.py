@@ -6,9 +6,10 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
     SELECTION = 0.5
 
-    def __init__(self, gradpenalty_weight, *args, prep_visualization=False, **kwargs):
+    def __init__(self, gradpenalty_weight, mutation_rate, *args, prep_visualization=False, **kwargs):
         self.network_retrain_count = 0
         self.gradpenalty_weight = gradpenalty_weight
+        self.mutation_rate = mutation_rate
 
         self.prep_visualization = prep_visualization
         if prep_visualization:
@@ -37,6 +38,15 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
     # === PRIVATE ===
 
+    def exploit_Xb(self, X):
+        X = super().exploit_Xb(X)
+        R1 = torch.rand_like(X)
+        R2 = torch.rand_like(X)
+        I = R1 <= self.mutation_rate
+        N = X.size(0)
+        X[I] = self.lipo.sample(N)[I]
+        return X
+
     def get_dataset(self):
         raise NotImplementedError
 
@@ -60,6 +70,8 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
     def store_losses(self, *args):
         return
+
+    def 
 
     def _store_losses(self, data_loss, test_loss, feature_count):
         self.data_losses.append(data_loss)
