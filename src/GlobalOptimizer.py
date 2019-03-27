@@ -15,7 +15,7 @@ class GlobalOptimizer:
 
     '''
 
-    def __init__(self, init_X, explore, exploit, mutation_rate, table, lipo, max_retry, lr, savepath):
+    def __init__(self, init_X, explore, exploit, table, lipo, max_retry, lr, savepath):
         self.table = table
         self.lipo = lipo
 
