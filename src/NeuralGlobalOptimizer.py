@@ -97,7 +97,6 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
             shortcut - float if x has already been evaluated, otherwise None.
             
         '''
-        #return None
         if not len(self.table):
             return None
         
@@ -173,4 +172,4 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
     @staticmethod
     def lipschitz1_loss(g):
-        return ((1-g)**2).sum()#torch.nn.functional.relu(g.abs()-1).sum()
+        return torch.nn.functional.relu(g.abs()-1).sum()
