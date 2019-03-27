@@ -264,9 +264,6 @@ class Lipo:
         return torch.rand(n, self.d)*(self.b - self.a)+self.a
 
     def decision_rule(self, Xb, X, Y):
-        
-        print(X.squeeze())
-        input()
         Xb = Xb.unsqueeze(1)
         X  = X.unsqueeze(0)
         Y  = Y.view(1, -1)

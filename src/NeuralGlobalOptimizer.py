@@ -110,10 +110,9 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         # if there is an entry in which no element is
         # different, then we can use that result.
         mark = diff.long().sum(dim=1) == 0
-        if mark.long().sum() > 0:
-            shortcut = Y[mark]
-            assert len(shortcut) == 1
-            return shortcut.item()
+        shortcut = Y[mark]
+        if len(shortcut) > 0:
+            return shortcut.mean().item()
         else:
             return None
         
@@ -128,13 +127,9 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         with torch.no_grad():
             model.eval()
             Yh_data = model(X_data).squeeze()
-            data_loss = torch.log(
-                lossf(Yh_data, Y_data) + NeuralGlobalOptimizer.EPS
-            ).item()
+            data_loss = lossf(Yh_data, Y_data).item()
             Yh_test = model(X_test).squeeze()
-            test_loss = torch.log(
-                lossf(Yh_test, Y_test) + NeuralGlobalOptimizer.EPS
-            ).item()
+            test_loss = lossf(Yh_test, Y_test).item()
             feature_count = x.long().sum().item()
             feature_penalty = self.penalize_featurecount(feature_count)
             self.store_losses(data_loss, test_loss, feature_count)
