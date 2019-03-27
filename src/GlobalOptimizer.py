@@ -35,8 +35,8 @@ class GlobalOptimizer:
         X, Y = self.get_XY()
         evalnet = self.fit_evalnet(X, Y)
         args = (X, Y, evalnet)
-        self.add_to_dataset(self.exploit_Xb(X), *args, "Exploiting")
-        self.add_to_dataset(self.explore_Xb(X), *args, " Exploring")
+        self.add_to_dataset(self.exploit_Xb(X, Y), *args, "Exploiting")
+        self.add_to_dataset(self.explore_Xb(X, Y), *args, " Exploring")
         self.table.update_scores(k=self.exploit)
 
     def save(self):
@@ -113,10 +113,10 @@ class GlobalOptimizer:
         self.num_evals += N
         return Y
 
-    def explore_Xb(self, X):
+    def explore_Xb(self, X, Y):
         return self.lipo.sample(self.explore)
 
-    def exploit_Xb(self, X):
+    def exploit_Xb(self, X, Y):
         Xb = X[:self.exploit].clone()
         for i in range(self.max_retry):
 
