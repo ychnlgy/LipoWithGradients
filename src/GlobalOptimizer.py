@@ -139,7 +139,7 @@ class GlobalOptimizer:
 
         # The rows that now satisfy the LIPO decision rule
         # get to be evaluated.
-        X_targets = Xb[self.lipo.decision_rule(Xb, X, Y)]
+        X_targets = Xb[self.lipo.decision_rule(Xb, X, Y)].detach()
         if len(X_targets) > 0:
             Y_targets = self._evaluate(X_targets, taskname)
             self.table.insert_xy(X_targets, Y_targets)
