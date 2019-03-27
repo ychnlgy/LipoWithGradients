@@ -66,25 +66,25 @@ class Equal4(NeuralGlobalOptimizer):
 
                 modules.ResBlock(
                     block = torch.nn.Sequential(
-                        #modules.PrototypeClassifier(64, 64),
-                        #modules.polynomial.Activation(64, n_degree=12),
-                        #torch.nn.Linear(64, 64)
-                        torch.nn.ReLU(),
-                        torch.nn.Linear(64, 64),
-                        torch.nn.ReLU(),
-                        torch.nn.Linear(64, 64),
+                        modules.PrototypeClassifier(64, 64),
+                        modules.polynomial.Activation(64, n_degree=12),
+                        torch.nn.Linear(64, 64)
+                        #torch.nn.ReLU(),
+                        #torch.nn.Linear(64, 64),
+                        #torch.nn.ReLU(),
+                        #torch.nn.Linear(64, 64),
                     )
                 ),
 
                 modules.ResBlock(
                     block = torch.nn.Sequential(
-                        #modules.PrototypeClassifier(64, 64),
-                        #modules.polynomial.Activation(64, n_degree=12),
-                        #torch.nn.Linear(64, 64)
-                        torch.nn.ReLU(),
-                        torch.nn.Linear(64, 64),
-                        torch.nn.ReLU(),
-                        torch.nn.Linear(64, 64),
+                        modules.PrototypeClassifier(64, 64),
+                        modules.polynomial.Activation(64, n_degree=12),
+                        torch.nn.Linear(64, 64)
+                        #torch.nn.ReLU(),
+                        #torch.nn.Linear(64, 64),
+                        #torch.nn.ReLU(),
+                        #torch.nn.Linear(64, 64),
                     )
                 )
             ),
@@ -127,7 +127,7 @@ def main(cycles):
             reduced_size = 3000,
             montecarlo_c = math.sqrt(2)
         ),
-        lipo = Lipo(k=10, d=features, a=0, b=1),
+        lipo = Lipo(k=2, d=features, a=0, b=1),
         max_retry = 10,
         lr = 1,
         savepath = "equal4.pkl",
