@@ -119,15 +119,16 @@ def main(cycles):
     prog = Equal4(
         gradpenalty_weight = 1e-4,
         init_X = torch.rand(32, features),
-        explore = 4,
-        exploit = 1,
+        explore = 8,
+        exploit = 8,
+        mutation_rate = 0.01
         table = GlobalOptimizationTable(
             capacity = 4000,
             features = features,
             reduced_size = 3000,
             montecarlo_c = math.sqrt(2)
         ),
-        lipo = Lipo(k=2, d=features, a=0, b=1),
+        lipo = Lipo(k=4, d=features, a=0, b=1),
         max_retry = 10,
         lr = 1,
         savepath = "equal4.pkl",
