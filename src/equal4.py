@@ -129,11 +129,11 @@ def main(cycles):
         init_X = torch.rand(32, features),
         explore = 8,
         exploit = 8,
-        mutation_rate = 0.01,
+        mutation_rate = 0.05,
         table = GlobalOptimizationTable(
-            capacity = 4000,
+            capacity = 60000,
             features = features,
-            reduced_size = 3000,
+            reduced_size = 50000,
             montecarlo_c = math.sqrt(2)
         ),
         lipo = Lipo(k=4, d=features, a=0, b=1),
