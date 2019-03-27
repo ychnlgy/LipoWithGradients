@@ -1,4 +1,4 @@
-import torch, math
+import torch, math, statistics
 
 from GlobalOptimizer import *
 
@@ -27,7 +27,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         assert self.prep_visualization
         out = tuple(
             map(
-                min,
+                statistics.mean,
                 (self.data_losses, self.test_losses, self.feature_counts)
             )
         )
@@ -95,48 +95,8 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
             y - torch Tensor of shape (1), scores for using x as feature mask.
 
         '''
-        shortcut = self.lookup_result(x)
-
-        if shortcut is not None:
-            return shortcut
-        else:
-            self.network_retrain_count += 1
-            return self.do_expensive_model_eval(
-                NeuralGlobalOptimizer.discretize_featuremask(x)
-            )
-
-    @staticmethod
-    def discretize_featuremask(x):
-        return x > NeuralGlobalOptimizer.SELECTION
-
-    def lookup_result(self, x):
-        '''
-
-        Output:
-            shortcut - float if x has already been evaluated, otherwise None.
-            
-        '''
-        return None
-        if not len(self.table):
-            return None
-        
-        X, Y = self.get_XY()
-        diff = (
-            NeuralGlobalOptimizer.discretize_featuremask(x)
-        ) != (
-            NeuralGlobalOptimizer.discretize_featuremask(X)
-        )
-
-        # if there is an entry in which no element is
-        # different, then we can use that result.
-        mark = diff.long().sum(dim=1) == 0
-        shortcut = Y[mark]
-        if len(shortcut) > 0:
-            return shortcut.mean().item()
-        else:
-            return None
-        
-    def do_expensive_model_eval(self, x):
+        self.network_retrain_count += 1
+        x = NeuralGlobalOptimizer.discretize_featuremask(x)
         X_data, Y_data, X_test, Y_test = self.get_dataset()
         X_data *= x.unsqueeze(0).float()
         model = self.make_model(X_data.size(1))
@@ -154,6 +114,10 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
             feature_penalty = self.penalize_featurecount(feature_count)
             self.store_losses(data_loss, test_loss, feature_count)
             return -(data_loss + test_loss + feature_penalty)
+
+    @staticmethod
+    def discretize_featuremask(x):
+        return x > NeuralGlobalOptimizer.SELECTION
 
     def fit_evalnet(self, X, Y):
         '''
