@@ -110,7 +110,7 @@ def main(cycles):
     prog = Equal4(
         gradpenalty_weight = 1e-3,
         init_X = torch.rand(8, features),
-        explore = 2,
+        explore = 8,
         exploit = 8,
         table = GlobalOptimizationTable(
             capacity = 4000,
