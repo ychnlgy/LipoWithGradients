@@ -9,7 +9,7 @@ from main import main
 
 class Equal4(NeuralGlobalOptimizer):
 
-    D = 100
+    D = 6
     TRUE_D = 4
 
     def get_dataset(self):
