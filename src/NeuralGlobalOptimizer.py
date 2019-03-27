@@ -38,8 +38,8 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
     # === PRIVATE ===
 
-    def exploit_Xb(self, X):
-        X = super().exploit_Xb(X)
+    def exploit_Xb(self, X, Y):
+        X = super().exploit_Xb(X, Y)
         R1 = torch.rand_like(X)
         R2 = torch.rand_like(X)
         I = R1 <= self.mutation_rate
