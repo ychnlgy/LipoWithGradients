@@ -4,7 +4,6 @@ from GlobalOptimizer import *
 
 class NeuralGlobalOptimizer(GlobalOptimizer):
 
-    EPS = 1e-32
     SELECTION = 0.5
 
     def __init__(self, gradpenalty_weight, *args, prep_visualization=False, **kwargs):
@@ -84,10 +83,11 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         else:
             self.network_retrain_count += 1
             return self.do_expensive_model_eval(
-                self.discretize_featuremask(x)
+                NeuralGlobalOptimizer.discretize_featuremask(x)
             )
 
-    def discretize_featuremask(self, x):
+    @staticmethod
+    def discretize_featuremask(x):
         return x > NeuralGlobalOptimizer.SELECTION
 
     def lookup_result(self, x):
@@ -102,9 +102,9 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         
         X, Y = self.get_XY()
         diff = (
-            self.discretize_featuremask(x)
+            NeuralGlobalOptimizer.discretize_featuremask(x)
         ) != (
-            self.discretize_featuremask(X)
+            NeuralGlobalOptimizer.discretize_featuremask(X)
         )
 
         # if there is an entry in which no element is

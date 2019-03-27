@@ -48,6 +48,7 @@ class Equal4(NeuralGlobalOptimizer):
         return 1e-3 * count**2
 
     def create_evalnet(self, D):
+        '''
         return torch.nn.Sequential(
             torch.nn.Linear(D, 32),
             torch.nn.ReLU(),
@@ -55,6 +56,7 @@ class Equal4(NeuralGlobalOptimizer):
             torch.nn.ReLU(),
             torch.nn.Linear(32, 1)
         )
+        '''
         return torch.nn.Sequential(
             torch.nn.Linear(D, 32),
 
@@ -63,7 +65,7 @@ class Equal4(NeuralGlobalOptimizer):
                 modules.ResBlock(
                     block = torch.nn.Sequential(
                         modules.PrototypeClassifier(32, 32),
-                        modules.polynomial.Activation(32, n_degree=4),
+                        modules.polynomial.Activation(32, n_degree=6),
                         torch.nn.Linear(32, 32)
                     )
                 ),
@@ -71,7 +73,7 @@ class Equal4(NeuralGlobalOptimizer):
                 modules.ResBlock(
                     block = torch.nn.Sequential(
                         modules.PrototypeClassifier(32, 32),
-                        modules.polynomial.Activation(32, n_degree=4),
+                        modules.polynomial.Activation(32, n_degree=6),
                         torch.nn.Linear(32, 32)
                     )
                 )
@@ -109,7 +111,7 @@ def main(cycles):
         gradpenalty_weight = 1e-3,
         init_X = torch.rand(8, features),
         explore = 8,
-        exploit = 8,
+        exploit = 2,
         table = GlobalOptimizationTable(
             capacity = 4000,
             features = features,
@@ -118,7 +120,7 @@ def main(cycles):
         ),
         lipo = Lipo(k=1, d=features, a=0, b=1),
         max_retry = 10,
-        lr = 0.5,
+        lr = 1,
         savepath = "equal4.pkl",
         prep_visualization = True
     )
@@ -142,13 +144,13 @@ def main(cycles):
     fig, axes = pyplot.subplots(nrows=3, sharex=True, figsize=(10, 8))
 
     axes[0].plot(data_loss, ".-")
-    axes[0].set_ylabel("Training loss")
+    axes[0].set_ylabel("Lowest training loss")
 
     axes[1].plot(test_loss, ".-")
-    axes[1].set_ylabel("Validation loss")
+    axes[1].set_ylabel("Lowest validation loss")
 
     axes[2].plot(feature_counts, ".-")
-    axes[2].set_ylabel("Feature count")
+    axes[2].set_ylabel("Lowest feature count")
 
     axes[-1].set_xlabel("Evaluations")
 
