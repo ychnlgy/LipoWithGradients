@@ -111,6 +111,14 @@ class Equal4(NeuralGlobalOptimizer):
             avg.update(loss.item())
             bar.set_description("Fitting evalnet: %.3f" % avg.peek())
 
+def score(pred, true):
+    acc = (pred == true).long().sum().item()/torch.numel(pred)
+    p = true == 1
+    sens = ((pred == 1) & p).long().sum().item()/p.long().sum().item()
+    spec = ((pred == 0) &~p).long().sum().item()/(~p).long().sum().item()
+    f1 = (sens*spec)/(sens+spec)*2
+    return acc, sens, spec, f1
+
 @main
 def main(cycles):
     cycles = int(cycles)
@@ -147,6 +155,7 @@ def main(cycles):
             for v, plot in zip(prog.get_losses(), plots):
                 plot.append(v)
             top = prog.discretize_featuremask(X[0])
+            print("Acc/Sens/Spec/F1: %.3f/%.3f/%.3f/%.3f" % score(top, ground_truth))
             print("Top feature selection:", top.numpy(), sep="\n")
             if (top == ground_truth).all() and input("Stop? [y/n] ") == "y":
                 break
