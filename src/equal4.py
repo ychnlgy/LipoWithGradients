@@ -19,7 +19,9 @@ class Equal4(NeuralGlobalOptimizer):
         return X[:N], Y[:N], X[N:], Y[N:]
 
     def make_model(self, D):
-        return torch.nn.Linear(D, 1)
+        return torch.nn.Sequential(
+            torch.nn.Linear(D, 1)
+        )
 
     def train_model(self, model, lossf, X, Y):
         dataset = torch.utils.data.TensorDataset(X, Y)
@@ -45,7 +47,7 @@ class Equal4(NeuralGlobalOptimizer):
         return torch.nn.MSELoss()
 
     def penalize_featurecount(self, count):
-        return 1e-1 * count
+        return 1e-2 * count
 
     def create_evalnet(self, D):
         '''
@@ -58,28 +60,28 @@ class Equal4(NeuralGlobalOptimizer):
         )
         '''
         return torch.nn.Sequential(
-            torch.nn.Linear(D, 32),
+            torch.nn.Linear(D, 64),
 
             modules.ResNet(
 
                 modules.ResBlock(
                     block = torch.nn.Sequential(
-                        modules.PrototypeClassifier(32, 32),
-                        modules.polynomial.Activation(32, n_degree=6),
-                        torch.nn.Linear(32, 32)
+                        modules.PrototypeClassifier(64, 64),
+                        modules.polynomial.Activation(64, n_degree=12),
+                        torch.nn.Linear(64, 64)
                     )
                 ),
 
                 modules.ResBlock(
                     block = torch.nn.Sequential(
-                        modules.PrototypeClassifier(32, 32),
-                        modules.polynomial.Activation(32, n_degree=6),
-                        torch.nn.Linear(32, 32)
+                        modules.PrototypeClassifier(64, 64),
+                        modules.polynomial.Activation(64, n_degree=12),
+                        torch.nn.Linear(64, 64)
                     )
                 )
             ),
 
-            torch.nn.Linear(32, 1)
+            torch.nn.Linear(64, 1)
         )
 
     def train_evalnet(self, evalnet, X, Y):
