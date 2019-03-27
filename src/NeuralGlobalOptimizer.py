@@ -71,8 +71,6 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
     def store_losses(self, *args):
         return
 
-    def 
-
     def _store_losses(self, data_loss, test_loss, feature_count):
         self.data_losses.append(data_loss)
         self.test_losses.append(test_loss)
