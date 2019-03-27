@@ -148,7 +148,6 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
         '''
         self._used_gradpenalty = False
-        X = self.discretize_featuremask(X).float()
         evalnet = self.create_evalnet(X.size(1))
         evalnet.train()
         self.train_evalnet(evalnet, X, Y)
