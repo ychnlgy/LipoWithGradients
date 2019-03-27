@@ -24,7 +24,16 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
     def get_losses(self):
         assert self.prep_visualization
-        return (self.data_losses, self.test_losses, self.feature_counts)
+        out = tuple(
+            map(
+                min,
+                (self.data_losses, self.test_losses, self.feature_counts)
+            )
+        )
+        self.data_losses = []
+        self.test_losses = []
+        self.feature_counts = []
+        return out
 
     # === PRIVATE ===
 

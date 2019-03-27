@@ -137,11 +137,14 @@ def main(cycles):
     ground_truth = torch.zeros(features).byte()
     ground_truth[:Equal4.TRUE_D] = 1
 
+    plots = ([], [], [])
     try:
         for i in range(cycles):
             print(" === Epoch %d ===" % i)
             prog.step()
             X, Y = prog.publish_XY()
+            for v, plot in zip(prog.get_losses(), plots):
+                plot.append(v)
             top = prog.discretize_featuremask(X[0])
             print("Top feature selection:", top.numpy(), sep="\n")
             if (top == ground_truth).all() and input("Stop? [y/n] ") == "y":
@@ -156,7 +159,7 @@ def main(cycles):
         print(" === Top %d feature selections === " % best_n, x, sep="\n")
         print(" >>> Number of retraining operations: %d" % prog.count_network_retrains())
         
-        data_loss, test_loss, feature_counts = prog.get_losses()
+        data_loss, test_loss, feature_counts = plots
 
         import matplotlib
         matplotlib.use("agg")
