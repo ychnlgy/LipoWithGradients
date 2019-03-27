@@ -67,7 +67,7 @@ class Equal4(NeuralGlobalOptimizer):
                 modules.ResBlock(
                     block = torch.nn.Sequential(
                         modules.PrototypeClassifier(64, 64),
-                        modules.polynomial.Activation(64, n_degree=4),
+                        modules.polynomial.Activation(64, n_degree=6),
                         torch.nn.Linear(64, 64)
                         #torch.nn.ReLU(),
                         #torch.nn.Linear(64, 64),
@@ -79,7 +79,7 @@ class Equal4(NeuralGlobalOptimizer):
                 modules.ResBlock(
                     block = torch.nn.Sequential(
                         modules.PrototypeClassifier(64, 64),
-                        modules.polynomial.Activation(64, n_degree=4),
+                        modules.polynomial.Activation(64, n_degree=6),
                         torch.nn.Linear(64, 64)
                         #torch.nn.ReLU(),
                         #torch.nn.Linear(64, 64),

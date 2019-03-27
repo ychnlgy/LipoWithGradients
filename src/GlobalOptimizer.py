@@ -117,9 +117,7 @@ class GlobalOptimizer:
         return self.lipo.sample(self.explore)
 
     def exploit_Xb(self, X):
-        return X[:self.exploit].clone()
-
-    def add_to_dataset(self, Xb, X, Y, evalnet, taskname):
+        Xb = X[:self.exploit].clone()
         for i in range(self.max_retry):
 
             # The rows that do not satisfy the LIPO decision rule
@@ -136,7 +134,9 @@ class GlobalOptimizer:
             self.exploit_grads(evalnet, X_exploit)
             optim.step()
             Xb[I] = X_exploit
+        return Xb
 
+    def add_to_dataset(self, Xb, X, Y, evalnet, taskname):
         # The rows that now satisfy the LIPO decision rule
         # get to be evaluated.
         X_targets = Xb[self.lipo.decision_rule(Xb, X, Y)].detach()
