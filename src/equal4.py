@@ -47,7 +47,7 @@ class Equal4(NeuralGlobalOptimizer):
         return torch.nn.MSELoss()
 
     def penalize_featurecount(self, count):
-        return 1e-3 * count
+        return 1e-2 * count
 
     def create_evalnet(self, D):
         '''
@@ -66,28 +66,28 @@ class Equal4(NeuralGlobalOptimizer):
 
                 modules.ResBlock(
                     block = torch.nn.Sequential(
-                        #modules.PrototypeClassifier(64, 64),
-                        #modules.polynomial.Activation(64, n_degree=12),
-                        torch.nn.ReLU(),
-                        torch.nn.Linear(64, 64),
-                        torch.nn.ReLU(),
-                        torch.nn.Linear(64, 64),
+                        modules.PrototypeClassifier(64, 64),
+                        modules.polynomial.Activation(64, n_degree=12),
+                        torch.nn.Linear(64, 64)
+                        #torch.nn.ReLU(),
+                        #torch.nn.Linear(64, 64),
+                        #torch.nn.ReLU(),
+                        #torch.nn.Linear(64, 64),
                     )
                 ),
 
                 modules.ResBlock(
                     block = torch.nn.Sequential(
-                        #modules.PrototypeClassifier(64, 64),
-                        #modules.polynomial.Activation(64, n_degree=12),
-                        #torch.nn.Linear(64, 64)
-                        torch.nn.ReLU(),
-                        torch.nn.Linear(64, 64),
-                        torch.nn.ReLU(),
-                        torch.nn.Linear(64, 64),
+                        modules.PrototypeClassifier(64, 64),
+                        modules.polynomial.Activation(64, n_degree=12),
+                        torch.nn.Linear(64, 64)
+                        #torch.nn.ReLU(),
+                        #torch.nn.Linear(64, 64),
+                        #torch.nn.ReLU(),
+                        #torch.nn.Linear(64, 64),
                     )
                 )
             ),
-
             torch.nn.Linear(64, 1)
         )
 
