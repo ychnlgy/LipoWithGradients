@@ -1,4 +1,6 @@
-import math, torch, numpy, tqdm
+import math, torch, numpy, tqdm, sys
+
+from MovingAverage import MovingAverage
 
 class GlobalOptimizer:
 
@@ -107,7 +109,7 @@ class GlobalOptimizer:
         bar = tqdm.tqdm(range(N), ncols=80)
         for i in bar:
             Y[i] = self.evaluate(X[i])
-            bar.set_description("%s (%.3f)" % (taskname, Y[i].item()))
+            bar.set_description("%s (%.3f)" % (taskname, Y.mean().item()))
         self.num_evals += N
         return Y
 
@@ -118,8 +120,6 @@ class GlobalOptimizer:
         return X[:self.exploit].clone()
 
     def add_to_dataset(self, Xb, X, Y, evalnet, taskname):
-        Xb = Xb.clone()
-
         for i in range(self.max_retry):
 
             # The rows that do not satisfy the LIPO decision rule
@@ -210,6 +210,11 @@ class GlobalOptimizationTable:
             self.reduce_size()
 
     def reduce_size(self):
+        sys.stderr.write(
+            "[Global optimization table]: reduced size from %d to %d.\n" % (
+                self.i, self.reduced_size
+            )
+        )
         self.i = self.reduced_size
         self.swap_and_sort_metadata(GlobalOptimizationTable.METAINDEX_Y)
         self.X[:self.i] = self.get_X()
