@@ -12,14 +12,8 @@ class Activation(torch.nn.Module):
             chebyshev.get_nodes(n_degree+1)
         )
         self.weight = torch.nn.Parameter(
-            torch.zero(1, self.d, self.n)
+            torch.zeros(1, self.d, self.n)
         )
-
-        #self.reset_parameters()
-
-    def reset_parameters(self):
-        pass
-        #torch.nn.init.kaiming_uniform_(self.weight, a=math.sqrt(5))
 
     def forward(self, X):
         B = self.basis(X)
