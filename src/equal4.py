@@ -96,10 +96,10 @@ class Equal4(NeuralGlobalOptimizer):
         )
 
     def train_evalnet(self, evalnet, X, Y):
-        epochs = 300
+        epochs = 200
         lossf = torch.nn.MSELoss()
-        optim = torch.optim.Adam(evalnet.parameters())
-        sched = torch.optim.lr_scheduler.MultiStepLR(optim, milestones=[100, 200])
+        optim = torch.optim.SGD(evalnet.parameters(), lr=0.01, momentum=0.9)
+        sched = torch.optim.lr_scheduler.MultiStepLR(optim, milestones=[80, 160])
 
         bar = tqdm.tqdm(range(epochs), ncols=80)
         avg = MovingAverage(momentum=0.95)
