@@ -113,6 +113,9 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         '''
         return torch.optim.SGD(parameters, lr=lr)
 
+    def mask(self, X, mask):
+        return X.transpose(0, 1)[mask].transpose(0, 1)
+
     def evaluate(self, x):
         '''
 
@@ -124,10 +127,10 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
         '''
         self.network_retrain_count += 1
-        x = NeuralGlobalOptimizer.discretize_featuremask(x).unsqueeze(0)
+        x = NeuralGlobalOptimizer.discretize_featuremask(x)
         X_data, Y_data, X_test, Y_test = self.get_dataset()
-        X_data = X_data[x.repeat(X_data.size(0), 1)]
-        X_test = X_test[x.repeat(X_test.size(0), 1)]
+        X_data = self.mask(X_data, x)
+        X_test = self.mask(X_test, x)
         D = X_data.size(1)
         model = self.make_model(D)
         lossf = self.create_model_lossfunction()
