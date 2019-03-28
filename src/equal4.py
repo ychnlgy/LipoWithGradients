@@ -141,7 +141,7 @@ def main(cycles, features):
             capacity = 60000,
             features = features,
             reduced_size = 50000,
-            montecarlo_c = math.sqrt(2)
+            montecarlo_c = 0#math.sqrt(2)
         ),
         lipo = Lipo(k=4, d=features, a=0, b=1),
         max_retry = 10,

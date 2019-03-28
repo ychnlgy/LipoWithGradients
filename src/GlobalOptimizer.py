@@ -96,7 +96,6 @@ class GlobalOptimizer:
         '''
         X = self.table.get_X()
         Y = self.table.get_Y()
-        print(X, Y)
         return (X, Y)
 
     def initialize_table(self):
