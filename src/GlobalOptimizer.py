@@ -102,7 +102,7 @@ class GlobalOptimizer:
         X = torch.eye(self.features+2, self.features)
         X[-1] = 1
         Y = self._evaluate(X, "Random initialization")
-        self.table.insert_xy(X, Y)
+        self.insert_xy(X, Y)
         self.table.update_scores(k=0)
 
     def _evaluate(self, X, taskname):
@@ -145,7 +145,7 @@ class GlobalOptimizer:
         
         if len(X_targets) > 0:
             Y_targets = self._evaluate(X_targets, taskname)
-            self.table.insert_xy(X_targets, Y_targets)
+            self.insert_xy(X_targets, Y_targets)
         else:
             print("Nothing to optimize!")
 
@@ -153,6 +153,9 @@ class GlobalOptimizer:
         Y = evalnet(X).sum()
         X.grad = -torch.autograd.grad([Y], [X], create_graph=True, only_inputs=True)[0]
 
+    def insert_xy(self, X, Y):
+        self.table.insert_xy(X, Y)
+        
 class GlobalOptimizationTable:
 
     METAINDEX_SCORE = 0
