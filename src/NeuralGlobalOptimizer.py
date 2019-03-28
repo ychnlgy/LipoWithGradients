@@ -149,6 +149,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
             # WARNING (previous bug): D is reduced
             feature_penalty = self.penalize_featurecount(feature_count, len(x))
             self.store_losses(data_loss, test_loss, feature_count)
+            print("\n", data_loss, test_loss)
             return -(data_loss + test_loss + feature_penalty)
 
     @staticmethod
