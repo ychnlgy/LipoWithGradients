@@ -112,6 +112,8 @@ class GlobalOptimizer:
         bar = tqdm.tqdm(range(N), ncols=80)
         for i in bar:
             Y[i] = self.evaluate(X[i])
+            print(X[i], Y[i])
+            input()
             bar.set_description("%s (%.3f)" % (taskname, Y[:i+1].max().item()))
         self.num_evals += N
         return Y
@@ -142,14 +144,10 @@ class GlobalOptimizer:
     def add_to_dataset(self, Xb, X, Y, evalnet, taskname):
         # The rows that now satisfy the LIPO decision rule
         # get to be evaluated.
-        print(Xb)
         X_targets = Xb[self.lipo.decision_rule(Xb, X, Y)].detach()
-        print(X_targets)
         
         if len(X_targets) > 0:
             Y_targets = self._evaluate(X_targets, taskname)
-            print(Y_targets)
-            input()
             self.table.insert_xy(X_targets, Y_targets)
         else:
             print("Nothing to optimize!")
