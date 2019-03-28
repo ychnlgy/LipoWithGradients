@@ -126,13 +126,19 @@ def score(pred, true):
 
 @main
 def main(cycles, features):
+
+    import matplotlib
+    matplotlib.use("agg")
+    from matplotlib import pyplot
+    fig, axes = pyplot.subplots(nrows=3, sharex=True, figsize=(10, 8))
+    
     cycles = int(cycles)
     features = int(features)
     
     Equal4.D = features
     prog = Equal4(
         features = features,
-        gradpenalty_weight = 1e-4,
+        gradpenalty_weight = 1e-3,
         explore = 8,
         exploit = 8,
         mutation_rate = 0.1,
@@ -174,11 +180,6 @@ def main(cycles, features):
             
             data_loss, test_loss, feature_counts = plots
 
-            import matplotlib
-            matplotlib.use("agg")
-            from matplotlib import pyplot
-            fig, axes = pyplot.subplots(nrows=3, sharex=True, figsize=(10, 8))
-
             axes[0].plot(data_loss, ".-")
             axes[0].set_ylabel("Training loss")
 
@@ -191,6 +192,7 @@ def main(cycles, features):
             axes[-1].set_xlabel("Evaluations")
 
             pyplot.savefig("equal4.png")
+            pyplot.clf()
             
             if (top == ground_truth).all() and input("Stop? [y/n] ") == "y":
                 break
