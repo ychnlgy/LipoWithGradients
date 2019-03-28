@@ -53,7 +53,7 @@ class Equal4(NeuralGlobalOptimizer):
         return self.expected_train_loss * self.featurepenalty_frac * count/D
 
     def create_evalnet(self, D):
-        
+        '''
         return torch.nn.Sequential(
             torch.nn.Linear(D, 32),
             torch.nn.ReLU(),
@@ -61,6 +61,7 @@ class Equal4(NeuralGlobalOptimizer):
             torch.nn.ReLU(),
             torch.nn.Linear(32, 1)
         )
+        '''
         
         return torch.nn.Sequential(
             torch.nn.Linear(D, 64),

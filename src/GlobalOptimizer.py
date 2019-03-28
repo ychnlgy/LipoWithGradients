@@ -99,6 +99,7 @@ class GlobalOptimizer:
         return [X, Y]
 
     def initialize_table(self):
+        X[0,:4] = 1
         X = torch.eye(self.features+2, self.features)
         X[-1] = 1
         Y = self._evaluate(X, "Random initialization")
