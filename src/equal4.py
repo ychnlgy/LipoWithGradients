@@ -18,6 +18,9 @@ class Equal4(NeuralGlobalOptimizer):
         Y = X[:,:Equal4.TRUE_D].sum(dim=1)
         return X[:N], Y[:N], X[N:], Y[N:]
 
+    def get_dataset_path(self):
+        return "equal4-data-d%d.pkl" % Equal4.D
+
     def make_model(self, D):
         return torch.nn.Sequential(
             torch.nn.Linear(D, 1)
