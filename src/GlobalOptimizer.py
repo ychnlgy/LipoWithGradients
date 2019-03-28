@@ -101,6 +101,7 @@ class GlobalOptimizer:
     def initialize_table(self):
         X = torch.eye(self.features+2, self.features)
         X[-1] = 1
+        X[0,:4] = 1
         Y = self._evaluate(X, "Random initialization")
         self.insert_xy(X, Y)
         self.table.update_scores(k=0)
