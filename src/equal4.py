@@ -146,7 +146,7 @@ def main(cycles, features):
         ),
         lipo = Lipo(k=2, d=features, a=0, b=1),
         max_retry = 10,
-        lr = 0.1,
+        lr = 0.9,
         savepath = "equal4.pkl",
         prep_visualization = True
     )
