@@ -127,6 +127,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         mask = x.unsqueeze(0).float()
         X_data *= mask
         X_test *= mask
+        print(X_data[:2].sum(dim=1), Y_data[:2])
         D = X_data.size(1)
         model = self.make_model(D)
         lossf = self.create_model_lossfunction()
