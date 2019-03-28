@@ -53,18 +53,14 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
     def exploit_Xb(self, X, Y, evalnet):
         X = super().exploit_Xb(X, Y, evalnet)
-        R1 = torch.rand_like(X)
-        R2 = torch.rand_like(X)
-        I = R1 <= self.mutation_rate + (1-self.mutation_rate)*self.homogeneity(X)
-        N = X.size(0)
-        X[I] = self.lipo.sample(N)[I]
-        return X
 
-    def homogeneity(self, X):
-        Xm = X.mean(dim=0).unsqueeze(0).repeat(X.size(0), 1)
-        cs = torch.nn.functional.cosine_similarity(Xm, X, dim=1)
-        print("", cs[0], Xm[0], X[0], "", sep="\n")
-        return torch.nn.functional.relu(cs)
+        # NOTE: Try to stay away from evolutionary methods
+        #R1 = torch.rand_like(X)
+        #R2 = torch.rand_like(X)
+        #I = R1 <= self.mutation_rate
+        #N = X.size(0)
+        #X[I] = self.lipo.sample(N)[I]
+        return X
 
     def get_dataset(self):
         if self._dataset is None:
