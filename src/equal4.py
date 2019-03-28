@@ -197,4 +197,5 @@ def main(cycles, features):
     except KeyboardInterrupt:
         pass
 
+    print("\n[EXITED]\n")
         
