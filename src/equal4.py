@@ -51,7 +51,7 @@ class Equal4(NeuralGlobalOptimizer):
 
     def penalize_featurecount(self, count, D):
         print(self.expected_train_loss * self.featurepenalty_frac * count, D)
-        return self.expected_train_loss * self.featurepenalty_frac * count/float(D)
+        return self.expected_train_loss * self.featurepenalty_frac * count/D
 
     def create_evalnet(self, D):
         '''
