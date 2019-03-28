@@ -63,8 +63,8 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
     def homogeneity(self, X):
         Xm = X.mean(dim=0).unsqueeze(0).repeat(X.size(0), 1)
         cs = torch.nn.functional.cosine_similarity(Xm, X, dim=1)
-        cs = cs.float().mean()
-        return torch.nn.functional.relu(cs).item()
+        print("", cs[0], Xm[0], X[0], "", sep="\n")
+        return torch.nn.functional.relu(cs)
 
     def get_dataset(self):
         if self._dataset is None:
