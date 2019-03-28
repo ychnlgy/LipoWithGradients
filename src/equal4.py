@@ -162,7 +162,7 @@ def main(cycles, features):
                 plot.append(v)
             top = prog.discretize_featuremask(X[:3])
             print("Acc/Sens/Spec/F1: %.3f/%.3f/%.3f/%.3f" % score(top, ground_truth))
-            print("Top feature selection:", top.numpy(), "(Score: %.3f)" % Y[:3].numpy(), sep="\n")
+            print("Top feature selection:", top.numpy(), "(Score: %s)" % Y[:3].numpy(), sep="\n")
             if (top == ground_truth).all() and input("Stop? [y/n] ") == "y":
                 break
     except KeyboardInterrupt:
