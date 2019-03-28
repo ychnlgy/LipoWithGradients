@@ -132,7 +132,7 @@ def main(cycles, features):
     Equal4.D = features
     prog = Equal4(
         features = features,
-        gradpenalty_weight = 1e-2,
+        gradpenalty_weight = 1e-3,
         explore = 8,
         exploit = 8,
         mutation_rate = 0.05,
