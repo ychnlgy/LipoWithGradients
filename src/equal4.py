@@ -12,7 +12,7 @@ class Equal4(NeuralGlobalOptimizer):
     D = 32
     TRUE_D = 4
 
-    def get_dataset(self):
+    def create_dataset(self):
         N = 500
         X = torch.rand(N*2, Equal4.D)
         Y = X[:,:Equal4.TRUE_D].sum(dim=1)
@@ -46,8 +46,8 @@ class Equal4(NeuralGlobalOptimizer):
     def create_model_lossfunction(self):
         return torch.nn.MSELoss()
 
-    def penalize_featurecount(self, count):
-        return 1e-1 * count
+    def penalize_featurecount(self, count, D):
+        return self.expected_train_loss * self.featurepenalty_frac * count/D * 2
 
     def create_evalnet(self, D):
         '''
@@ -120,16 +120,19 @@ def score(pred, true):
     return acc, sens, spec, f1
 
 @main
-def main(cycles):
+def main(cycles, features):
     cycles = int(cycles)
+    features = int(features)
     
-    features = Equal4.D
+    Equal4.D = features
     prog = Equal4(
         gradpenalty_weight = 1e-4,
-        init_X = torch.rand(32, features),
+        init_X = torch.eye(features, features),
         explore = 8,
         exploit = 8,
         mutation_rate = 0.01,
+        expected_train_loss = 0.01,
+        featurepenalty_frac = 10,
         table = GlobalOptimizationTable(
             capacity = 60000,
             features = features,

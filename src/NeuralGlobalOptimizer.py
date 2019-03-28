@@ -1,4 +1,4 @@
-import torch, math, statistics
+import torch, math, statistics, os
 
 from GlobalOptimizer import *
 
@@ -6,10 +6,21 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
     SELECTION = 0.5
 
-    def __init__(self, gradpenalty_weight, mutation_rate, *args, prep_visualization=False, **kwargs):
+    def __init__(
+        self,
+        gradpenalty_weight,
+        mutation_rate,
+        expected_train_loss,
+        featurepenalty_frac,
+        *args,
+        prep_visualization=False,
+        **kwargs
+    ):
         self.network_retrain_count = 0
         self.gradpenalty_weight = gradpenalty_weight
         self.mutation_rate = mutation_rate
+        self.expected_train_loss = expected_train_loss
+        self.featurepenalty_frac = featurepenalty_frac
 
         self.prep_visualization = prep_visualization
         if prep_visualization:
@@ -17,6 +28,8 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
             self.test_losses = []
             self.feature_counts = []
             self.store_losses = self._store_losses
+
+        self._dataset = None
 
         super().__init__(*args, **kwargs)
 
@@ -48,6 +61,19 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         return X
 
     def get_dataset(self):
+        if self._dataset is None:
+            dpath = self.get_dataset_path()
+            if not os.path.isfile(dpath):
+                self._dataset = self.create_dataset()
+                torch.save(self._dataset, dpath)
+            else:
+                self._dataset = torch.load(dpath)
+        return self._dataset
+
+    def get_dataset_path(self):
+        raise NotImplementedError
+
+    def create_dataset(self):
         raise NotImplementedError
 
     def make_model(self, D):
@@ -99,7 +125,8 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         x = NeuralGlobalOptimizer.discretize_featuremask(x)
         X_data, Y_data, X_test, Y_test = self.get_dataset()
         X_data *= x.unsqueeze(0).float()
-        model = self.make_model(X_data.size(1))
+        D = X_data.size(1)
+        model = self.make_model(D)
         lossf = self.create_model_lossfunction()
         model.train()
         self.train_model(model, lossf, X_data, Y_data)
@@ -111,7 +138,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
             Yh_test = model(X_test).squeeze()
             test_loss = lossf(Yh_test, Y_test).item()
             feature_count = x.long().sum().item()
-            feature_penalty = self.penalize_featurecount(feature_count)
+            feature_penalty = self.penalize_featurecount(feature_count, D)
             self.store_losses(data_loss, test_loss, feature_count)
             return -(data_loss + test_loss + feature_penalty)
 
