@@ -181,4 +181,5 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
     @staticmethod
     def lipschitz1_loss(g):
+        return ((1-g).norm(p=2)**2).sum()
         return torch.nn.functional.relu(g.abs()-1).sum()
