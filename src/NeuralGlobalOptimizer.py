@@ -55,11 +55,11 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         X = super().exploit_Xb(X, Y, evalnet)
 
         # NOTE: Try to stay away from evolutionary methods
-        #R1 = torch.rand_like(X)
-        #R2 = torch.rand_like(X)
-        #I = R1 <= self.mutation_rate
-        #N = X.size(0)
-        #X[I] = self.lipo.sample(N)[I]
+        R1 = torch.rand_like(X)
+        R2 = torch.rand_like(X)
+        I = R1 <= self.mutation_rate
+        N = X.size(0)
+        X[I] = self.lipo.sample(N)[I]
         return X
 
     def get_dataset(self):
