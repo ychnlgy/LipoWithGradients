@@ -195,7 +195,7 @@ def main(cycles, features):
             axes[-1].set_xlabel("Evaluations")
 
             pyplot.savefig("equal4.png")
-            pyplot.clf()
+            [axis.cla() for axis in axes]
             
             if (top == ground_truth).all() and input("Stop? [y/n] ") == "y":
                 break
