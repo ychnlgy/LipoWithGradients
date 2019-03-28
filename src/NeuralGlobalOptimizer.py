@@ -114,8 +114,11 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         return torch.optim.SGD(parameters, lr=lr)
 
     def mask(self, X, mask):
-        print(X.shape, mask.shape)
-        return X.transpose(0, 1)[mask].transpose(0, 1)
+        out = X.transpose(0, 1)[mask]
+        if len(out) == 0:
+            return torch.zeros(X.size(0), 1)
+        else:
+            return out.transpose(0, 1)
 
     def evaluate(self, x):
         '''
