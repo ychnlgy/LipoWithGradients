@@ -162,37 +162,39 @@ def main(cycles, features):
             X, Y = prog.publish_XY()
             for v, plot in zip(prog.get_losses(), plots):
                 plot.append(v)
-            top = prog.discretize_featuremask(X[:3])
+
+            best_n = 3
+            top = prog.discretize_featuremask(X[:best_n])
             print("Acc/Sens/Spec/F1: %.3f/%.3f/%.3f/%.3f" % score(top, ground_truth))
-            print("Top feature selection:", top.numpy(), "(Score: %s)" % Y[:3].numpy(), sep="\n")
+            print(" === Top %d feature selections === " % best_n, top.numpy(), sep="\n")
+            print("(Scores: %s)" % Y[:3].numpy(), sep="\n")
+            
+            print(" >>> Number of retraining operations: %d" % prog.count_network_retrains())
+            
+            data_loss, test_loss, feature_counts = plots
+
+            import matplotlib
+            matplotlib.use("agg")
+            from matplotlib import pyplot
+            fig, axes = pyplot.subplots(nrows=3, sharex=True, figsize=(10, 8))
+
+            axes[0].plot(data_loss, ".-")
+            axes[0].set_ylabel("Training loss")
+
+            axes[1].plot(test_loss, ".-")
+            axes[1].set_ylabel("Validation loss")
+
+            axes[2].plot(feature_counts, ".-")
+            axes[2].set_ylabel("Feature count")
+
+            axes[-1].set_xlabel("Evaluations")
+
+            pyplot.savefig("equal4.png")
+            
             if (top == ground_truth).all() and input("Stop? [y/n] ") == "y":
                 break
+            
     except KeyboardInterrupt:
         pass
-    finally:
-        X, Y = prog.publish_XY()
 
-        best_n = 3
-        x = (X[:best_n] > NeuralGlobalOptimizer.SELECTION).numpy()
-        print(" === Top %d feature selections === " % best_n, x, sep="\n")
-        print(" >>> Number of retraining operations: %d" % prog.count_network_retrains())
         
-        data_loss, test_loss, feature_counts = plots
-
-        import matplotlib
-        matplotlib.use("agg")
-        from matplotlib import pyplot
-        fig, axes = pyplot.subplots(nrows=3, sharex=True, figsize=(10, 8))
-
-        axes[0].plot(data_loss, ".-")
-        axes[0].set_ylabel("Training loss")
-
-        axes[1].plot(test_loss, ".-")
-        axes[1].set_ylabel("Validation loss")
-
-        axes[2].plot(feature_counts, ".-")
-        axes[2].set_ylabel("Feature count")
-
-        axes[-1].set_xlabel("Evaluations")
-
-        pyplot.savefig("equal4.png")
