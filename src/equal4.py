@@ -50,7 +50,7 @@ class Equal4(NeuralGlobalOptimizer):
         return torch.nn.MSELoss()
 
     def penalize_featurecount(self, count, D):
-        print(self.expected_train_loss * self.featurepenalty_frac * count, D)
+        print("\n", self.expected_train_loss * self.featurepenalty_frac * count, D)
         return self.expected_train_loss * self.featurepenalty_frac * count/D
 
     def create_evalnet(self, D):
