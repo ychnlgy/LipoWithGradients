@@ -30,10 +30,10 @@ class Equal4(NeuralGlobalOptimizer):
         dataset = torch.utils.data.TensorDataset(X, Y)
         dataloader = torch.utils.data.DataLoader(dataset, batch_size=16, shuffle=True)
 
-        epochs = 200
+        epochs = 100
 
         optim = torch.optim.Adam(model.parameters())
-        sched = torch.optim.lr_scheduler.MultiStepLR(optim, milestones=[100])
+        sched = torch.optim.lr_scheduler.MultiStepLR(optim, milestones=[50])
 
         for epoch in range(epochs):
 
