@@ -132,7 +132,7 @@ def main(cycles, features):
     Equal4.D = features
     prog = Equal4(
         features = features,
-        gradpenalty_weight = 1e-3,
+        gradpenalty_weight = 1e-4,
         explore = 8,
         exploit = 8,
         mutation_rate = 0.05,
@@ -146,7 +146,7 @@ def main(cycles, features):
         ),
         lipo = Lipo(k=2, d=features, a=0, b=1),
         max_retry = 10,
-        lr = 1,
+        lr = 0.9,
         savepath = "equal4.pkl",
         prep_visualization = True
     )
