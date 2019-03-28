@@ -135,7 +135,7 @@ def main(cycles, features):
         gradpenalty_weight = 1e-4,
         explore = 8,
         exploit = 8,
-        mutation_rate = 0.05,
+        mutation_rate = 0.1,
         expected_train_loss = 0.01,
         featurepenalty_frac = 10,
         table = GlobalOptimizationTable(
