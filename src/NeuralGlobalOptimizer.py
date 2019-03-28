@@ -142,6 +142,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
             feature_count = mask.sum().item()
             feature_penalty = self.penalize_featurecount(feature_count, D)
             self.store_losses(data_loss, test_loss, feature_count)
+            print("", x, data_loss, test_loss, feature_penalty, "", sep="\n")
             return -(data_loss + test_loss + feature_penalty)
 
     @staticmethod

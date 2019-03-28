@@ -112,7 +112,6 @@ class GlobalOptimizer:
         bar = tqdm.tqdm(range(N), ncols=80)
         for i in bar:
             Y[i] = self.evaluate(X[i])
-            print(X[i], Y[i])
             bar.set_description("%s (%.3f)" % (taskname, Y[:i+1].max().item()))
         self.num_evals += N
         return Y
