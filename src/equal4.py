@@ -32,7 +32,7 @@ class Equal4(NeuralGlobalOptimizer):
 
         epochs = 150
 
-        optim = torch.optim.SGD(model.parameters(), momentum=0.9)
+        optim = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
         sched = torch.optim.lr_scheduler.MultiStepLR(optim, milestones=[80, 120])
 
         for epoch in range(epochs):
