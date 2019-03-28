@@ -64,7 +64,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         Xm = X.mean(dim=0).unsqueeze(0).repeat(X.size(0), 1)
         cs = torch.nn.functional.cosine_similarity(Xm, X, dim=1)
         cs = .float().mean()
-        return torch.nn.functional.relu(cs)
+        return torch.nn.functional.relu(cs).item()
 
     def get_dataset(self):
         if self._dataset is None:
