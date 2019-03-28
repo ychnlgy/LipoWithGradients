@@ -15,10 +15,10 @@ class GlobalOptimizer:
 
     '''
 
-    def __init__(self, init_X, explore, exploit, table, lipo, max_retry, lr, savepath):
+    def __init__(self, features, explore, exploit, table, lipo, max_retry, lr, savepath):
         self.table = table
         self.lipo = lipo
-
+        self.features = features
         self.explore = explore
         self.exploit = exploit
         self.max_retry = max_retry
@@ -26,7 +26,7 @@ class GlobalOptimizer:
         self.savepath = savepath
         self.num_evals = 0
 
-        self.initialize_table(init_X)
+        self.initialize_table()
 
     def count_evals(self):
         return self.num_evals
@@ -98,7 +98,9 @@ class GlobalOptimizer:
         Y = self.table.get_Y()
         return [X, Y]
 
-    def initialize_table(self, X):
+    def initialize_table(self):
+        X = torch.eye(self.features+2, self.features)
+        X[-1] = 1
         Y = self._evaluate(X, "Random initialization")
         self.table.insert_xy(X, Y)
         self.table.update_scores(k=0)
