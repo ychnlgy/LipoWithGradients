@@ -145,9 +145,11 @@ class GlobalOptimizer:
         print(Xb)
         X_targets = Xb[self.lipo.decision_rule(Xb, X, Y)].detach()
         print(X_targets)
-        input()
+        
         if len(X_targets) > 0:
             Y_targets = self._evaluate(X_targets, taskname)
+            print(Y_targets)
+            input()
             self.table.insert_xy(X_targets, Y_targets)
         else:
             print("Nothing to optimize!")
