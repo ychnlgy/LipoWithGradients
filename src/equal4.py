@@ -50,7 +50,7 @@ class Equal4(NeuralGlobalOptimizer):
         return torch.nn.MSELoss()
 
     def penalize_featurecount(self, count, D):
-        return self.expected_train_loss * self.featurepenalty_frac * count/D * 2
+        return self.expected_train_loss * self.featurepenalty_frac * count/D
 
     def create_evalnet(self, D):
         '''
@@ -135,7 +135,7 @@ def main(cycles, features):
         exploit = 8,
         mutation_rate = 0.01,
         expected_train_loss = 0.01,
-        featurepenalty_frac = 1,
+        featurepenalty_frac = 2,
         table = GlobalOptimizationTable(
             capacity = 60000,
             features = features,
@@ -160,9 +160,9 @@ def main(cycles, features):
             X, Y = prog.publish_XY()
             for v, plot in zip(prog.get_losses(), plots):
                 plot.append(v)
-            top = prog.discretize_featuremask(X[0])
+            top = prog.discretize_featuremask(X[:3])
             print("Acc/Sens/Spec/F1: %.3f/%.3f/%.3f/%.3f" % score(top, ground_truth))
-            print("Top feature selection:", top.numpy(), "(Score: %.3f)" % Y[0].item(), sep="\n")
+            print("Top feature selection:", top.numpy(), "(Score: %.3f)" % Y[:3].numpy(), sep="\n")
             if (top == ground_truth).all() and input("Stop? [y/n] ") == "y":
                 break
     except KeyboardInterrupt:
