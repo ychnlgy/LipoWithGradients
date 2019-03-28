@@ -137,7 +137,7 @@ def main(cycles, features):
         exploit = 8,
         mutation_rate = 0.01,
         expected_train_loss = 0.01,
-        featurepenalty_frac = 50,
+        featurepenalty_frac = 10,
         table = GlobalOptimizationTable(
             capacity = 60000,
             features = features,
