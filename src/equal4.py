@@ -174,7 +174,7 @@ def main(cycles, features):
 
             best_n = 10
             top = prog.discretize_featuremask(X[:best_n])
-            print("Acc/Sens/Spec/F1: %.3f/%.3f/%.3f/%.3f" % score(top, ground_truth))
+            print("Acc/Sens/Spec/F1: %.3f/%.3f/%.3f/%.3f" % score(top[0], ground_truth))
             print(" --- Top %d feature selections --- " % best_n)
             for i in range(best_n):
                 print("%d)" % (i+1), top[i].numpy(), "%.4f" % Y[i], sep="\t")
