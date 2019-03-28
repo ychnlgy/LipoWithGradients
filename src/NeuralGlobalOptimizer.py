@@ -55,10 +55,15 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         X = super().exploit_Xb(X, Y, evalnet)
         R1 = torch.rand_like(X)
         R2 = torch.rand_like(X)
-        I = R1 <= self.mutation_rate
+        I = R1 <= self.mutation_rate + (1-self.mutation_rate)*self.homogeneity(X)
         N = X.size(0)
         X[I] = self.lipo.sample(N)[I]
         return X
+
+    def homogeneity(self, X):
+        Xm = X.mean(dim=0).unsqueeze(0).repeat(X.size(0), 1)
+        cs = torch.nn.functional.cosine_similarity(Xm, X, dim=1)
+        return torch.nn.functional.relu(cs).mean()
 
     def get_dataset(self):
         if self._dataset is None:

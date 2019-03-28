@@ -116,10 +116,11 @@ class Equal4(NeuralGlobalOptimizer):
             bar.set_description("Fitting evalnet: %.3f" % avg.peek())
 
 def score(pred, true):
+    
     acc = (pred == true).long().sum().item()/torch.numel(pred)
     p = true == 1
-    sens = ((pred == 1) & p).long().sum().item()/p.long().sum().item()
-    spec = ((pred == 0) &~p).long().sum().item()/(~p).long().sum().item()
+    sens = ((pred == 1) & p).long().sum(dim=1).mean().item()/p.long().sum().item()
+    spec = ((pred == 0) &~p).long().sum(dim=1).mean().item()/(~p).long().sum().item()
     f1 = (sens*spec)/(sens+spec)*2
     return acc, sens, spec, f1
 
