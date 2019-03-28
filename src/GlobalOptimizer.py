@@ -96,7 +96,8 @@ class GlobalOptimizer:
         '''
         X = self.table.get_X()
         Y = self.table.get_Y()
-        return [X, Y]
+        print(X, Y)
+        return (X, Y)
 
     def initialize_table(self):
         X = torch.eye(self.features+2, self.features)
