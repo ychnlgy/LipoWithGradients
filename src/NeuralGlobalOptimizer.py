@@ -68,7 +68,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
                 torch.save(self._dataset, dpath)
             else:
                 self._dataset = torch.load(dpath)
-        return self._dataset
+        return [d.clone() for d in self._dataset]
 
     def get_dataset_path(self):
         raise NotImplementedError
@@ -125,9 +125,8 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         x = NeuralGlobalOptimizer.discretize_featuremask(x)
         X_data, Y_data, X_test, Y_test = self.get_dataset()
         mask = x.unsqueeze(0).float()
-        X_data *= mask
+        X_data *=mask
         X_test *= mask
-        print(X_data[:2].sum(dim=1), Y_data[:2])
         D = X_data.size(1)
         model = self.make_model(D)
         lossf = self.create_model_lossfunction()
@@ -143,7 +142,6 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
             feature_count = mask.sum().item()
             feature_penalty = self.penalize_featurecount(feature_count, D)
             self.store_losses(data_loss, test_loss, feature_count)
-            print("", x, data_loss, test_loss, feature_penalty, "", sep="\n")
             return -(data_loss + test_loss + feature_penalty)
 
     @staticmethod
