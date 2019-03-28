@@ -133,7 +133,6 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         X_data, Y_data, X_test, Y_test = self.get_dataset()
         X_data = self.mask(X_data, x)
         X_test = self.mask(X_test, x)
-        print("\n", (X_data[:,:x.sum().item()].sum(dim=1)-Y_data).abs().sum())
         D = X_data.size(1)
         model = self.make_model(D)
         lossf = self.create_model_lossfunction()
@@ -150,7 +149,6 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
             # WARNING (previous bug): D is reduced
             feature_penalty = self.penalize_featurecount(feature_count, len(x))
             self.store_losses(data_loss, test_loss, feature_count)
-            print("\n", data_loss, test_loss)
             return -(data_loss + test_loss + feature_penalty)
 
     @staticmethod
