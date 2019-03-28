@@ -150,7 +150,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
             feature_count = x.float().sum().item()
             feature_penalty = self.penalize_featurecount(feature_count, D)
             self.store_losses(data_loss, test_loss, feature_count)
-            return -(feature_penalty)
+            return -(data_loss + test_loss + feature_penalty)
 
     @staticmethod
     def discretize_featuremask(x):
