@@ -145,7 +145,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
             Yh_test = model(X_test).squeeze()
             test_loss = lossf(Yh_test, Y_test).item()
             feature_count = x.float().sum().item()
-            feature_penalty = self.penalize_featurecount(feature_count, D)
+            feature_penalty = self.penalize_featurecount(feature_count, x.size())
             self.store_losses(data_loss, test_loss, feature_count)
             print("\n", x, data_loss, test_loss, feature_count, feature_penalty)
             return -(data_loss + test_loss + feature_penalty)
