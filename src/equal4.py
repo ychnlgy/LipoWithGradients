@@ -130,7 +130,6 @@ def main(cycles, features):
     Equal4.D = features
     prog = Equal4(
         gradpenalty_weight = 1e-4,
-        init_X = torch.eye(features, features),
         explore = 8,
         exploit = 8,
         mutation_rate = 0.01,
