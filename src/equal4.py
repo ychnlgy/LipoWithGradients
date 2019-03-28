@@ -132,7 +132,7 @@ def main(cycles, features):
     Equal4.D = features
     prog = Equal4(
         features = features,
-        gradpenalty_weight = 1e-4,
+        gradpenalty_weight = 1e-3,
         explore = 8,
         exploit = 8,
         mutation_rate = 0.01,
@@ -144,7 +144,7 @@ def main(cycles, features):
             reduced_size = 50000,
             montecarlo_c = math.sqrt(2)
         ),
-        lipo = Lipo(k=4, d=features, a=0, b=1),
+        lipo = Lipo(k=2, d=features, a=0, b=1),
         max_retry = 10,
         lr = 1,
         savepath = "equal4.pkl",
@@ -166,7 +166,7 @@ def main(cycles, features):
             best_n = 3
             top = prog.discretize_featuremask(X[:best_n])
             print("Acc/Sens/Spec/F1: %.3f/%.3f/%.3f/%.3f" % score(top, ground_truth))
-            print(" === Top %d feature selections === " % best_n, top.numpy(), sep="\n")
+            print(" --- Top %d feature selections --- " % best_n, top.numpy(), sep="\n")
             print("(Scores: %s)" % Y[:3].numpy(), sep="\n")
             
             print(" >>> Number of retraining operations: %d" % prog.count_network_retrains())
