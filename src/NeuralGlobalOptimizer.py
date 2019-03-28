@@ -156,6 +156,10 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
     def discretize_featuremask(x):
         return x > NeuralGlobalOptimizer.SELECTION
 
+    @staticmethod
+    def center0_mask(mask):
+        return mask.float() - NeuralGlobalOptimizer.SELECTION
+
     def fit_evalnet(self, X, Y):
         '''
 

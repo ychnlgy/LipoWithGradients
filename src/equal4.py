@@ -166,8 +166,9 @@ def main(cycles, features):
             best_n = 10
             top = prog.discretize_featuremask(X[:best_n])
             print("Acc/Sens/Spec/F1: %.3f/%.3f/%.3f/%.3f" % score(top, ground_truth))
-            print(" --- Top %d feature selections --- " % best_n, top.numpy(), sep="\n")
-            print("(Scores: %s)" % Y[:3].numpy(), sep="\n")
+            print(" --- Top %d feature selections --- " % best_n)
+            for select, score in zip(top.numpy(), Y[:best_n].numpy()):
+                print(select, score, sep="\t")
             
             print(" >>> Number of retraining operations: %d" % prog.count_network_retrains())
             
