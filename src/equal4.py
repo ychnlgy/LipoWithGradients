@@ -163,7 +163,7 @@ def main(cycles, features):
             for v, plot in zip(prog.get_losses(), plots):
                 plot.append(v)
 
-            best_n = 3
+            best_n = 10
             top = prog.discretize_featuremask(X[:best_n])
             print("Acc/Sens/Spec/F1: %.3f/%.3f/%.3f/%.3f" % score(top, ground_truth))
             print(" --- Top %d feature selections --- " % best_n, top.numpy(), sep="\n")
