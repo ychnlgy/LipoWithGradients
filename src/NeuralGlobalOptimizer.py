@@ -124,7 +124,9 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         self.network_retrain_count += 1
         x = NeuralGlobalOptimizer.discretize_featuremask(x)
         X_data, Y_data, X_test, Y_test = self.get_dataset()
-        X_data *= x.unsqueeze(0).float()
+        mask = x.unsqueeze(0).float()
+        X_data *= mask
+        X_test *= mask
         D = X_data.size(1)
         model = self.make_model(D)
         lossf = self.create_model_lossfunction()
@@ -137,7 +139,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
             data_loss = lossf(Yh_data, Y_data).item()
             Yh_test = model(X_test).squeeze()
             test_loss = lossf(Yh_test, Y_test).item()
-            feature_count = x.long().sum().item()
+            feature_count = mask.sum().item()
             feature_penalty = self.penalize_featurecount(feature_count, D)
             self.store_losses(data_loss, test_loss, feature_count)
             return -(data_loss + test_loss + feature_penalty)
