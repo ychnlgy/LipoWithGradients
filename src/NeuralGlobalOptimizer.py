@@ -133,7 +133,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         X_data, Y_data, X_test, Y_test = self.get_dataset()
         X_data = self.mask(X_data, x)
         X_test = self.mask(X_test, x)
-        print("\n", (X_data[:,:x.sum().item()].sum().abs()-Y_data.abs()).abs().sum())
+        print("\n", (X_data[:,:x.sum().item()].sum(dim=1)-Y_data).abs().sum())
         D = X_data.size(1)
         model = self.make_model(D)
         lossf = self.create_model_lossfunction()
