@@ -96,6 +96,33 @@ class Equal4(NeuralGlobalOptimizer):
             )
         return self._evalnet
 
+    '''
+    def train_evalnet(self, evalnet, X, Y):
+        print("Evaluation network data size: %d" % X.size(0))
+        dataset = torch.utils.data.TensorDataset(X, Y)
+        dataloader = torch.utils.data.DataLoader(dataset, batch_size=8, shuffle=True)
+        epochs = 200
+        lossf = torch.nn.MSELoss()
+        optim = torch.optim.SGD(evalnet.parameters(), lr=0.01, momentum=0.9)
+        sched = torch.optim.lr_scheduler.MultiStepLR(optim, milestones=[80, 160])
+
+        bar = tqdm.tqdm(range(epochs), ncols=80)
+        avg = MovingAverage(momentum=0.95)
+        
+        for epoch in bar:
+            for Xb, Yb in dataloader:
+                Xb = Xb + torch.normal(Xb, 0.01)
+                Yb = Yb + torch.normal(Yb, 0.01)
+                Yh = evalnet(Xb).squeeze()
+                loss = lossf(Yh, Yb)
+                full_loss = loss + self.grad_penalty(evalnet, X, Xb)
+                optim.zero_grad()
+                full_loss.backward()
+                optim.step()
+            sched.step()
+            avg.update(loss.item())
+            bar.set_description("Fitting evalnet: %.3f" % avg.peek())
+    '''
     def train_evalnet(self, evalnet, X, Y):
         print("Evaluation network data size: %d" % X.size(0))
         dataset = torch.utils.data.TensorDataset(X, Y)
