@@ -130,7 +130,7 @@ class GlobalOptimizer:
 
     def explore_Xb(self, X, Y, evalnet):
         Xb = self.lipo.sample(self.explore)
-        Xb[-1] = evalnet.reverse(Y.max().unsqueeze(0))
+        Xb[0] = evalnet.reverse(Y.max().unsqueeze(0))
         return Xb
 
     def neutral_x(self):

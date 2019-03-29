@@ -145,8 +145,8 @@ class Equal4(NeuralGlobalOptimizer):
         
         for epoch in bar:
             for Xb, Yb in dataloader:
-                Xb = Xb + torch.normal(Xb, 0.01)
-                Yb = Yb + torch.normal(Yb, 0.01)
+                Xb = Xb + torch.normal(Xb, 0.001)
+                Yb = Yb + torch.normal(Yb, 0.001)
                 Yh = evalnet(Xb).squeeze()
                 Xh = evalnet.reverse(Yb)
                 loss = lossf(Yh, Yb)
