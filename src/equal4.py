@@ -62,38 +62,39 @@ class Equal4(NeuralGlobalOptimizer):
             torch.nn.Linear(32, 1)
         )
         '''
-        
-        return torch.nn.Sequential(
-            torch.nn.Linear(D, 32),
+        if not hasattr(self, "_evalnet"):
+            self._evalnet = torch.nn.Sequential(
+                torch.nn.Linear(D, 32),
 
-            modules.ResNet(
+                modules.ResNet(
 
-                modules.ResBlock(
-                    block = torch.nn.Sequential(
-                        modules.PrototypeClassifier(32, 32),
-                        modules.polynomial.Activation(32, n_degree=6),
-                        torch.nn.Linear(32, 32)
-                        #torch.nn.ReLU(),
-                        #torch.nn.Linear(64, 64),
-                        #torch.nn.ReLU(),
-                        #torch.nn.Linear(64, 64),
+                    modules.ResBlock(
+                        block = torch.nn.Sequential(
+                            modules.PrototypeClassifier(32, 32),
+                            modules.polynomial.Activation(32, n_degree=6),
+                            torch.nn.Linear(32, 32)
+                            #torch.nn.ReLU(),
+                            #torch.nn.Linear(64, 64),
+                            #torch.nn.ReLU(),
+                            #torch.nn.Linear(64, 64),
+                        )
+                    ),
+
+                    modules.ResBlock(
+                        block = torch.nn.Sequential(
+                            modules.PrototypeClassifier(32, 32),
+                            modules.polynomial.Activation(32, n_degree=6),
+                            torch.nn.Linear(32, 32)
+                            #torch.nn.ReLU(),
+                            #torch.nn.Linear(64, 64),
+                            #torch.nn.ReLU(),
+                            #torch.nn.Linear(64, 64),
+                        )
                     )
                 ),
-
-                modules.ResBlock(
-                    block = torch.nn.Sequential(
-                        modules.PrototypeClassifier(32, 32),
-                        modules.polynomial.Activation(32, n_degree=6),
-                        torch.nn.Linear(32, 32)
-                        #torch.nn.ReLU(),
-                        #torch.nn.Linear(64, 64),
-                        #torch.nn.ReLU(),
-                        #torch.nn.Linear(64, 64),
-                    )
-                )
-            ),
-            torch.nn.Linear(32, 1)
-        )
+                torch.nn.Linear(32, 1)
+            )
+        return self._evalnet
 
     def train_evalnet(self, evalnet, X, Y):
         print("Evaluation network data size: %d" % X.size(0))
@@ -149,9 +150,9 @@ def main(cycles, features):
         expected_train_loss = 0.01,
         featurepenalty_frac = 10,
         table = GlobalOptimizationTable(
-            capacity = 64,
+            capacity = 200,
             features = features,
-            reduced_size = 40,
+            reduced_size = 160,
             montecarlo_c = math.sqrt(2)
         ),
         lipo = Lipo(k=2, d=features, a=0, b=1),
