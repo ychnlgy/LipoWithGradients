@@ -131,6 +131,7 @@ class GlobalOptimizer:
     def explore_Xb(self, X, Y, evalnet):
         Xb = self.lipo.sample(self.explore)
         Xb[-1] = evalnet.reverse(Y.max().unsqueeze(0) + 0.01)
+        return Xb
 
     def neutral_x(self):
         raise NotImplementedError
