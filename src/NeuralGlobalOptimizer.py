@@ -186,6 +186,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         i = self.check_tooclose(Xs, Xb)
         while len(i) > 0:
             Xs[i] = self.rand_select(Xs[i], X)
+            i = self.check_tooclose(Xs, Xb)
         return self.blend(Xs, Xb)
 
     def blend(self, Xs, Xb):
