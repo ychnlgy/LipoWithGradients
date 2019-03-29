@@ -2,7 +2,7 @@ import torch, math, statistics, os, numpy
 
 from GlobalOptimizer import *
 
-EPS = 1e-8
+EPS = 1e-32
 
 class NeuralGlobalOptimizer(GlobalOptimizer):
 
@@ -187,6 +187,8 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         while len(i) > 0:
             Xs[i] = self.rand_select(Xs[i], X)
             i = self.check_tooclose(Xs, Xb)
+            print(Xs, Xb)
+            input()
         return self.blend(Xs, Xb)
 
     def blend(self, Xs, Xb):
