@@ -195,7 +195,6 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
     def rand_select(self, Xb, X):
         i = torch.arange(X.size(0)).long()
-        # too bad torch doesn't have shuffle
         numpy.random.shuffle(i.numpy()) # NOTE: they share memory
         i = i[:Xb.size(0)]
         return X[i]
