@@ -111,11 +111,6 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
     def mask(self, X, mask):
         return X * mask.float().unsqueeze(0)
-        out = X.transpose(0, 1)[mask]
-        if len(out) == 0:
-            return torch.zeros(X.size(0), 1)
-        else:
-            return out.transpose(0, 1)
 
     def evaluate(self, x):
         '''
@@ -158,6 +153,11 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
     def center0_mask(mask):
         return mask.float() - NeuralGlobalOptimizer.SELECTION
 
+    def neutral_x(self):
+        return torch.FloatTensor(
+            self.features
+        ).normal_(mean=NeuralGlobalOptimizer.SELECTION, std=0.01)
+
     def fit_evalnet(self, X, Y):
         '''
 
@@ -191,7 +191,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         return a*Xs + (1-a)*Xb
 
     def check_tooclose(self, Xs, Xb):
-        return (Xs-Xb).norm(p=2, dim=1) < 1 # 1 - lipshitz
+        return (Xs-Xb).norm(p=2, dim=1) < 1
 
     def rand_select(self, Xb, X):
         i = torch.arange(X.size(0)).long()
@@ -202,7 +202,6 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
     def grad_penalty(self, evalnet, X, Xb):
         self._used_gradpenalty = True
-        #Xg = Xb
         Xg = self.rand_diff_blend(X, Xb)
         X = torch.autograd.Variable(Xg, requires_grad=True)
         Y = evalnet(X).sum()

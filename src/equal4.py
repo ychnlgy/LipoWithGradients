@@ -110,6 +110,8 @@ class Equal4(NeuralGlobalOptimizer):
         
         for epoch in bar:
             for Xb, Yb in dataloader:
+                Xb = Xb + torch.normal(Xb, 0.01)
+                Yb = Yb + torch.normal(Yb, 0.01)
                 Yh = evalnet(Xb).squeeze()
                 loss = lossf(Yh, Yb)
                 full_loss = loss + self.grad_penalty(evalnet, X, Xb)
@@ -143,9 +145,9 @@ def main(cycles, features):
     Equal4.D = features
     prog = Equal4(
         features = features,
-        gradpenalty_weight = 1e-4,
+        gradpenalty_weight = 1e-3,
         explore = 1,
-        exploit = 3,
+        exploit = 4,
         mutation_rate = 0.1,
         expected_train_loss = 0.01,
         featurepenalty_frac = 10,
