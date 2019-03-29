@@ -125,7 +125,8 @@ class GlobalOptimizer:
         _, I = Y.sort(descending=True)
         Xb = torch.cat([
             X[:self.explore].clone(),
-            X[I[:self.exploit]].clone()
+            X[I[:self.exploit]].clone(),
+            self.neutral_x()
         ])
         for i in range(self.max_retry):
 
