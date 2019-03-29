@@ -148,7 +148,7 @@ class Equal4(NeuralGlobalOptimizer):
         I = (Y - Y.max()).abs() < 1e-4
         Y_max = Y[I]
         X_max = X[I]
-        print((X_max > 0.5).numpy())
+        print("\n", (X_max > 0.5).numpy())
         
         for epoch in bar:
             for Xb, Yb in dataloader:
@@ -158,7 +158,8 @@ class Equal4(NeuralGlobalOptimizer):
 
                 Xh_max = evalnet.reverse(self.create_normal(Y_max))
                 loss = lossf(Yh, Yb)
-                full_loss = loss + lossf(Xh_max, self.create_normal(X_max)) + self.grad_penalty(evalnet, X, Xb)
+                rloss = lossf(Xh_max, X_max)
+                full_loss = loss + rloss + self.grad_penalty(evalnet, X, Xb)
                 optim.zero_grad()
                 full_loss.backward()
                 optim.step()
