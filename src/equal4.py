@@ -146,6 +146,7 @@ class Equal4(NeuralGlobalOptimizer):
         I = (Y - Y.max()).abs() < 1e-4
         Y_max = Y[I]
         X_max = X[I]
+        print(X_max, Y_max)
         
         for epoch in bar:
             for Xb, Yb in dataloader:
