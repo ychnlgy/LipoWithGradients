@@ -152,7 +152,7 @@ def main(cycles, features):
     Equal4.D = features
     prog = Equal4(
         features = features,
-        top_n = None,
+        top_n = 30,
         gradpenalty_weight = 1e-3,
         explore = 1,
         exploit = 4,
