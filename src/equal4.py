@@ -149,9 +149,9 @@ def main(cycles, features):
         expected_train_loss = 0.01,
         featurepenalty_frac = 10,
         table = GlobalOptimizationTable(
-            capacity = 40,
+            capacity = 200,
             features = features,
-            reduced_size = 20,
+            reduced_size = 160,
             montecarlo_c = math.sqrt(2)
         ),
         lipo = Lipo(k=2, d=features, a=0, b=1),
