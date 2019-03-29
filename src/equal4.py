@@ -182,7 +182,7 @@ def main(cycles, features):
     prog = Equal4(
         features = features,
         gradpenalty_weight = 1e-3,
-        explore = 1,
+        explore = 2,
         exploit = 4,
         mutation_rate = 1.0/features,
         expected_train_loss = 0.01,
