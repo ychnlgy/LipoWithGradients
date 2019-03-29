@@ -225,8 +225,8 @@ class GlobalOptimizationTable:
                 self.i, self.reduced_size
             )
         )
-        self.i = self.reduced_size
         self.swap_and_sort_metadata(GlobalOptimizationTable.METAINDEX_Y)
+        self.i = self.reduced_size
         self.X[:self.i] = self.get_X()
         self.metadata[:self.i,GlobalOptimizationTable.METAINDEX_I] = torch.arange(self.i).float()
 
