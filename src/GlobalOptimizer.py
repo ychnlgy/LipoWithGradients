@@ -268,7 +268,7 @@ class MonteCarloTree:
     def score(self, X):
         s = X[:,self.s_i]
         n = X[:,self.n_i]
-        return s/n + self.c*torch.sqrt(math.log(self.N)/n)
+        return -torch.log(-s)/n + self.c*torch.sqrt(math.log(self.N)/n)
 
 class Lipo:
 
