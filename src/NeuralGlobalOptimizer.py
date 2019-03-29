@@ -2,8 +2,6 @@ import torch, math, statistics, os, numpy
 
 from GlobalOptimizer import *
 
-EPS = 1e-8
-
 class NeuralGlobalOptimizer(GlobalOptimizer):
 
     SELECTION = 0.5
@@ -55,7 +53,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
     def exploit_Xb(self, X, Y, evalnet):
         X = super().exploit_Xb(X, Y, evalnet)
-
+        print(self.discretize_featuremask(X[-1]).numpy())
         # NOTE: Try to stay away from evolutionary methods
         I = torch.rand_like(X) <= self.mutation_rate
         X[I] = self.lipo.sample(X.size(0))[I]
@@ -197,7 +195,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         return a*Xs + (1-a)*Xb
 
     def check_tooclose(self, Xs, Xb):
-        return (Xs-Xb).norm(p=2, dim=1) < EPS
+        return (Xs-Xb).norm(p=2, dim=1) < 1 # 1 - lipshitz
 
     def rand_select(self, Xb, X):
         i = torch.arange(X.size(0)).long()
