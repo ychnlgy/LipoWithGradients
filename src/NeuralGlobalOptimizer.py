@@ -40,7 +40,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         assert self.prep_visualization
         out = tuple(
             map(
-                statistics.mean,
+                min,
                 (self.data_losses, self.test_losses, self.feature_counts)
             )
         )
