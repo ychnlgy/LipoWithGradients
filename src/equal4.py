@@ -149,18 +149,27 @@ class Equal4(NeuralGlobalOptimizer):
         
         for epoch in bar:
             for Xb, Yb in dataloader:
-                Xb = Xb + torch.normal(Xb, 0.001)
-                Yb = Yb + torch.normal(Yb, 0.001)
+                Xb = self.create_normal(Xb)
+                Yb = self.create_normal(Yb)
                 Yh = evalnet(Xb).squeeze()
-                Xh_max = evalnet.reverse(Y_max)
+                
                 loss = lossf(Yh, Yb)
-                full_loss = loss + lossf(Xh_max, X_max) + self.grad_penalty(evalnet, X, Xb)
+                full_loss = loss + self.grad_penalty(evalnet, X, Xb)
                 optim.zero_grad()
                 full_loss.backward()
                 optim.step()
+
+            Xh_max = evalnet.reverse(self.create_normal(Y_max))
+            optim.zero_grad()
+            lossf(Xh_max, self.create_normal(X_max)).backward()
+            optim.step()
+            
             sched.step()
             avg.update(loss.item())
             bar.set_description("Fitting evalnet: %.3f" % avg.peek())
+
+    def create_normal(self, t):
+        return t + torch.normal(t, 0.001)
 
 def score(pred, true):
     assert pred.size() == true.size()
@@ -186,7 +195,7 @@ def main(cycles, features):
     prog = Equal4(
         features = features,
         gradpenalty_weight = 1e-3,
-        explore = 2,
+        explore = 1,
         exploit = 4,
         mutation_rate = 1.0/features,
         expected_train_loss = 0.01,
