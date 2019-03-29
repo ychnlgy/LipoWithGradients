@@ -14,7 +14,7 @@ class EvalNet(torch.nn.Module):
 
     def reverse(self, Y):
         return self.rev(Y)
-
+    
     def reset_rev_parameters(self):
         self.rev.apply(self.reset_module_parameters)
 
