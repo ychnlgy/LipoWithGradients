@@ -150,7 +150,7 @@ class Equal4(NeuralGlobalOptimizer):
                 Yb = self.create_normal(Yb)
                 Yh = evalnet(Xb).squeeze()
 
-                Xh = evalnet.reverse(Yh)
+                Xh = evalnet.reverse(Yb)
                 loss = lossf(Yh, Yb)
                 rloss = lossf(Xh, Xb)
                 full_loss = loss + rloss + self.grad_penalty(evalnet, X, Xb)
