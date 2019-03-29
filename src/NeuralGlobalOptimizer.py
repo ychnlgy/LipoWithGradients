@@ -161,6 +161,9 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
     def center0_mask(mask):
         return mask.float() - NeuralGlobalOptimizer.SELECTION
 
+    def neutral_x(self):
+        return NeuralGlobalOptimizer.SELECTION
+
     def fit_evalnet(self, X, Y):
         '''
 
