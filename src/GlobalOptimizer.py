@@ -140,6 +140,8 @@ class GlobalOptimizer:
         with torch.no_grad():
             Xb[-2] = evalnet.reverse(Y.max().unsqueeze(0))
 
+        print(Xb[-2].numpy(), Y.max().item())
+
         for i in range(self.max_retry):
 
             # The rows that do not satisfy the LIPO decision rule

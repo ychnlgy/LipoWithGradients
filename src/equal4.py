@@ -143,10 +143,6 @@ class Equal4(NeuralGlobalOptimizer):
 
         bar = tqdm.tqdm(range(epochs), ncols=80)
         avg = MovingAverage(momentum=0.95)
-
-        I = (Y - Y.max()).abs() < (self.featurepenalty_frac * self.expected_train_loss / self.features)
-        Y_max = Y[I]
-        X_max = X[I]
         
         for epoch in bar:
             for Xb, Yb in dataloader:
@@ -154,9 +150,9 @@ class Equal4(NeuralGlobalOptimizer):
                 Yb = self.create_normal(Yb)
                 Yh = evalnet(Xb).squeeze()
 
-                Xh_max = evalnet.reverse(self.create_normal(Y_max))
+                Xh = evalnet.reverse(Yh)
                 loss = lossf(Yh, Yb)
-                rloss = lossf(Xh_max, self.create_normal(X_max))
+                rloss = lossf(Xh, Xb)
                 full_loss = loss + rloss + self.grad_penalty(evalnet, X, Xb)
                 optim.zero_grad()
                 full_loss.backward()
