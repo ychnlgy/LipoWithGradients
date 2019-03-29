@@ -96,6 +96,7 @@ class Equal4(NeuralGlobalOptimizer):
         )
 
     def train_evalnet(self, evalnet, X, Y):
+        print("Evaluation network data size: %d" % X.size(0))
         dataset = torch.utils.data.TensorDataset(X, Y)
         dataloader = torch.utils.data.DataLoader(dataset, batch_size=8, shuffle=True)
         epochs = 200
