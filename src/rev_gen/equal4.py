@@ -102,7 +102,7 @@ class Equal4(NeuralGlobalOptimizer):
         dataset = torch.utils.data.TensorDataset(X, Y)
         dataloader = torch.utils.data.DataLoader(dataset, batch_size=8, shuffle=True)
         epochs = 200
-        lossf = torch.nn.BCEWithLogitsLoss()
+        lossf = torch.nn.MSELoss()
         optim = torch.optim.SGD(evalnet.parameters(), lr=0.01, momentum=0.9)
         sched = torch.optim.lr_scheduler.MultiStepLR(optim, milestones=[80, 160])
 
