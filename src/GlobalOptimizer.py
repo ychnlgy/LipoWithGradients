@@ -16,7 +16,7 @@ class EvalNet(torch.nn.Module):
         return self.rev(Y)
 
     def reset_rev_parameters():
-        self.apply(self.reset_module_parameters)
+        self.rev.apply(self.reset_module_parameters)
 
     def reset_module_parameters(self, m):
         if hasattr(m, "reset_parameters"):
