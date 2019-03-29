@@ -143,7 +143,7 @@ class Equal4(NeuralGlobalOptimizer):
         bar = tqdm.tqdm(range(epochs), ncols=80)
         avg = MovingAverage(momentum=0.95)
 
-        I = (Y - Y.max()).abs()
+        I = (Y - Y.max()).abs() < 1e-4
         Y_max = Y[I]
         X_max = X[I]
         

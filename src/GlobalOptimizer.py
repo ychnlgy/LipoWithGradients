@@ -139,7 +139,7 @@ class GlobalOptimizer:
         Xb[-1] = self.neutral_x()
         with torch.no_grad():
             Xb[-2] = evalnet.reverse(Y.max().unsqueeze(0))
-        print(Xb[-2].numpy(), Y.max().item())
+        print((Xb[-2]>0.5).numpy(), Y.max().item())
 
         for i in range(self.max_retry):
 
@@ -157,7 +157,7 @@ class GlobalOptimizer:
             self.exploit_grads(evalnet, X_exploit)
             optim.step()
             Xb[I] = X_exploit.detach()
-        print(Xb[-2].numpy())
+        print((Xb[-2]>0.5).numpy())
         return Xb
 
     def add_to_dataset(self, Xb, X, Y, evalnet, taskname):
