@@ -15,9 +15,10 @@ class GlobalOptimizer:
 
     '''
 
-    def __init__(self, features, explore, exploit, table, lipo, max_retry, lr, savepath):
+    def __init__(self, features, top_n, explore, exploit, table, lipo, max_retry, lr, savepath):
         self.table = table
         self.lipo = lipo
+        self.top_n = top_n
         self.features = features
         self.explore = explore
         self.exploit = exploit
@@ -125,9 +126,7 @@ class GlobalOptimizer:
         Xb = X[:self.exploit].clone()
         Xb[-1] = self.neutral_x()
         with torch.no_grad():
-            Xb[-2] = X[:10].mean(dim=0)
-
-        print((Xb[-2]>0.5).numpy())
+            Xb[-2] = X[:self.top_n].mean(dim=0)
 
         for i in range(self.max_retry):
 
