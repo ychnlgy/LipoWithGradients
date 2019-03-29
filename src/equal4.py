@@ -64,15 +64,15 @@ class Equal4(NeuralGlobalOptimizer):
         '''
         
         return torch.nn.Sequential(
-            torch.nn.Linear(D, 64),
+            torch.nn.Linear(D, 32),
 
             modules.ResNet(
 
                 modules.ResBlock(
                     block = torch.nn.Sequential(
-                        modules.PrototypeClassifier(64, 64),
-                        modules.polynomial.Activation(64, n_degree=6),
-                        torch.nn.Linear(64, 64)
+                        modules.PrototypeClassifier(32, 32),
+                        modules.polynomial.Activation(32, n_degree=6),
+                        torch.nn.Linear(32, 32)
                         #torch.nn.ReLU(),
                         #torch.nn.Linear(64, 64),
                         #torch.nn.ReLU(),
@@ -82,9 +82,9 @@ class Equal4(NeuralGlobalOptimizer):
 
                 modules.ResBlock(
                     block = torch.nn.Sequential(
-                        modules.PrototypeClassifier(64, 64),
-                        modules.polynomial.Activation(64, n_degree=6),
-                        torch.nn.Linear(64, 64)
+                        modules.PrototypeClassifier(32, 32),
+                        modules.polynomial.Activation(32, n_degree=6),
+                        torch.nn.Linear(32, 32)
                         #torch.nn.ReLU(),
                         #torch.nn.Linear(64, 64),
                         #torch.nn.ReLU(),
@@ -92,7 +92,7 @@ class Equal4(NeuralGlobalOptimizer):
                     )
                 )
             ),
-            torch.nn.Linear(64, 1)
+            torch.nn.Linear(32, 1)
         )
 
     def train_evalnet(self, evalnet, X, Y):
