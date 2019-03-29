@@ -204,8 +204,11 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         Xg = self.rand_diff_blend(X, Xb)
         X = torch.autograd.Variable(Xg, requires_grad=True)
         Y = evalnet(X).sum()
-        T = list(evalnet.net.parameters())
-        grads = torch.autograd.grad([Y], T, create_graph=True)
+        grads = torch.autograd.grad(
+            [Y],
+            evalnet.parameters(),
+            create_graph=True
+        )
         gp = sum(map(NeuralGlobalOptimizer.lipschitz1_loss, grads))
         return gp * self.gradpenalty_weight
 
