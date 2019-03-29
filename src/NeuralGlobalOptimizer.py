@@ -184,11 +184,9 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
     def rand_diff_blend(self, X, Xb):
         Xs = self.rand_select(Xb, X)
         i = self.check_tooclose(Xs, Xb)
-        while len(i) > 0:
+        while i.long().sum() > 0:
             Xs[i] = self.rand_select(Xs[i], X)
             i = self.check_tooclose(Xs, Xb)
-            print(Xs, Xb, i, sep="\n")
-            input()
         return self.blend(Xs, Xb)
 
     def blend(self, Xs, Xb):
