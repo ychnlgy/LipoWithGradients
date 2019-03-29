@@ -15,6 +15,13 @@ class EvalNet(torch.nn.Module):
     def reverse(self, Y):
         return self.rev(Y)
 
+    def reset_rev_parameters():
+        self.apply(self.reset_module_parameters)
+
+    def reset_module_parameters(self, m):
+        if hasattr(m, "reset_parameters"):
+            m.reset_parameters()
+
 class GlobalOptimizer:
 
     '''

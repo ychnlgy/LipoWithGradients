@@ -20,3 +20,6 @@ class Activation(torch.nn.Module):
         B = B.view(-1, self.d, self.n)
         L = (self.weight * B).sum(dim=-1)
         return L.view(X.size())
+
+    def reset_parameters(self):
+        self.weight.data.zero_()
