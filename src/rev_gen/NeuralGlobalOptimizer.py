@@ -51,13 +51,6 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
     # === PRIVATE ===
 
-    def exploit_Xb(self, X, Y, evalnet):
-        X = super().exploit_Xb(X, Y, evalnet)
-        # NOTE: Try to stay away from evolutionary methods
-        I = torch.rand_like(X) <= self.mutation_rate
-        X[I] = self.lipo.sample(X.size(0))[I]
-        return X
-
     def get_dataset(self):
         if self._dataset is None:
             dpath = self.get_dataset_path()
@@ -149,10 +142,6 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
     def discretize_featuremask(x):
         return x > NeuralGlobalOptimizer.SELECTION
 
-    @staticmethod
-    def center0_mask(mask):
-        return mask.float() - NeuralGlobalOptimizer.SELECTION
-
     def neutral_x(self):
         return torch.FloatTensor(
             1, self.features
@@ -170,45 +159,8 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
                 feature selection to predicted score.
 
         '''
-        self._used_gradpenalty = False
         evalnet = self.create_evalnet(X.size(1))
         evalnet.train()
         self.train_evalnet(evalnet, X, Y)
-        assert self._used_gradpenalty
         evalnet.eval()
         return evalnet
-
-    def rand_diff_blend(self, X, Xb):
-        Xs = self.rand_select(Xb, X)
-        i = self.check_tooclose(Xs, Xb)
-        while i.long().sum() > 0:
-            Xs[i] = self.rand_select(Xs[i], X)
-            i = self.check_tooclose(Xs, Xb)
-        return self.blend(Xs, Xb)
-
-    def blend(self, Xs, Xb):
-        a = torch.rand_like(Xs)
-        return a*Xs + (1-a)*Xb
-
-    def check_tooclose(self, Xs, Xb):
-        return (Xs-Xb).norm(p=2, dim=1) < 1
-
-    def rand_select(self, Xb, X):
-        i = torch.arange(X.size(0)).long()
-        numpy.random.shuffle(i.numpy()) # NOTE: they share memory
-        i = i[:Xb.size(0)]
-        return X[i]
-
-    def grad_penalty(self, evalnet, X, Xb):
-        self._used_gradpenalty = True
-        Xg = self.rand_diff_blend(X, Xb)
-        X = torch.autograd.Variable(Xg, requires_grad=True)
-        Y = evalnet(X).sum()
-        T = list(evalnet.parameters())
-        grads = torch.autograd.grad([Y], T, create_graph=True)
-        gp = sum(map(NeuralGlobalOptimizer.lipschitz1_loss, grads))
-        return gp * self.gradpenalty_weight
-
-    @staticmethod
-    def lipschitz1_loss(g):
-        return ((1-g.norm(p=2))**2).sum()

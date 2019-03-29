@@ -122,25 +122,8 @@ class GlobalOptimizer:
         raise NotImplementedError
 
     def exploit_Xb(self, X, Y, evalnet):
-        Xb = X[:self.exploit].clone()
-        Xb[-1] = self.neutral_x()
-        for i in range(self.max_retry):
-
-            # The rows that do not satisfy the LIPO decision rule
-            # need to be improved upon by gradient ascent.
-            I = ~self.lipo.decision_rule(Xb, X, Y)
-            
-            if I.long().sum() == 0:
-                break
-
-            X_exploit = torch.autograd.Variable(Xb[I], requires_grad=True)
-            optim = self.create_optimizer([X_exploit], self.lr)
-
-            optim.zero_grad()
-            self.exploit_grads(evalnet, X_exploit)
-            optim.step()
-            Xb[I] = X_exploit.detach()
-        return Xb
+        Yb = Y[:self.exploit] + 0.01
+        return evalnet(Yb)
 
     def add_to_dataset(self, Xb, X, Y, evalnet, taskname):
         # The rows that now satisfy the LIPO decision rule
@@ -152,10 +135,6 @@ class GlobalOptimizer:
             self.insert_xy(X_targets, Y_targets)
         else:
             print("Nothing to optimize!")
-
-    def exploit_grads(self, evalnet, X):
-        Y = evalnet(X).sum()
-        X.grad = -torch.autograd.grad([Y], [X], create_graph=True, only_inputs=True)[0]
 
     def insert_xy(self, X, Y):
         self.table.insert_xy(X, Y)

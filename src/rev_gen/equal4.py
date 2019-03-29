@@ -64,7 +64,7 @@ class Equal4(NeuralGlobalOptimizer):
         '''
         if not hasattr(self, "_evalnet"):
             self._evalnet = torch.nn.Sequential(
-                torch.nn.Linear(D, 32),
+                torch.nn.Linear(1, 32),
 
                 modules.ResNet(
 
@@ -92,7 +92,7 @@ class Equal4(NeuralGlobalOptimizer):
                         )
                     )
                 ),
-                torch.nn.Linear(32, 1)
+                torch.nn.Linear(32, D)
             )
         return self._evalnet
 
@@ -101,7 +101,7 @@ class Equal4(NeuralGlobalOptimizer):
         dataset = torch.utils.data.TensorDataset(X, Y)
         dataloader = torch.utils.data.DataLoader(dataset, batch_size=8, shuffle=True)
         epochs = 200
-        lossf = torch.nn.MSELoss()
+        lossf = torch.nn.BCEWithLogitsLoss()
         optim = torch.optim.SGD(evalnet.parameters(), lr=0.01, momentum=0.9)
         sched = torch.optim.lr_scheduler.MultiStepLR(optim, milestones=[80, 160])
 
@@ -112,8 +112,8 @@ class Equal4(NeuralGlobalOptimizer):
             for Xb, Yb in dataloader:
                 Xb = Xb + torch.normal(Xb, 0.01)
                 Yb = Yb + torch.normal(Yb, 0.01)
-                Yh = evalnet(Xb).squeeze()
-                loss = lossf(Yh, Yb)
+                Xh = evalnet(Yb).squeeze()
+                loss = lossf(Xh, Xb)
                 full_loss = loss + self.grad_penalty(evalnet, X, Xb)
                 optim.zero_grad()
                 full_loss.backward()
