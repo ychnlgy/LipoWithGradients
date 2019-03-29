@@ -64,6 +64,7 @@ class Equal4(NeuralGlobalOptimizer):
         '''
         if not hasattr(self, "_evalnet"):
             self._evalnet = torch.nn.Sequential(
+                modules.Reshape(1),
                 torch.nn.Linear(1, 32),
 
                 modules.ResNet(
@@ -112,7 +113,7 @@ class Equal4(NeuralGlobalOptimizer):
             for Xb, Yb in dataloader:
                 Xb = Xb + torch.normal(Xb, 0.01)
                 Yb = Yb + torch.normal(Yb, 0.01)
-                Xh = evalnet(Yb).squeeze()
+                Xh = evalnet(Yb)
                 loss = lossf(Xh, Xb)
                 full_loss = loss + self.grad_penalty(evalnet, X, Xb)
                 optim.zero_grad()
