@@ -190,7 +190,6 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         return self.blend(Xs, Xb)
 
     def blend(self, Xs, Xb):
-        assert Xs.size() == Xb.size()
         a = torch.rand_like(Xs)
         return a*Xs + (1-a)*Xb
 
