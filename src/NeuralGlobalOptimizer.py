@@ -179,7 +179,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         return evalnet
 
     def rand_diff_blend(self, X, Xb):
-        Xs = self.rand_select(Xb, X)
+        Xs = X[:1].repeat(Xb.size(0), 1)#self.rand_select(Xb, X)
         i = self.check_tooclose(Xs, Xb)
         while i.long().sum() > 0:
             Xs[i] = self.rand_select(Xs[i], X)
