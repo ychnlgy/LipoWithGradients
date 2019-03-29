@@ -205,8 +205,9 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
     def grad_penalty(self, evalnet, X, Xb):
         self._used_gradpenalty = True
-        X = self.rand_diff_blend(X, Xb)
-        X = torch.autograd.Variable(X, requires_grad=True)
+        Xg = Xb
+        #Xg = self.rand_diff_blend(X, Xb)
+        X = torch.autograd.Variable(Xg, requires_grad=True)
         Y = evalnet(X).sum()
         T = list(evalnet.parameters())
         grads = torch.autograd.grad([Y], T, create_graph=True)
