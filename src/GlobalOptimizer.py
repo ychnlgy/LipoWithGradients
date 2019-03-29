@@ -118,12 +118,9 @@ class GlobalOptimizer:
     def explore_Xb(self, X, Y, evalnet):
         return self.lipo.sample(self.explore)
 
-    def neutral_x(self):
-        return 0
-
     def exploit_Xb(self, X, Y, evalnet):
         Xb = X[:self.exploit].clone()
-        Xb[-1] = self.neutral_x()
+        Xb[-1] = X[Y.argmin()].clone()
         for i in range(self.max_retry):
 
             # The rows that do not satisfy the LIPO decision rule
