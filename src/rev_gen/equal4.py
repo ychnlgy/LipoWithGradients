@@ -115,7 +115,7 @@ class Equal4(NeuralGlobalOptimizer):
                 Yb = Yb + torch.normal(Yb, 0.01)
                 Xh = evalnet(Yb)
                 loss = lossf(Xh, Xb)
-                full_loss = loss + self.grad_penalty(evalnet, X, Xb)
+                full_loss = loss
                 optim.zero_grad()
                 full_loss.backward()
                 optim.step()
