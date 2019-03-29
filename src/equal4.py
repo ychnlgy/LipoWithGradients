@@ -145,7 +145,7 @@ class Equal4(NeuralGlobalOptimizer):
         bar = tqdm.tqdm(range(epochs), ncols=80)
         avg = MovingAverage(momentum=0.95)
 
-        I = (Y - Y.max()).abs() < 1e-4
+        I = (Y - Y.max()).abs() < 1e-2
         Y_max = Y[I]
         X_max = X[I]
         print("\n", (X_max > 0.5).numpy())
@@ -158,7 +158,7 @@ class Equal4(NeuralGlobalOptimizer):
 
                 Xh_max = evalnet.reverse(self.create_normal(Y_max))
                 loss = lossf(Yh, Yb)
-                rloss = lossf(Xh_max, X_max)
+                rloss = lossf(Xh_max, self.create_normal(X_max))
                 full_loss = loss + rloss + self.grad_penalty(evalnet, X, Xb)
                 optim.zero_grad()
                 full_loss.backward()
@@ -169,7 +169,7 @@ class Equal4(NeuralGlobalOptimizer):
             bar.set_description("Fitting evalnet: %.3f" % avg.peek())
 
     def create_normal(self, t):
-        return t + torch.normal(t, 0.001)
+        return torch.normal(t, 0.001)
 
 def score(pred, true):
     assert pred.size() == true.size()
