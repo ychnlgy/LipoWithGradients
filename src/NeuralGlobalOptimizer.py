@@ -2,7 +2,7 @@ import torch, math, statistics, os, numpy
 
 from GlobalOptimizer import *
 
-EPS = 1e-32
+EPS = 1e-8
 
 class NeuralGlobalOptimizer(GlobalOptimizer):
 
