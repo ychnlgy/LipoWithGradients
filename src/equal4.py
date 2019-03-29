@@ -7,19 +7,6 @@ import modules
 
 from main import main
 
-class EvalNet(torch.nn.Module):
-
-    def __init__(self, net, rev):
-        super().__init__()
-        self.net = net
-        self.rev = rev
-
-    def forward(self, X):
-        return self.net(X)
-
-    def reverse(self, Y):
-        return self.rev(Y)
-
 class Equal4(NeuralGlobalOptimizer):
 
     D = 32
@@ -161,7 +148,7 @@ class Equal4(NeuralGlobalOptimizer):
                 Xb = Xb + torch.normal(Xb, 0.01)
                 Yb = Yb + torch.normal(Yb, 0.01)
                 Yh = evalnet(Xb).squeeze()
-                Xh = evalnet(Yb)
+                Xh = evalnet.reverse(Yb)
                 loss = lossf(Yh, Yb) + lossf(Xh, Xb)
                 full_loss = loss + self.grad_penalty(evalnet, X, Xb)
                 optim.zero_grad()
