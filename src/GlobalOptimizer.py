@@ -14,13 +14,6 @@ class EvalNet(torch.nn.Module):
 
     def reverse(self, Y):
         return self.rev(Y)
-    
-    def reset_rev_parameters(self):
-        self.rev.apply(self.reset_module_parameters)
-
-    def reset_module_parameters(self, m):
-        if hasattr(m, "reset_parameters"):
-            m.reset_parameters()
 
 class GlobalOptimizer:
 
@@ -146,7 +139,6 @@ class GlobalOptimizer:
         Xb[-1] = self.neutral_x()
         with torch.no_grad():
             Xb[-2] = evalnet.reverse(Y.max().unsqueeze(0))
-        print((Xb[-2]>0.5).numpy(), Y.max().item())
 
         for i in range(self.max_retry):
 
@@ -164,7 +156,6 @@ class GlobalOptimizer:
             self.exploit_grads(evalnet, X_exploit)
             optim.step()
             Xb[I] = X_exploit.detach()
-        print((Xb[-2]>0.5).numpy())
         return Xb
 
     def add_to_dataset(self, Xb, X, Y, evalnet, taskname):

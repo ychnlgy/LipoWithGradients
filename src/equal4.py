@@ -144,10 +144,9 @@ class Equal4(NeuralGlobalOptimizer):
         bar = tqdm.tqdm(range(epochs), ncols=80)
         avg = MovingAverage(momentum=0.95)
 
-        I = (Y - Y.max()).abs() < 3e-2
+        I = (Y - Y.max()).abs() < (self.featurepenalty_frac * self.expected_train_loss / self.features)
         Y_max = Y[I]
         X_max = X[I]
-        print("\n", (X_max > 0.5).numpy())
         
         for epoch in bar:
             for Xb, Yb in dataloader:
