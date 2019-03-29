@@ -129,7 +129,8 @@ class GlobalOptimizer:
         return Y
 
     def explore_Xb(self, X, Y, evalnet):
-        return self.lipo.sample(self.explore)
+        Xb = self.lipo.sample(self.explore)
+        Xb[-1] = evalnet.reverse(Y.max().unsqueeze(0) + 0.01)
 
     def neutral_x(self):
         raise NotImplementedError
@@ -137,7 +138,7 @@ class GlobalOptimizer:
     def exploit_Xb(self, X, Y, evalnet):
         Xb = X[:self.exploit].clone()
         Xb[-1] = self.neutral_x()
-        Xb[-2] = evalnet.reverse(Y.max().unsqueeze(0) + 0.01)
+
         for i in range(self.max_retry):
 
             # The rows that do not satisfy the LIPO decision rule
