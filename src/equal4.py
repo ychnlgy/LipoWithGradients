@@ -7,6 +7,19 @@ import modules
 
 from main import main
 
+class EvalNet(torch.nn.Module):
+
+    def __init__(self, net, rev):
+        super().__init__()
+        self.net = net
+        self.rev = rev
+
+    def forward(self, X):
+        return self.net(X)
+
+    def reverse(self, Y):
+        return self.rev(Y)
+
 class Equal4(NeuralGlobalOptimizer):
 
     D = 32
@@ -63,37 +76,72 @@ class Equal4(NeuralGlobalOptimizer):
         )
         '''
         if not hasattr(self, "_evalnet"):
-            self._evalnet = torch.nn.Sequential(
-                torch.nn.Linear(D, 32),
+            self._evalnet = EvalNet(
+                torch.nn.Sequential(
+                    torch.nn.Linear(D, 32),
 
-                modules.ResNet(
+                    modules.ResNet(
 
-                    modules.ResBlock(
-                        block = torch.nn.Sequential(
-                            modules.PrototypeClassifier(32, 32),
-                            modules.polynomial.Activation(32, n_degree=6),
-                            torch.nn.Linear(32, 32)
-                            #torch.nn.ReLU(),
-                            #torch.nn.Linear(64, 64),
-                            #torch.nn.ReLU(),
-                            #torch.nn.Linear(64, 64),
+                        modules.ResBlock(
+                            block = torch.nn.Sequential(
+                                modules.PrototypeClassifier(32, 32),
+                                modules.polynomial.Activation(32, n_degree=6),
+                                torch.nn.Linear(32, 32)
+                                #torch.nn.ReLU(),
+                                #torch.nn.Linear(64, 64),
+                                #torch.nn.ReLU(),
+                                #torch.nn.Linear(64, 64),
+                            )
+                        ),
+
+                        modules.ResBlock(
+                            block = torch.nn.Sequential(
+                                modules.PrototypeClassifier(32, 32),
+                                modules.polynomial.Activation(32, n_degree=6),
+                                torch.nn.Linear(32, 32)
+                                #torch.nn.ReLU(),
+                                #torch.nn.Linear(64, 64),
+                                #torch.nn.ReLU(),
+                                #torch.nn.Linear(64, 64),
+                            )
                         )
                     ),
-
-                    modules.ResBlock(
-                        block = torch.nn.Sequential(
-                            modules.PrototypeClassifier(32, 32),
-                            modules.polynomial.Activation(32, n_degree=6),
-                            torch.nn.Linear(32, 32)
-                            #torch.nn.ReLU(),
-                            #torch.nn.Linear(64, 64),
-                            #torch.nn.ReLU(),
-                            #torch.nn.Linear(64, 64),
-                        )
-                    )
+                    torch.nn.Linear(32, 1)
                 ),
-                torch.nn.Linear(32, 1)
+                torch.nn.Sequential(
+                    modules.Reshape(1),
+                    torch.nn.Linear(1, 32),
+
+                    modules.ResNet(
+
+                        modules.ResBlock(
+                            block = torch.nn.Sequential(
+                                modules.PrototypeClassifier(32, 32),
+                                modules.polynomial.Activation(32, n_degree=6),
+                                torch.nn.Linear(32, 32)
+                                #torch.nn.ReLU(),
+                                #torch.nn.Linear(64, 64),
+                                #torch.nn.ReLU(),
+                                #torch.nn.Linear(64, 64),
+                            )
+                        ),
+
+                        modules.ResBlock(
+                            block = torch.nn.Sequential(
+                                modules.PrototypeClassifier(32, 32),
+                                modules.polynomial.Activation(32, n_degree=6),
+                                torch.nn.Linear(32, 32)
+                                #torch.nn.ReLU(),
+                                #torch.nn.Linear(64, 64),
+                                #torch.nn.ReLU(),
+                                #torch.nn.Linear(64, 64),
+                            )
+                        )
+                    ),
+                    torch.nn.Linear(32, D)
+                )
             )
+                
         return self._evalnet
 
     def train_evalnet(self, evalnet, X, Y):
@@ -113,7 +161,8 @@ class Equal4(NeuralGlobalOptimizer):
                 Xb = Xb + torch.normal(Xb, 0.01)
                 Yb = Yb + torch.normal(Yb, 0.01)
                 Yh = evalnet(Xb).squeeze()
-                loss = lossf(Yh, Yb)
+                Xh = evalnet(Yb)
+                loss = lossf(Yh, Yb) + lossf(Xh, Xb)
                 full_loss = loss + self.grad_penalty(evalnet, X, Xb)
                 optim.zero_grad()
                 full_loss.backward()

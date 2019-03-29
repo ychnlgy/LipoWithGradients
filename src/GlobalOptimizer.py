@@ -2,6 +2,19 @@ import math, torch, numpy, tqdm, sys
 
 from MovingAverage import MovingAverage
 
+class EvalNet(torch.nn.Module):
+
+    def __init__(self, net, rev):
+        super().__init__()
+        self.net = net
+        self.rev = rev
+
+    def forward(self, X):
+        return self.net(X)
+
+    def reverse(self, Y):
+        return self.rev(Y)
+
 class GlobalOptimizer:
 
     '''
@@ -124,6 +137,7 @@ class GlobalOptimizer:
     def exploit_Xb(self, X, Y, evalnet):
         Xb = X[:self.exploit].clone()
         Xb[-1] = self.neutral_x()
+        Xb[-2] = evalnet.reverse(Y.max().unsqueeze(0) + 0.01)
         for i in range(self.max_retry):
 
             # The rows that do not satisfy the LIPO decision rule
