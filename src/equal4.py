@@ -97,7 +97,7 @@ class Equal4(NeuralGlobalOptimizer):
 
     def train_evalnet(self, evalnet, X, Y):
         dataset = torch.utils.data.TensorDataset(X, Y)
-        dataloader = torch.utils.data.DataLoader(dataset, batch_size=32, shuffle=True)
+        dataloader = torch.utils.data.DataLoader(dataset, batch_size=8, shuffle=True)
         epochs = 200
         lossf = torch.nn.MSELoss()
         optim = torch.optim.SGD(evalnet.parameters(), lr=0.01, momentum=0.9)
@@ -143,14 +143,14 @@ def main(cycles, features):
         features = features,
         gradpenalty_weight = 1e-3,
         explore = 8,
-        exploit = 8,
+        exploit = 2,
         mutation_rate = 0.1,
         expected_train_loss = 0.01,
         featurepenalty_frac = 10,
         table = GlobalOptimizationTable(
-            capacity = 60000,
+            capacity = 150,
             features = features,
-            reduced_size = 50000,
+            reduced_size = 100,
             montecarlo_c = math.sqrt(2)
         ),
         lipo = Lipo(k=2, d=features, a=0, b=1),
