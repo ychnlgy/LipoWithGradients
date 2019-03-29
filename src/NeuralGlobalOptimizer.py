@@ -1,6 +1,8 @@
-import torch, math, statistics, os
+import torch, math, statistics, os, numpy
 
 from GlobalOptimizer import *
+
+EPS = 1e-8
 
 class NeuralGlobalOptimizer(GlobalOptimizer):
 
@@ -179,16 +181,37 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         evalnet.eval()
         return evalnet
 
-    def grad_penalty(self, evalnet, X):
+    def rand_diff_blend(self, X, Xb):
+        Xs = self.rand_select(Xb, X)
+        i = self.check_tooclose(Xs, Xb)
+        while len(i) > 0:
+            Xs[i] = self.rand_select(Xs[i], X)
+        return self.blend(Xs, Xb)
+
+    def blend(self, Xs, Xb):
+        a = torch.rand_like(Xs)
+        return a*Xs + (1-a)*Xb
+
+    def check_tooclose(self, Xs, Xb):
+        return (Xs-Xb).norm(p=2, dim=1) < EPS
+
+    def rand_select(self, Xb, X):
+        i = torch.arange(X.size(0))
+        # too bad torch doesn't have shuffle
+        numpy.random.shuffle(i.numpy()) # NOTE: they share memory
+        i = i[:Xb.size(0)]
+        return X[i]
+
+    def grad_penalty(self, evalnet, X, Xb):
         self._used_gradpenalty = True
+        X = self.rand_diff_blend(X, Xb)
         X = torch.autograd.Variable(X, requires_grad=True)
         Y = evalnet(X).sum()
-        T = list(evalnet.parameters()) + [X]
+        T = list(evalnet.parameters())
         grads = torch.autograd.grad([Y], T, create_graph=True)
         gp = sum(map(NeuralGlobalOptimizer.lipschitz1_loss, grads))
         return gp * self.gradpenalty_weight
 
     @staticmethod
     def lipschitz1_loss(g):
-        #return ((1-g.norm(p=2))**2).sum()
-        return torch.nn.functional.relu(g.abs()-1).sum()
+        return ((1-g.norm(p=2))**2).sum()
