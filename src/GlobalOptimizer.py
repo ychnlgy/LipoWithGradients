@@ -124,9 +124,9 @@ class GlobalOptimizer:
 
     def exploit_Xb(self, X, Y, evalnet):
         Xb = X[:self.exploit].clone()
-        #Xb[-1] = self.neutral_x()
-        #with torch.no_grad():
-        #    Xb[-2] = X[:self.top_n].mean(dim=0)
+        Xb[-1] = self.neutral_x()
+        with torch.no_grad():
+            Xb[-2] = X[:self.top_n].mean(dim=0)
 
         for i in range(self.max_retry):
 
