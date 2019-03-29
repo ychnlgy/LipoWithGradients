@@ -196,7 +196,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         return (Xs-Xb).norm(p=2, dim=1) < EPS
 
     def rand_select(self, Xb, X):
-        i = torch.arange(X.size(0))
+        i = torch.arange(X.size(0)).long()
         # too bad torch doesn't have shuffle
         numpy.random.shuffle(i.numpy()) # NOTE: they share memory
         i = i[:Xb.size(0)]
