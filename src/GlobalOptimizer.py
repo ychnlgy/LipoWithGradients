@@ -122,7 +122,7 @@ class GlobalOptimizer:
         raise NotImplementedError
 
     def exploit_Xb(self, X, Y, evalnet):
-        _, I = Y.sort()
+        _, I = Y.sort(descending=True)
         Xb = torch.cat([
             X[:self.explore].clone(),
             X[I[:self.exploit]].clone(),
