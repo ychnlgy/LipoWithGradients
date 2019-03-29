@@ -135,7 +135,7 @@ class GlobalOptimizer:
         raise NotImplementedError
 
     def exploit_Xb(self, X, Y, evalnet):
-        Xb = X[:self.exploit].clone()
+        Xb = X[:self.exploit].clone().detach()
         Xb[-1] = self.neutral_x()
         Xb[-2] = evalnet.reverse(Y.max().unsqueeze(0))
         print(Xb[-2].numpy(), Y.max().item())
