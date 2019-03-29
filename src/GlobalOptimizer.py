@@ -122,12 +122,8 @@ class GlobalOptimizer:
         raise NotImplementedError
 
     def exploit_Xb(self, X, Y, evalnet):
-        _, I = Y.sort(descending=True)
-        Xb = torch.cat([
-            X[:self.explore].clone(),
-            X[I[:self.exploit]].clone(),
-            self.neutral_x()
-        ])
+        Xb = X[:self.exploit].clone()
+        Xb[-1] = self.neutral_x()
         for i in range(self.max_retry):
 
             # The rows that do not satisfy the LIPO decision rule
