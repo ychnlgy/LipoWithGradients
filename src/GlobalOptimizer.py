@@ -20,6 +20,7 @@ class EvalNet(torch.nn.Module):
 
     def reset_module_parameters(self, m):
         if hasattr(m, "reset_parameters"):
+            print(m)
             m.reset_parameters()
 
 class GlobalOptimizer:
