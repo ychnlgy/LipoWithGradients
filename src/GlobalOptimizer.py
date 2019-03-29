@@ -2,19 +2,6 @@ import math, torch, numpy, tqdm, sys
 
 from MovingAverage import MovingAverage
 
-class EvalNet(torch.nn.Module):
-
-    def __init__(self, net, rev):
-        super().__init__()
-        self.net = net
-        self.rev = rev
-
-    def forward(self, X):
-        return self.net(X)
-
-    def reverse(self, Y):
-        return self.rev(Y)
-
 class GlobalOptimizer:
 
     '''
@@ -138,9 +125,9 @@ class GlobalOptimizer:
         Xb = X[:self.exploit].clone()
         Xb[-1] = self.neutral_x()
         with torch.no_grad():
-            Xb[-2] = evalnet.reverse(Y.max().unsqueeze(0))
+            Xb[-2] = X[:10].mean(dim=0)
 
-        print((Xb[-2]>0.5).numpy(), Y.max().item())
+        print((Xb[-2]>0.5).numpy())
 
         for i in range(self.max_retry):
 

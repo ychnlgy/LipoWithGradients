@@ -63,70 +63,36 @@ class Equal4(NeuralGlobalOptimizer):
         )
         '''
         if not hasattr(self, "_evalnet"):
-            self._evalnet = EvalNet(
-                torch.nn.Sequential(
-                    torch.nn.Linear(D, 32),
+            self._evalnet = torch.nn.Sequential(
+                torch.nn.Linear(D, 32),
 
-                    modules.ResNet(
+                modules.ResNet(
 
-                        modules.ResBlock(
-                            block = torch.nn.Sequential(
-                                modules.PrototypeClassifier(32, 32),
-                                modules.polynomial.Activation(32, n_degree=6),
-                                torch.nn.Linear(32, 32)
-                                #torch.nn.ReLU(),
-                                #torch.nn.Linear(64, 64),
-                                #torch.nn.ReLU(),
-                                #torch.nn.Linear(64, 64),
-                            )
-                        ),
-
-                        modules.ResBlock(
-                            block = torch.nn.Sequential(
-                                modules.PrototypeClassifier(32, 32),
-                                modules.polynomial.Activation(32, n_degree=6),
-                                torch.nn.Linear(32, 32)
-                                #torch.nn.ReLU(),
-                                #torch.nn.Linear(64, 64),
-                                #torch.nn.ReLU(),
-                                #torch.nn.Linear(64, 64),
-                            )
+                    modules.ResBlock(
+                        block = torch.nn.Sequential(
+                            modules.PrototypeClassifier(32, 32),
+                            modules.polynomial.Activation(32, n_degree=6),
+                            torch.nn.Linear(32, 32)
+                            #torch.nn.ReLU(),
+                            #torch.nn.Linear(64, 64),
+                            #torch.nn.ReLU(),
+                            #torch.nn.Linear(64, 64),
                         )
                     ),
-                    torch.nn.Linear(32, 1)
+
+                    modules.ResBlock(
+                        block = torch.nn.Sequential(
+                            modules.PrototypeClassifier(32, 32),
+                            modules.polynomial.Activation(32, n_degree=6),
+                            torch.nn.Linear(32, 32)
+                            #torch.nn.ReLU(),
+                            #torch.nn.Linear(64, 64),
+                            #torch.nn.ReLU(),
+                            #torch.nn.Linear(64, 64),
+                        )
+                    )
                 ),
-                torch.nn.Sequential(
-                    modules.Reshape(1),
-                    torch.nn.Linear(1, 32),
-
-                    modules.ResNet(
-
-                        modules.ResBlock(
-                            block = torch.nn.Sequential(
-                                modules.PrototypeClassifier(32, 32),
-                                modules.polynomial.Activation(32, n_degree=6),
-                                torch.nn.Linear(32, 32)
-                                #torch.nn.ReLU(),
-                                #torch.nn.Linear(64, 64),
-                                #torch.nn.ReLU(),
-                                #torch.nn.Linear(64, 64),
-                            )
-                        ),
-
-                        modules.ResBlock(
-                            block = torch.nn.Sequential(
-                                modules.PrototypeClassifier(32, 32),
-                                modules.polynomial.Activation(32, n_degree=6),
-                                torch.nn.Linear(32, 32)
-                                #torch.nn.ReLU(),
-                                #torch.nn.Linear(64, 64),
-                                #torch.nn.ReLU(),
-                                #torch.nn.Linear(64, 64),
-                            )
-                        )
-                    ),
-                    torch.nn.Linear(32, D)
-                )
+                torch.nn.Linear(32, 1)
             )
                 
         return self._evalnet
@@ -150,10 +116,8 @@ class Equal4(NeuralGlobalOptimizer):
                 Yb = self.create_normal(Yb)
                 Yh = evalnet(Xb).squeeze()
 
-                Xh = evalnet.reverse(Yb)
                 loss = lossf(Yh, Yb)
-                rloss = lossf(Xh, Xb)
-                full_loss = loss + rloss + self.grad_penalty(evalnet, X, Xb)
+                full_loss = loss + self.grad_penalty(evalnet, X, Xb)
                 optim.zero_grad()
                 full_loss.backward()
                 optim.step()
