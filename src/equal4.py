@@ -122,8 +122,8 @@ def score(pred, true):
     assert pred.size() == true.size()
     acc = (pred == true).long().sum().item()/torch.numel(pred)
     p = true == 1
-    sens = ((pred == 1) & p).float().item()/p.long().sum().item()
-    spec = ((pred == 0) &~p).float().item()/(~p).long().sum().item()
+    sens = ((pred == 1) & p).float().sum().item()/p.long().sum().item()
+    spec = ((pred == 0) &~p).float().sum().item()/(~p).long().sum().item()
     f1 = (sens*spec)/(sens+spec)*2
     return acc, sens, spec, f1
 
