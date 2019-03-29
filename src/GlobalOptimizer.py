@@ -240,7 +240,8 @@ class GlobalOptimizationTable:
         self.swap(i)
 
     def swap(self, i):
-        self.metadata[:,0], self.metadata[:,i] = self.metadata[:,i], self.metadata[:,0]
+        j = GlobalOptimizationTable.METAINDEX_SCORE
+        self.metadata[:,j], self.metadata[:,i] = self.metadata[:,i], self.metadata[:,j]
 
     def get_metadata(self, i):
         return self.metadata[:self.i,i]
