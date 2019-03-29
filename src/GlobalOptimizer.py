@@ -138,7 +138,7 @@ class GlobalOptimizer:
         Xb = X[:self.exploit].clone()
         Xb[-1] = self.neutral_x()
         Xb[-2] = evalnet.reverse(Y.max().unsqueeze(0))
-        print(Xb[-2] > 0.5)
+        print(Xb[-2] > 0.5, Y.max())
 
         for i in range(self.max_retry):
 
