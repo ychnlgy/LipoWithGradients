@@ -155,7 +155,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
     def neutral_x(self):
         return torch.FloatTensor(
-            self.features
+            1, self.features
         ).normal_(mean=NeuralGlobalOptimizer.SELECTION, std=0.01)
 
     def fit_evalnet(self, X, Y):

@@ -146,9 +146,9 @@ def main(cycles, features):
     prog = Equal4(
         features = features,
         gradpenalty_weight = 1e-3,
-        explore = 1,
+        explore = 4,
         exploit = 4,
-        mutation_rate = 0.1,
+        mutation_rate = 1.0/features,
         expected_train_loss = 0.01,
         featurepenalty_frac = 10,
         table = GlobalOptimizationTable(
