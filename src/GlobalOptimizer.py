@@ -143,7 +143,8 @@ class GlobalOptimizer:
             optim.zero_grad()
             self.exploit_grads(evalnet, X_exploit)
             optim.step()
-            Xb[I] = X_exploit.detach()
+
+            Xb[I] = self.lipo.clip(X_exploit.detach())
         return Xb
 
     def add_to_dataset(self, Xb, X, Y, evalnet, taskname):
@@ -281,6 +282,11 @@ class Lipo:
         self.d = d
         self.a = a
         self.b = b
+
+    def clip(self, X):
+        X[X < self.a] = self.a
+        X[X > self.b] = self.b
+        return X
 
     def sample(self, n):
         return torch.rand(n, self.d)*(self.b - self.a)+self.a
