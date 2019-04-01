@@ -144,7 +144,7 @@ class GlobalOptimizer:
             self.exploit_grads(evalnet, X_exploit)
             optim.step()
 
-            Xb[I] = self.lipo.clip(X_exploit.detach())
+            Xb[I] = X_exploit.detach()#self.lipo.clip(X_exploit.detach())
         return Xb
 
     def add_to_dataset(self, Xb, X, Y, evalnet, taskname):
