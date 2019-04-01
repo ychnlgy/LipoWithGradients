@@ -142,13 +142,14 @@ def score(pred, true):
     return acc, sens, spec, f1
 
 @main
-def main(cycles, features):
+def main(cycles, features, true_features):
 
     import matplotlib
     matplotlib.use("agg")
     from matplotlib import pyplot
     fig, axes = pyplot.subplots(nrows=3, sharex=True, figsize=(10, 8))
-    
+
+    Equal4.TRUE_D = int(true_features)
     cycles = int(cycles)
     features = int(features)
     
