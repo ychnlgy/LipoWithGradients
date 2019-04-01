@@ -21,7 +21,6 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         self.mutation_rate = mutation_rate
         self.expected_train_loss = expected_train_loss
         self.featurepenalty_frac = featurepenalty_frac
-        self.neg_sampler = Lipo(self.lipo.k, self.lipo.d, self.lipo.a, NeuralGlobalOptimizer.SELECTION)
 
         self.prep_visualization = prep_visualization
         if prep_visualization:
@@ -33,6 +32,8 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         self._dataset = None
 
         super().__init__(*args, **kwargs)
+
+        self.neg_sampler = Lipo(self.lipo.k, self.lipo.d, self.lipo.a, NeuralGlobalOptimizer.SELECTION)
 
     def count_network_retrains(self):
         return self.network_retrain_count
@@ -56,7 +57,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         X = super().exploit_Xb(X, Y, evalnet)
         # NOTE: Try to stay away from evolutionary methods
         I = (torch.rand_like(X) <= self.mutation_rate) & NeuralGlobalOptimizer.discretize_featuremask(X)
-        X[I] = self.lipo.sample(X.size(0))[I]
+        X[I] = self.neg_sampler.sample(X.size(0))[I]
         return X
 
     def get_dataset(self):
