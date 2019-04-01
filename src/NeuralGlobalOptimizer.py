@@ -61,11 +61,12 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
     def get_dataset(self):
         if self._dataset is None:
             dpath = self.get_dataset_path()
-            if not os.path.isfile(dpath):
-                self._dataset = self.create_dataset()
-                torch.save(self._dataset, dpath)
-            else:
-                self._dataset = torch.load(dpath)
+            self._dataset = self.create_dataset()
+            #if not os.path.isfile(dpath):
+                #self._dataset = self.create_dataset()
+                #torch.save(self._dataset, dpath)
+            #else:
+            #    self._dataset = torch.load(dpath)
         return [d.clone() for d in self._dataset]
 
     def get_dataset_path(self):
