@@ -142,7 +142,7 @@ def score(pred, true):
     return acc, sens, spec, f1
 
 @main
-def main(cycles, features, true_features):
+def main(cycles, features, true_features, best_n=10):
 
     import matplotlib
     matplotlib.use("agg")
@@ -152,6 +152,7 @@ def main(cycles, features, true_features):
     Equal4.TRUE_D = int(true_features)
     cycles = int(cycles)
     features = int(features)
+    best_n = int(best_n)
     
     Equal4.D = features
     prog = Equal4(
@@ -188,7 +189,6 @@ def main(cycles, features, true_features):
             for v, plot in zip(prog.get_losses(), plots):
                 plot.append(v)
 
-            best_n = 10
             top = prog.discretize_featuremask(X[:best_n])
             print("Acc/Sens/Spec/F1: %.3f/%.3f/%.3f/%.3f" % score(top[0], ground_truth))
             print(" --- Top %d feature selections --- " % best_n)
