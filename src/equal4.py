@@ -15,7 +15,9 @@ class Equal4(NeuralGlobalOptimizer):
     def create_dataset(self):
         N = 500
         X = torch.rand(N*2, Equal4.D)
-        Y = X[:,:Equal4.TRUE_D].sum(dim=1)
+        Y = torch.zeros(N*2)
+        for i in range(Equal.D):
+            Y += X[:,i]*2**i
         return X[:N], Y[:N], X[N:], Y[N:]
 
     def get_dataset_path(self):
