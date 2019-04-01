@@ -10,7 +10,7 @@ from main import main
 class Equal4(NeuralGlobalOptimizer):
 
     D = 32
-    TRUE_D = 4
+    TRUE_D = 8
 
     def create_dataset(self):
         N = 500
@@ -211,7 +211,7 @@ def main(cycles, features):
             pyplot.savefig("equal4.png")
             [axis.cla() for axis in axes]
             
-            if (top[0] == ground_truth).all() and input("Stop? [y/n] ") == "y":
+            if (top == ground_truth).all() and input("Stop? [y/n] ") == "y":
                 break
             
     except KeyboardInterrupt:
