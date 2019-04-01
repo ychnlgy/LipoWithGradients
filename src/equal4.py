@@ -10,7 +10,7 @@ from main import main
 class Equal4(NeuralGlobalOptimizer):
 
     D = 32
-    TRUE_D = 8
+    TRUE_D = 4
 
     def create_dataset(self):
         N = 500
