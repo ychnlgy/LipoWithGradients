@@ -56,7 +56,8 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
     def exploit_Xb(self, X, Y, evalnet):
         X = super().exploit_Xb(X, Y, evalnet)
         # NOTE: Try to stay away from evolutionary methods
-        I = (torch.rand_like(X) <= self.mutation_rate) & NeuralGlobalOptimizer.discretize_featuremask(X)
+        M = NeuralGlobalOptimizer.discretize_featuremask(X)
+        I = (torch.rand_like(X) <= (1.0/I.float().sum(dim=1)).unsqueeze(1)) & M
         X[I] = self.neg_sampler.sample(X.size(0))[I]
         return X
 
