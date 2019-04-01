@@ -15,7 +15,7 @@ class Equal4(NeuralGlobalOptimizer):
     def create_dataset(self):
         N = 500
         X = torch.rand(N*2, Equal4.D)
-        Y = X[:,:Equal4.TRUE_D].sum(dim=1)#torch.zeros(N*2)
+        Y = X[:,:Equal4.TRUE_D].mean(dim=1)#torch.zeros(N*2)
         #for i in range(1, Equal4.TRUE_D+1):
         #    Y += X[:,i-1]*i*0.5
         #print(X[0], Y[0])
