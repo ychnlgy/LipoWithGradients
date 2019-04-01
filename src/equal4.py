@@ -211,7 +211,7 @@ def main(cycles, features):
             pyplot.savefig("equal4.png")
             [axis.cla() for axis in axes]
             
-            if (top == ground_truth).all() and input("Stop? [y/n] ") == "y":
+            if (top[0] == ground_truth).all() and input("Stop? [y/n] ") == "y":
                 break
             
     except KeyboardInterrupt:
