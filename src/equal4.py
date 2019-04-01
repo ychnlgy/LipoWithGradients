@@ -18,6 +18,7 @@ class Equal4(NeuralGlobalOptimizer):
         Y = torch.zeros(N*2)
         for i in range(Equal.D):
             Y += X[:,i]*2**i
+        print(X[0], Y[0])
         return X[:N], Y[:N], X[N:], Y[N:]
 
     def get_dataset_path(self):
