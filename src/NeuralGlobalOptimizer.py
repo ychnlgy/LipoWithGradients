@@ -21,6 +21,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
         self.mutation_rate = mutation_rate
         self.expected_train_loss = expected_train_loss
         self.featurepenalty_frac = featurepenalty_frac
+        self.neg_sampler = Lipo(self.lipo.k, self.lipo.d, self.lipo.a, NeuralGlobalOptimizer.SELECTION)
 
         self.prep_visualization = prep_visualization
         if prep_visualization:
@@ -54,7 +55,7 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
     def exploit_Xb(self, X, Y, evalnet):
         X = super().exploit_Xb(X, Y, evalnet)
         # NOTE: Try to stay away from evolutionary methods
-        I = torch.rand_like(X) <= self.mutation_rate
+        I = (torch.rand_like(X) <= self.mutation_rate) & NeuralGlobalOptimizer.discretize_featuremask(X)
         X[I] = self.lipo.sample(X.size(0))[I]
         return X
 
