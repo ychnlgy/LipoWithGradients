@@ -16,8 +16,8 @@ class Equal4(NeuralGlobalOptimizer):
         N = 500
         X = torch.rand(N*2, Equal4.D)
         Y = torch.zeros(N*2)
-        for i in range(Equal4.TRUE_D):
-            Y += X[:,i]*2**i
+        for i in range(1, Equal4.TRUE_D+1):
+            Y += X[:,i]*i*0.5
         print(X[0], Y[0])
         return X[:N], Y[:N], X[N:], Y[N:]
 
