@@ -44,17 +44,17 @@ def create_baseline_model(D, C):
                     modules.PrototypeClassifier(128, 32),
                     modules.polynomial.Activation(32, n_degree=4),
                     modules.Transpose(3, 1),
-                    torch.nn.Conv2d(128, 256, 3, padding=1, stride=2) # 8 -> 4
+                    torch.nn.Conv2d(32, 64, 3, padding=1, stride=2) # 8 -> 4
                 ),
-                shortcut = torch.nn.Conv2d(128, 256, 1, stride=2)
+                shortcut = torch.nn.Conv2d(128, 64, 1, stride=2)
             )
         ),
         torch.nn.AvgPool2d(4),
-        modules.Reshape(256),
-        torch.nn.Linear(256, 1024),
+        modules.Reshape(64),
+        torch.nn.Linear(64, 256),
         #torch.nn.ReLU(),
         #torch.nn.Linear(1024, C)
-        modules.PrototypeClassifier(1024, 32),
+        modules.PrototypeClassifier(256, 32),
         modules.polynomial.Activation(32, n_degree=4),
         torch.nn.Linear(32, C)
     )
