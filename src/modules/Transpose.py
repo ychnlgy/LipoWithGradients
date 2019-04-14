@@ -8,4 +8,4 @@ class Transpose(torch.nn.Module):
         self.d2 = dim2
 
     def forward(self, X):
-        return X.transpose(self.d1, self.d2)
+        return X.transpose(self.d1, self.d2).contiguous()
