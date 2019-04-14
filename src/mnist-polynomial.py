@@ -75,13 +75,14 @@ def main(download=0, device="cuda"):
     data_avg = MovingAverage(momentum=0.99)
     test_avg = MovingAverage(momentum=0.99)
     
-    with tqdm.tqdm(range(epochs), ncols=80) as bar:
+    
         
-        for epoch in bar:
-            
-            model.train()
-            
-            for X, Y in dataloader:
+    for epoch in range(epochs):
+        
+        model.train()
+        
+        with tqdm.tqdm(dataloader, ncols=80) as bar:
+            for X, Y in bar:
                 X = X.to(device)
                 Y = Y.to(device)
                 
@@ -96,7 +97,7 @@ def main(download=0, device="cuda"):
                 bar.set_description("E%d train loss: %.5f" % (epoch, data_avg.peek()))
             
             sched.step()
-    
+
             model.eval()
             with torch.no_grad():
                 for X, Y in testloader:
