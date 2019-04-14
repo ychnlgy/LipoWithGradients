@@ -1,4 +1,5 @@
 import torch
+import torchvision.transforms
 import torchvision.datasets
 
 import constants
