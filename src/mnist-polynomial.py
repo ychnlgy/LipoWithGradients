@@ -84,10 +84,10 @@ def main(download=0, device="cuda"):
     
     lossf = torch.nn.CrossEntropyLoss()
     optim = torch.optim.Adam(model.parameters())
-    optim = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-4)
-    sched = torch.optim.lr_scheduler.MultiStepLR(optim, milestones=[100, 200])
+    #optim = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-4)
+    sched = torch.optim.lr_scheduler.MultiStepLR(optim, milestones=[50])
     
-    epochs = 300
+    epochs = 100
     
     data_avg = MovingAverage(momentum=0.99)
     test_avg = MovingAverage(momentum=0.99)
