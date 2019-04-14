@@ -113,7 +113,7 @@ def main(download=0, device="cuda"):
                 
                 bar.set_description("E%d train loss: %.5f" % (epoch, data_avg.peek()))
             
-            sched.step()
+            sched.step(data_avg.peek())
 
             model.eval()
             with torch.no_grad():
