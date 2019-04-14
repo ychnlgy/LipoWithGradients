@@ -42,7 +42,7 @@ def create_baseline_model(D, C):
                     #torch.nn.ReLU(),
                     modules.Transpose(1, 3),
                     modules.PrototypeClassifier(128, 32),
-                    modules.polynomial.Activation(32, n_degree=4),
+                    modules.polynomial.Activation(32, n_degree=16),
                     modules.Transpose(3, 1),
                     torch.nn.Conv2d(32, 64, 3, padding=1, stride=2) # 8 -> 4
                 ),
@@ -55,7 +55,7 @@ def create_baseline_model(D, C):
         #torch.nn.ReLU(),
         #torch.nn.Linear(1024, C)
         modules.PrototypeClassifier(256, 32),
-        modules.polynomial.Activation(32, n_degree=4),
+        modules.polynomial.Activation(32, n_degree=16),
         torch.nn.Linear(32, C)
     )
 
