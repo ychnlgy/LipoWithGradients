@@ -51,15 +51,15 @@ def create_baseline_model(D, C):
                     #torch.nn.ReLU(),
                     #torch.nn.Conv2d(128, 128, 3, padding=1),
                     
-                    torch.nn.BatchNorm2d(128),
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(128, 64, 3, padding=1, stride=2)
+                    #torch.nn.BatchNorm2d(128),
+                    #torch.nn.ReLU(),
+                    #torch.nn.Conv2d(128, 64, 3, padding=1, stride=2)
                     
-                    #modules.Transpose(1, 3),
-                    #modules.PrototypeClassifier(128, 32),
-                    #modules.polynomial.Activation(32, n_degree=16),
-                    #modules.Transpose(3, 1),
-                    #torch.nn.Conv2d(32, 64, 3, padding=1, stride=2) # 8 -> 4
+                    modules.Transpose(1, 3),
+                    modules.PrototypeClassifier(128, 32),
+                    modules.polynomial.Activation(32, n_degree=16),
+                    modules.Transpose(3, 1),
+                    torch.nn.Conv2d(32, 64, 3, padding=1, stride=2) # 8 -> 4
                 ),
                 shortcut = torch.nn.Conv2d(128, 64, 1, stride=2)
             )
@@ -67,11 +67,11 @@ def create_baseline_model(D, C):
         torch.nn.AvgPool2d(4),
         modules.Reshape(64),
         torch.nn.Linear(64, 256),
-        torch.nn.ReLU(),
-        torch.nn.Linear(256, C)
-        #modules.PrototypeClassifier(256, 32),
-        #modules.polynomial.Activation(32, n_degree=16),
-        #torch.nn.Linear(32, C)
+        #torch.nn.ReLU(),
+        #torch.nn.Linear(256, C)
+        modules.PrototypeClassifier(256, 32),
+        modules.polynomial.Activation(32, n_degree=16),
+        torch.nn.Linear(32, C)
     )
 
 #def create_baseline2(D, C):
