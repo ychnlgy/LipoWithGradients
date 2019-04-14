@@ -6,7 +6,7 @@ from MovingAverage import MovingAverage
 
 def random_crop(X, padding):
     N, C, W, H = X.size()
-    X = torch.functional.pad(X, [padding]*4)
+    X = torch.nn.functional.pad(X, [padding]*4)
     out = [
         _random_crop(X[i], padding, W, H) for i in range(N)
     ]
