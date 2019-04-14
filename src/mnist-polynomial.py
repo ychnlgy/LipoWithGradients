@@ -12,7 +12,7 @@ def create_baseline_model(D, C):
                 block = torch.nn.Sequential(
                     torch.nn.BatchNorm2d(32),
                     torch.nn.ReLU(),
-                    torch.nn.Conv2d(32, 32, padding=3)
+                    torch.nn.Conv2d(32, 32, 3, padding=1)
                 ),
             ),
             modules.ResBlock(
