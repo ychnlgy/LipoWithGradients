@@ -15,7 +15,10 @@ class Equal4(NeuralGlobalOptimizer):
     def create_dataset(self):
         N = 500
         X = torch.rand(N*2, Equal4.D)
-        Y = X[:,:Equal4.TRUE_D].sum(dim=1)
+        Y = X[:,:Equal4.TRUE_D].sum(dim=1)#torch.zeros(N*2)
+        #for i in range(1, Equal4.TRUE_D+1):
+        #    Y += X[:,i-1]*i*0.5
+        #print(X[0], Y[0])
         return X[:N], Y[:N], X[N:], Y[N:]
 
     def get_dataset_path(self):
@@ -139,15 +142,17 @@ def score(pred, true):
     return acc, sens, spec, f1
 
 @main
-def main(cycles, features):
+def main(cycles, features, true_features, best_n=10):
 
     import matplotlib
     matplotlib.use("agg")
     from matplotlib import pyplot
     fig, axes = pyplot.subplots(nrows=3, sharex=True, figsize=(10, 8))
-    
+
+    Equal4.TRUE_D = int(true_features)
     cycles = int(cycles)
     features = int(features)
+    best_n = int(best_n)
     
     Equal4.D = features
     prog = Equal4(
@@ -160,9 +165,9 @@ def main(cycles, features):
         expected_train_loss = 0.01,
         featurepenalty_frac = 10,
         table = GlobalOptimizationTable(
-            capacity = 200,
+            capacity = 1000,
             features = features,
-            reduced_size = 160,
+            reduced_size = 800,
             montecarlo_c = math.sqrt(2)
         ),
         lipo = Lipo(k=2, d=features, a=0, b=1),
@@ -184,7 +189,6 @@ def main(cycles, features):
             for v, plot in zip(prog.get_losses(), plots):
                 plot.append(v)
 
-            best_n = 10
             top = prog.discretize_featuremask(X[:best_n])
             print("Acc/Sens/Spec/F1: %.3f/%.3f/%.3f/%.3f" % score(top[0], ground_truth))
             print(" --- Top %d feature selections --- " % best_n)

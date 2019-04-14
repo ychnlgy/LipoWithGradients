@@ -33,6 +33,8 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
 
         super().__init__(*args, **kwargs)
 
+        self.neg_sampler = Lipo(self.lipo.k, self.lipo.d, self.lipo.a, NeuralGlobalOptimizer.SELECTION)
+
     def count_network_retrains(self):
         return self.network_retrain_count
 
@@ -54,18 +56,20 @@ class NeuralGlobalOptimizer(GlobalOptimizer):
     def exploit_Xb(self, X, Y, evalnet):
         X = super().exploit_Xb(X, Y, evalnet)
         # NOTE: Try to stay away from evolutionary methods
-        I = torch.rand_like(X) <= self.mutation_rate
-        X[I] = self.lipo.sample(X.size(0))[I]
+        M = NeuralGlobalOptimizer.discretize_featuremask(X)
+        I = (torch.rand_like(X) <= (1.0/(1+M.float().sum(dim=1)).unsqueeze(1))) & M
+        X[I] = self.neg_sampler.sample(X.size(0))[I]
         return X
 
     def get_dataset(self):
         if self._dataset is None:
             dpath = self.get_dataset_path()
-            if not os.path.isfile(dpath):
-                self._dataset = self.create_dataset()
-                torch.save(self._dataset, dpath)
-            else:
-                self._dataset = torch.load(dpath)
+            self._dataset = self.create_dataset()
+            #if not os.path.isfile(dpath):
+                #self._dataset = self.create_dataset()
+                #torch.save(self._dataset, dpath)
+            #else:
+            #    self._dataset = torch.load(dpath)
         return [d.clone() for d in self._dataset]
 
     def get_dataset_path(self):
