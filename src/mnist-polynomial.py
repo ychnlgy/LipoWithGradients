@@ -92,6 +92,8 @@ def main(download=0, device="cuda"):
                 optim.step()
                 
                 data_avg.update(loss.item())
+                
+                bar.set_description("E%d train loss: %.5f" % (epoch, data_avg.peek()))
             
             sched.step()
     
@@ -106,5 +108,5 @@ def main(download=0, device="cuda"):
                     
                     test_avg.update(acc.item())
                 
-            bar.set_description("E%d train/test scores: %.5f/%.5f" % (epoch, data_avg.peek(), test_avg.peek()))
+            print("Test accuracy: %.5f" % test_avg.peek())
         
