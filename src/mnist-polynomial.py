@@ -48,9 +48,15 @@ def create_baseline_model(D, C):
         torch.nn.AvgPool2d(4),
         modules.Reshape(256),
         torch.nn.Linear(256, 1024),
-        torch.nn.ReLU(),
-        torch.nn.Linear(1024, C)
+        #torch.nn.ReLU(),
+        modules.PrototypeClassifier(1024, 32),
+        modules.polynomial.Activation(32, n_degree=4),
+        torch.nn.Linear(32, C)
     )
+
+#def create_baseline2(D, C):
+#    return torch.nn.Sequential(
+#        torch.nn.Conv2d(D, 32, 
 
 @util.main
 def main(download=0, device="cuda"):
