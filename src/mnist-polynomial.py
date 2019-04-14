@@ -53,7 +53,7 @@ def create_baseline_model(D, C):
                     
                     torch.nn.BatchNorm2d(128),
                     torch.nn.ReLU(),
-                    torch.nn.Conv2d(128, 64, stride=2)
+                    torch.nn.Conv2d(128, 64, 3, padding=1, stride=2)
                     
                     #modules.Transpose(1, 3),
                     #modules.PrototypeClassifier(128, 32),
