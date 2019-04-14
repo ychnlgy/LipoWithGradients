@@ -18,6 +18,8 @@ def get(download=0):
         train=True, download=download, 
         transform=torchvision.transforms.RandomCrop(IMAGESIZE, padding=4)
     )
+    print(train.train_data.shape)
+    input()
     data_X = train.train_data.view(-1, 1, *IMAGESIZE).float()/255.0
     #data_X = util.convert_size(data_X, IMAGESIZE)
     data_Y = torch.LongTensor(train.train_labels)
