@@ -84,6 +84,7 @@ def main(download=0, device="cuda"):
     
     lossf = torch.nn.CrossEntropyLoss()
     optim = torch.optim.Adam(model.parameters())
+    optim = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-4)
     sched = torch.optim.lr_scheduler.MultiStepLR(optim, milestones=[100, 200])
     
     epochs = 300
