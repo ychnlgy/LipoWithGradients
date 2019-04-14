@@ -1,8 +1,21 @@
-import torch, tqdm
+import torch, tqdm, random
 import torch.utils
 
 import util, modules, datasets
 from MovingAverage import MovingAverage
+
+def random_crop(X, padding):
+    N, C, W, H = X.size()
+    X = torch.functional.pad(X, [padding]*4)
+    out = [
+        _random_crop(X[i], padding, W, H) for i in range(N)
+    ]
+    return torch.stack(out, dim=0)
+
+def _random_crop(x, padding, W, H):
+    w_i = random.randint(0, padding)
+    h_i = random.randint(0, padding)
+    return x[:,w_i:w_i+W,h_i:h_i+H]
 
 def create_baseline_model(D, C):
     return torch.nn.Sequential(
@@ -100,7 +113,7 @@ def main(download=0, device="cuda"):
         
         with tqdm.tqdm(dataloader, ncols=80) as bar:
             for X, Y in bar:
-                X = X.to(device)
+                X = random_crop(X, padding=2).to(device)
                 Y = Y.to(device)
                 
                 Yh = model(X)
