@@ -64,8 +64,8 @@ def main(download=0, device="cuda"):
         data_X, data_Y, test_X, test_Y, CLASSES, CHANNELS, IMAGESIZE
     ) = datasets.mnist.get(download)
     
-    dataloader = src.tensortools.create_loader([data_X, data_Y], batch_size=32, shuffle=True)
-    testloader = src.tensortools.create_loader([test_X, test_Y], batch_size=128)
+    dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=32, shuffle=True)
+    testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=128)
     
     assert IMAGESIZE == (32, 32)
     
