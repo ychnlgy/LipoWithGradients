@@ -45,32 +45,32 @@ def create_baseline_model(D, C):
             ),
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
-                    torch.nn.BatchNorm2d(128),
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(128, 128, 3, padding=1),
+                    #torch.nn.BatchNorm2d(128),
+                    #torch.nn.ReLU(),
+                    #torch.nn.Conv2d(128, 128, 3, padding=1),
                     #src.modules.PrototypeSimilarity(128, 64),
                     #src.modules.polynomial.Activation(64, n_degree=4),
                     #torch.nn.Conv2d(64, 128, 3, padding=1),
                     
                     torch.nn.BatchNorm2d(128),
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(128, 128, 3, padding=1, stride=2),
-                    #src.modules.PrototypeSimilarity(128, 64),
-                    #src.modules.polynomial.Activation(64, n_degree=4),
-                    #torch.nn.Conv2d(64, 128, 3, padding=1, stride=2) # 8 -> 4
+                    #torch.nn.ReLU(),
+                    #torch.nn.Conv2d(128, 128, 3, padding=1, stride=2),
+                    src.modules.PrototypeSimilarity(128, 64),
+                    src.modules.polynomial.Activation(64, n_degree=4),
+                    torch.nn.Conv2d(64, 128, 3, padding=1, stride=2) # 8 -> 4
                 ),
                 shortcut = torch.nn.Conv2d(128, 128, 1, stride=2)
             )
         ),
         torch.nn.AvgPool2d(4),
         src.modules.Reshape(128),
-        torch.nn.Linear(128, 256),
-        torch.nn.Dropout(p=0.2),
-        torch.nn.ReLU(),
-        torch.nn.Linear(256, C)
-        #src.modules.PrototypeSimilarity(256, 64),
-        #src.modules.polynomial.Activation(64, n_degree=8),
-        #torch.nn.Linear(64, C)
+        #torch.nn.Linear(128, 256),
+        #torch.nn.Dropout(p=0.2),
+        #torch.nn.ReLU(),
+        #torch.nn.Linear(256, C)
+        src.modules.PrototypeSimilarity(128, 64),
+        src.modules.polynomial.Activation(64, n_degree=8),
+        torch.nn.Linear(64, C)
     )
 
 @src.util.main
