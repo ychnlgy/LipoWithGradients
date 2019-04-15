@@ -24,7 +24,7 @@ class LagrangeBasis(torch.nn.Module):
         n = len(nodes)
 
         m_i = (1-torch.eye(n)).byte()
-        m_v = torch.arange(n).view(1, n).repeat(n, 1)
+        m_v = torch.arange(n).long().view(1, n).repeat(n, 1)
         m_s = m_v[m_i].view(n, n-1)
 
         # xm is shape (1, 1, n, n-1, 1)
