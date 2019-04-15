@@ -92,7 +92,7 @@ def create_baseline_model(D, C):
                     torch.nn.Linear(32, 256),
                 )
             ),
-        )
+        ),
         
         #torch.nn.Dropout(p=0.2),
         #torch.nn.ReLU(),
