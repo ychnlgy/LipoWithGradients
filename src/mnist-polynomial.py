@@ -106,8 +106,8 @@ def main(download=0, device="cuda"):
     model = create_baseline_model(CHANNELS, CLASSES).to(device)
     
     lossf = torch.nn.CrossEntropyLoss()
-    optim = torch.optim.Adam(model.parameters())
-    #optim = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-4)
+    #optim = torch.optim.Adam(model.parameters())
+    optim = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-4)
     sched = torch.optim.lr_scheduler.ReduceLROnPlateau(optim, patience=3, factor=0.5, verbose=True)
     
     epochs = 100
