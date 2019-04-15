@@ -53,7 +53,7 @@ def create_baseline_model(D, C):
         src.modules.Reshape(256),
         torch.nn.Linear(256, 1024),
         src.modules.PrototypeSimilarity(1024, 128),
-        src.modules.polynomial.Activation(128, n_degree=4),
+        src.modules.polynomial.Activation(128, n_degree=16),
         torch.nn.Linear(128, C)
     )
 
