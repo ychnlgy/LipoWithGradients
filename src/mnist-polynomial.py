@@ -64,9 +64,9 @@ def create_baseline_model(D, C):
                     
                     torch.nn.BatchNorm2d(128),
                     #torch.nn.ReLU(),
-                    src.modules.PrototypeSimilarity(128, 128),
-                    src.modules.polynomial.Activation(128, n_degree=32),
-                    torch.nn.Conv2d(128, 128, 3, padding=1, stride=2),
+                    src.modules.PrototypeSimilarity(128, 64),
+                    src.modules.polynomial.Activation(64, n_degree=16),
+                    torch.nn.Conv2d(64, 128, 3, padding=1, stride=2),
                     #src.modules.PrototypeSimilarity(128, 64),
                     #src.modules.polynomial.Activation(64, n_degree=4),
                     #torch.nn.Conv2d(64, 128, 3, padding=1, stride=2) # 8 -> 4
