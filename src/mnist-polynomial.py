@@ -55,7 +55,7 @@ def create_baseline_model(D, C):
         torch.nn.Linear(64, C)
     )
 
-@util.main
+@src.util.main
 def main(download=0, device="cuda"):
 
     download = int(download)
