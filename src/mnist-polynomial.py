@@ -22,8 +22,10 @@ def create_baseline_model(D, C):
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
                     torch.nn.BatchNorm2d(32),
-                    #src.modules.PrototypeSimilarity(32, 32),
-                    #src.modules.polynomial.Activation(32, n_degree=2),
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(32, 32, 3, padding=1),
+                    
+                    torch.nn.BatchNorm2d(32),
                     torch.nn.ReLU(),
                     torch.nn.Conv2d(32, 64, 3, padding=1, stride=2) # 32 -> 16
                 ),
@@ -32,9 +34,11 @@ def create_baseline_model(D, C):
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
                     torch.nn.BatchNorm2d(64),
-                    src.modules.PrototypeSimilarity(64, 64),
-                    src.modules.polynomial.Activation(64, n_degree=3),
-                    #torch.nn.ReLU(),
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(64, 64, 3, padding=1),
+                    
+                    torch.nn.BatchNorm2d(64),
+                    torch.nn.ReLU(),
                     torch.nn.Conv2d(64, 128, 3, padding=1, stride=2) # 16 -> 8
                 ),
                 shortcut = torch.nn.Conv2d(64, 128, 1, stride=2)
@@ -44,14 +48,19 @@ def create_baseline_model(D, C):
                     torch.nn.BatchNorm2d(128),
                     src.modules.PrototypeSimilarity(128, 64),
                     src.modules.polynomial.Activation(64, n_degree=4),
-                    torch.nn.Conv2d(64, 256, 3, padding=1, stride=2) # 8 -> 4
+                    torch.nn.Conv2d(64, 128, 3, padding=1),
+                    
+                    torch.nn.BatchNorm2d(128),
+                    src.modules.PrototypeSimilarity(128, 64),
+                    src.modules.polynomial.Activation(64, n_degree=4),
+                    torch.nn.Conv2d(64, 128, 3, padding=1, stride=2) # 8 -> 4
                 ),
-                shortcut = torch.nn.Conv2d(128, 256, 1, stride=2)
+                shortcut = torch.nn.Conv2d(128, 128, 1, stride=2)
             )
         ),
         torch.nn.AvgPool2d(4),
-        src.modules.Reshape(256),
-        torch.nn.Linear(256, 256),
+        src.modules.Reshape(128),
+        torch.nn.Linear(128, 256),
         src.modules.PrototypeSimilarity(256, 64),
         src.modules.polynomial.Activation(64, n_degree=8),
         torch.nn.Linear(64, C)
