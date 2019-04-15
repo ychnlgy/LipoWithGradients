@@ -23,7 +23,7 @@ def create_baseline_model(D, C):
                 block = torch.nn.Sequential(
                     #torch.nn.BatchNorm2d(32),
                     src.modules.PrototypeSimilarity(32, 32),
-                    src.modules.polynomial.Activation(32, n_degree=4),
+                    src.modules.polynomial.Activation(32, n_degree=2),
                     #torch.nn.ReLU(),
                     torch.nn.Conv2d(32, 64, 3, padding=1, stride=2) # 32 -> 16
                 ),
@@ -33,7 +33,7 @@ def create_baseline_model(D, C):
                 block = torch.nn.Sequential(
                     #torch.nn.BatchNorm2d(64),
                     src.modules.PrototypeSimilarity(64, 64),
-                    src.modules.polynomial.Activation(64, n_degree=8),
+                    src.modules.polynomial.Activation(64, n_degree=3),
                     #torch.nn.ReLU(),
                     torch.nn.Conv2d(64, 128, 3, padding=1, stride=2) # 16 -> 8
                 ),
@@ -43,7 +43,7 @@ def create_baseline_model(D, C):
                 block = torch.nn.Sequential(
                     #torch.nn.BatchNorm2d(128),
                     src.modules.PrototypeSimilarity(128, 64),
-                    src.modules.polynomial.Activation(64, n_degree=16),
+                    src.modules.polynomial.Activation(64, n_degree=4),
                     torch.nn.Conv2d(64, 256, 3, padding=1, stride=2) # 8 -> 4
                 ),
                 shortcut = torch.nn.Conv2d(128, 256, 1, stride=2)
@@ -53,7 +53,7 @@ def create_baseline_model(D, C):
         src.modules.Reshape(256),
         torch.nn.Linear(256, 1024),
         src.modules.PrototypeSimilarity(1024, 64),
-        src.modules.polynomial.Activation(64, n_degree=16),
+        src.modules.polynomial.Activation(64, n_degree=8),
         torch.nn.Linear(64, C)
     )
 
@@ -66,7 +66,7 @@ def main(download=0, device="cuda"):
         data_X, data_Y, test_X, test_Y, CLASSES, CHANNELS, IMAGESIZE
     ) = datasets.mnist.get(download)
     
-    dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=32, shuffle=True)
+    dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=64, shuffle=True)
     testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=128)
     
     assert IMAGESIZE == (32, 32)
