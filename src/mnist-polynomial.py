@@ -68,9 +68,11 @@ def create_baseline_model(D, C):
         #torch.nn.Dropout(p=0.2),
         #torch.nn.ReLU(),
         #torch.nn.Linear(256, C)
-        src.modules.PrototypeSimilarity(256, 64),
-        src.modules.polynomial.Activation(64, n_degree=8),
-        torch.nn.Linear(64, C)
+        #src.modules.PrototypeSimilarity(256, 64),
+        #src.modules.polynomial.Activation(64, n_degree=8),
+        torch.nn.Dropout(p=0.2),
+        torch.nn.ReLU(),
+        torch.nn.Linear(256, C)
     )
 
 @src.util.main
