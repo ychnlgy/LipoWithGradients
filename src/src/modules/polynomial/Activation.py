@@ -14,6 +14,10 @@ class Activation(torch.nn.Module):
         self.weight = torch.nn.Parameter(
             torch.zeros(1, self.d, self.n, 1)
         )
+        self.reset_parameters()
+
+    def reset_parameters(self):
+        torch.nn.init.kaiming_uniform_(self.weight, a=math.sqrt(5))
 
     def forward(self, X):
         '''
