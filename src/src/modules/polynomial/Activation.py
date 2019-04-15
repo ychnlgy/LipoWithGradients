@@ -29,7 +29,5 @@ class Activation(torch.nn.Module):
         D = X.size(1)
         
         B = self.basis(X.view(N, D, -1)) # (N, D, n, -1)
-        print(B.size(), self.weight.size())
-        input()
         L = (self.weight * B).sum(dim=2)
         return L.view(X.size())
