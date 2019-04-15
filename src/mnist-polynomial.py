@@ -80,7 +80,7 @@ def main(download=0, device="cuda"):
     
     (
         data_X, data_Y, test_X, test_Y, CLASSES, CHANNELS, IMAGESIZE
-    ) = datasets.mnist.get(download)
+    ) = datasets.cifar.get(download)
     
     dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=64, shuffle=True)
     testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=128)
