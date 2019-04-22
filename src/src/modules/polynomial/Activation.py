@@ -68,7 +68,7 @@ class Activation(torch.nn.Module):
                 plot.set_xlim([-1, 1])
                 plot.plot(v.cpu().numpy(), Xh[:,i].cpu().numpy(), label="Interpolated polynomial activation")
 
-                plot.plot(self.basis.nodes.cpu().numpy(), self.weight[0,i].cpu().numpy(), "x", label="Learned Chebyshev node")
+                plot.plot(self.basis.nodes.cpu().numpy(), self.weight[0,i].clone().detach().cpu().numpy(), "x", label="Learned Chebyshev node")
 
                 plot.axvline(x=self.basis.nodes[0].numpy(), linestyle=":", label="Chebyshev x-position")
                 for node in self.basis.nodes[1:]:
