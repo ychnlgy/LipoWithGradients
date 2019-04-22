@@ -68,8 +68,6 @@ def _rand_diff_choice(X_observe, X_target, Y_target):
             break
         
         I = src.tensortools.rand_indices(N)[:m]
-        print(X_choice.shape, X_target.shape)
-        input()
         X_choice[too_close] = X_target[I].clone()
         Y_choice[too_close] = Y_target[I].clone()
         too_close = _check_too_close(X_observe, X_choice)
@@ -78,4 +76,5 @@ def _rand_diff_choice(X_observe, X_target, Y_target):
     return X_choice, Y_choice
 
 def _check_too_close(X1, X2):
-    return (X1 - X2).norm(p=2, dim=1) < EPS
+    N = X1.size(0)
+    return (X1.view(N, -1) - X2.view(N, -1)).norm(p=2, dim=1) < EPS
