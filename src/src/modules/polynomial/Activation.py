@@ -50,7 +50,7 @@ class Activation(torch.nn.Module):
                     plot.axvline(x=node.numpy(), linestyle=":")
             
                 plot.set_ylabel("$x_%d$" % i)
-        axes[-1].legend(bbox_to_anchor=[0, 1])
+        axes[-1].legend(bbox_to_anchor=[1.2, 0])
         axes[0].set_title(title)
 
         fname = "%s.png" % title
