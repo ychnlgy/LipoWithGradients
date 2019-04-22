@@ -45,8 +45,9 @@ class Activation(torch.nn.Module):
 
                 plot.plot(self.basis.nodes.cpu().numpy(), self.weight[0,i].cpu().numpy(), "x", label="Learned Chebyshev node")
 
-                for node in self.basis.nodes:
-                    plot.axvline(x=node.numpy(), linestyle=":", label="Chebyshev x-position")
+                plot.axvline(x=self.basis.nodes[0].numpy(), linestyle=":", label="Chebyshev x-position")
+                for node in self.basis.nodes[1:]:
+                    plot.axvline(x=node.numpy(), linestyle=":")
             
                 plot.set_ylabel("$x_%d$" % i)
         axes[-1].legend()
