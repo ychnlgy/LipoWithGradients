@@ -17,6 +17,7 @@ def _random_crop(x, padding, W, H):
 
 def create_baseline_model(D, C):
     act = src.modules.polynomial.Activation(256, n_degree=32)
+    sim = src.modules.PrototypeSimilarity(256, 256)
     return torch.nn.Sequential(
         torch.nn.Conv2d(D, 32, 3, padding=1),
         src.modules.ResNet(
@@ -89,24 +90,29 @@ def create_baseline_model(D, C):
         src.modules.Reshape(256),
         #torch.nn.Linear(256, 1024),
         
-        #torch.nn.Dropout(p=0.2),
-        #torch.nn.ReLU(),
-        #torch.nn.Linear(256, C)
+        
+        torch.nn.Linear(256, 1024),
+        torch.nn.Dropout(p=0.2),
+        torch.nn.ReLU(),
+        torch.nn.Linear(1024, C)
+        
         #src.modules.PrototypeSimilarity(256, 64),
         #src.modules.polynomial.Activation(64, n_degree=8),
         #torch.nn.Dropout(p=0.2),
+        
         #torch.nn.ReLU(),
-        src.modules.PrototypeSimilarity(256, 256),
-        act,
-        torch.nn.Linear(256, C)
-    ), act
+        #sim,
+        #act,
+        #torch.nn.Linear(256, C)
+    ), act, sim
 
 @src.util.main
-def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2):
+def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1):
 
     download = int(download)
     visualize_relu = int(visualize_relu)
     gradpenalty = float(gradpenalty)
+    cycles = int(cycles)
     
     (
         data_X, data_Y, test_X, test_Y, CLASSES, CHANNELS, IMAGESIZE
@@ -117,7 +123,7 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2):
     
     assert IMAGESIZE == (32, 32)
     
-    model, act = create_baseline_model(CHANNELS, CLASSES)
+    model, act, sim = create_baseline_model(CHANNELS, CLASSES)
     model = model.to(device)
 
     NUM_VISUAL_ACTIVATIONS = 5
@@ -133,7 +139,7 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2):
     optim = torch.optim.Adam(model.parameters(), weight_decay=1e-6)
     #optim = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-4)
     sched = torch.optim.lr_scheduler.ReduceLROnPlateau(optim, patience=3, factor=0.5, verbose=True)
-    
+
     epochs = 400
     
     data_avg = src.util.MovingAverage(momentum=0.99)
@@ -142,6 +148,9 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2):
     for epoch in range(epochs):
         
         model.train()
+
+        if not epoch % cycles:
+            sim.set_visualization_count(NUM_VISUAL_ACTIVATIONS)
         
         with tqdm.tqdm(dataloader, ncols=80) as bar:
             for X, Y in bar:
@@ -175,7 +184,8 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2):
                 
             print("Test accuracy: %.5f" % test_avg.peek())
 
-            if not epoch % 1:
+            if not epoch % cycles:
+                sim.visualize(title="Epoch %d (prototype outputs)" % epoch, figsize=FIGSIZE)
                 act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100), figsize=FIGSIZE)
         
-    act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d" % epochs, figsize=FIGSIZE)
+    #act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d" % epochs, figsize=FIGSIZE)
