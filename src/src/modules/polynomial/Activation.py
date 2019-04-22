@@ -45,7 +45,6 @@ class Activation(torch.nn.Module):
 
                 plot.plot(self.basis.nodes.cpu().numpy(), self.weight[0,i].cpu().numpy(), "x", label="Chebyshev node")
             
-                self.basis.visualize(plot)
                 plot.set_ylabel("$x_%d$" % i)
         axes[-1].legend()
         axes[0].set_title(title)
