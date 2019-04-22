@@ -50,9 +50,9 @@ class Activation(torch.nn.Module):
                     plot.axvline(x=node.numpy(), linestyle=":")
             
                 plot.set_ylabel("$x_%d$" % i)
-        axes[-1].legend()
+        axes[-1].legend(bbox_to_anchor=[1, 0])
         axes[0].set_title(title)
 
         fname = "%s.png" % title
-        matplotlib.pyplot.savefig(fname)
+        matplotlib.pyplot.savefig(fname, bbox_inches="tight")
         print("Saved polynomial activations to %s" % fname)
