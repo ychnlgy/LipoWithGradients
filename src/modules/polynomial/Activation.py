@@ -17,6 +17,7 @@ class Activation(torch.nn.Module):
         self.weight = torch.nn.Parameter(
             torch.zeros(1, self.d, self.n)
         )
+        print(self.visualize)
 
     def forward(self, X):
         B = self.basis(X)
@@ -38,7 +39,7 @@ class Activation(torch.nn.Module):
                 Xh = self.forward(X)
 
                 plot = axes[i]
-                plot.plot(v.numpy(), Xh[:,i].numpy())
+                plot.plot(v.cpu().numpy(), Xh[:,i].cpu().numpy())
             
                 self.basis.visualize(plot)
 
