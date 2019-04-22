@@ -37,10 +37,10 @@ class LagrangeBasis(torch.nn.Module):
 
         '''
 
-        
+        device = X.device
         shape = X.size()
         X = X.view(-1, 1, 1)
-        out = (X-self.xm).prod(dim=-1)/self.dn
+        out = (X-self.xm.to(device)).prod(dim=-1)/self.dn.to(device)
         return out.view(*shape, out.size(-1))
 
     def visualize(self, plot):
