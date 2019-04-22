@@ -55,8 +55,8 @@ class Activation(torch.nn.Module):
         
 
         import math
-        mid = math.ceil(k/2.0)
-        axes[mid].legend(bbox_to_anchor=[0, 1.5])
+        mid = math.floor(k/2.0)
+        axes[mid].legend(bbox_to_anchor=[0, -0.1])
         axes[mid].set_title(title)
 
         fname = "%s.png" % title
