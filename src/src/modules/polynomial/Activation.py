@@ -17,6 +17,7 @@ class Activation(torch.nn.Module):
         self.weight = torch.nn.Parameter(
             torch.zeros(1, self.d, self.n)
         )
+        self._axes = None
 
     def forward(self, X):
         B = self.basis(X)
@@ -28,9 +29,11 @@ class Activation(torch.nn.Module):
         self.weight.data.zero_()
 
     def visualize_relu(self, k, title, figsize):
-        fig, axes = matplotlib.pyplot.subplots(
-            nrows=1, ncols=k, sharex=True, sharey=True, figsize=figsize
-        )
+        if self._axes is None:
+            fig, self._axes = matplotlib.pyplot.subplots(
+                nrows=1, ncols=k, sharex=True, sharey=True, figsize=figsize
+            )
+        axes = self._axes
         model = torch.nn.ReLU()
         n = 1000
         x = torch.linspace(-1, 1, n)
@@ -44,14 +47,16 @@ class Activation(torch.nn.Module):
         fname = "%s.png" % title
         matplotlib.pyplot.savefig(fname, bbox_inches="tight")
         print("Saved ReLU activations to %s" % fname)
-        matplotlib.pyplot.clf()
+        [ax.cla() for ax in axes]
 
     def visualize(self, k, title, figsize):
         device = self.weight.device
         with torch.no_grad():
-            fig, axes = matplotlib.pyplot.subplots(
-                nrows=1, ncols=k, sharex=True, sharey=True, figsize=figsize
-            )
+            if self._axes is None:
+                fig, self._axes = matplotlib.pyplot.subplots(
+                    nrows=1, ncols=k, sharex=True, sharey=True, figsize=figsize
+                )
+            axes = self._axes
             n = 1000
             for i in range(k):
                 v = torch.linspace(-1, 1, n)
@@ -77,4 +82,4 @@ class Activation(torch.nn.Module):
         fname = "%s.png" % title
         matplotlib.pyplot.savefig(fname, bbox_inches="tight")
         print("Saved polynomial activations to %s" % fname)
-        matplotlib.pyplot.clf()
+        [ax.cla() for ax in axes]
