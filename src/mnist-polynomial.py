@@ -98,7 +98,8 @@ def create_baseline_model(D, C):
         #torch.nn.ReLU(),
         src.modules.PrototypeSimilarity(256, 256),
         act,
-        torch.nn.Linear(256, C)
+        #torch.nn.Linear(256, C)
+        src.modules.PrototypeSimilarity(256, C),
     ), act
 
 @src.util.main
