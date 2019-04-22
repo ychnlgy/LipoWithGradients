@@ -17,7 +17,6 @@ class Activation(torch.nn.Module):
         self.weight = torch.nn.Parameter(
             torch.zeros(1, self.d, self.n)
         )
-        print(self.visualize)
 
     def forward(self, X):
         B = self.basis(X)
@@ -28,9 +27,11 @@ class Activation(torch.nn.Module):
     def reset_parameters(self):
         self.weight.data.zero_()
 
-    def visualize(self, k, fname):
+    def visualize(self, k, title, figsize):
         with torch.no_grad():
-            fig, axes = matplotlib.pyplot.subplots(nrows=k, ncols=1, sharex=True, sharey=True)
+            fig, axes = matplotlib.pyplot.subplots(
+                nrows=k, ncols=1, sharex=True, sharey=True, figsize=figsize
+            )
             n = 1000
             for i in range(k):
                 v = torch.linspace(-1, 1, n)
@@ -42,6 +43,10 @@ class Activation(torch.nn.Module):
                 plot.plot(v.cpu().numpy(), Xh[:,i].cpu().numpy())
             
                 self.basis.visualize(plot)
+                plot.set_ylabel("$x_%d$" % i)
 
+        axes[0].set_title(title)
+
+        fname = "%s.png" % title
         matplotlib.pyplot.savefig(fname)
         print("Saved polynomial activations to %s" % fname)

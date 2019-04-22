@@ -107,8 +107,10 @@ def main(download=0, device="cuda"):
     
     model, act = create_baseline_model(CHANNELS, CLASSES)
     model = model.to(device)
-    act.visualize(k=4, fname="before.png")
-    input()
+
+    NUM_VISUAL_ACTIVATIONS = 4
+    FIGSIZE = (12, 9)
+    act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Initial state", figsize=FIGSIZE)
     
     lossf = torch.nn.CrossEntropyLoss()
     optim = torch.optim.Adam(model.parameters())
@@ -141,6 +143,12 @@ def main(download=0, device="cuda"):
             
             sched.step(data_avg.peek())
 
+            if epoch == 10:
+                act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch 10", figsize=FIGSIZE)
+
+            if epoch == 50:
+                act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch 50", figsize=FIGSIZE)
+
             model.eval()
             with torch.no_grad():
                 for X, Y in testloader:
@@ -154,3 +162,4 @@ def main(download=0, device="cuda"):
                 
             print("Test accuracy: %.5f" % test_avg.peek())
         
+    act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d" % epochs, figsize=FIGSIZE)
