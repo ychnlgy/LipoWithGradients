@@ -44,6 +44,7 @@ class Activation(torch.nn.Module):
         fname = "%s.png" % title
         matplotlib.pyplot.savefig(fname, bbox_inches="tight")
         print("Saved ReLU activations to %s" % fname)
+        matplotlib.pyplot.clf()
 
     def visualize(self, k, title, figsize):
         device = self.weight.device
@@ -76,3 +77,4 @@ class Activation(torch.nn.Module):
         fname = "%s.png" % title
         matplotlib.pyplot.savefig(fname, bbox_inches="tight")
         print("Saved polynomial activations to %s" % fname)
+        matplotlib.pyplot.clf()
