@@ -96,6 +96,7 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-3):
 
     download = int(download)
     visualize_relu = int(visualize_relu)
+    gradpenalty = float(gradpenalty)
     
     (
         data_X, data_Y, test_X, test_Y, CLASSES, CHANNELS, IMAGESIZE
