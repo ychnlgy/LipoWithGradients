@@ -39,7 +39,10 @@ class Activation(torch.nn.Module):
         for i in range(k):
             axes[i].plot(x, y)
             axes[i].set_xlabel("$x_%d$" % i)
-        axes[k//2].set_title("ReLU")
+        axes[k//2].set_title(title)
+        fname = "%s.png" % title
+        matplotlib.pyplot.savefig(fname, bbox_inches="tight")
+        print("Saved ReLU activations to %s" % fname)
 
     def visualize(self, k, title, figsize):
         device = self.weight.device
