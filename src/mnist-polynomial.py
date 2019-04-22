@@ -16,7 +16,7 @@ def _random_crop(x, padding, W, H):
     return x[:,w_i:w_i+W,h_i:h_i+H]
 
 def create_baseline_model(D, C):
-    act = src.modules.polynomial.Activation(8, n_degree=32)
+    act = src.modules.polynomial.Activation(256, n_degree=32)
     return torch.nn.Sequential(
         torch.nn.Conv2d(D, 32, 3, padding=1),
         src.modules.ResNet(
@@ -87,7 +87,7 @@ def create_baseline_model(D, C):
         ),
         torch.nn.AvgPool2d(4),
         src.modules.Reshape(256),
-        #torch.nn.Linear(128, 256),
+        torch.nn.Linear(256, 1024),
         
         #torch.nn.Dropout(p=0.2),
         #torch.nn.ReLU(),
@@ -96,9 +96,9 @@ def create_baseline_model(D, C):
         #src.modules.polynomial.Activation(64, n_degree=8),
         #torch.nn.Dropout(p=0.2),
         #torch.nn.ReLU(),
-        src.modules.PrototypeSimilarity(256, 8),
+        src.modules.PrototypeSimilarity(1024, 1024),
         act,
-        torch.nn.Linear(8, C)
+        torch.nn.Linear(1024, C)
     ), act
 
 @src.util.main
