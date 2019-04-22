@@ -36,7 +36,8 @@ class PrototypeSimilarity(torch.nn.Module):
 
     def visualize(self, title, figsize):
         if self.visualizing > 0:
-            self.do_visualization(numpy.concatenate(self.stored_visuals, axis=0), title, figsize)
+            if self.stored_visuals:
+                self.do_visualization(numpy.concatenate(self.stored_visuals, axis=0), title, figsize)
             self.visualizing = 0
             self.stored_visuals = []
 
