@@ -28,6 +28,7 @@ class Activation(torch.nn.Module):
         self.weight.data.zero_()
 
     def visualize(self, k, title, figsize):
+        device = self.weight.device
         with torch.no_grad():
             fig, axes = matplotlib.pyplot.subplots(
                 nrows=k, ncols=1, sharex=True, sharey=True, figsize=figsize
@@ -37,14 +38,16 @@ class Activation(torch.nn.Module):
                 v = torch.linspace(-1, 1, n)
                 X = torch.zeros(n, self.d)
                 X[:,i] = v
-                Xh = self.forward(X)
+                Xh = self.forward(X.to(device))
 
                 plot = axes[i]
-                plot.plot(v.cpu().numpy(), Xh[:,i].cpu().numpy())
+                plot.plot(v.cpu().numpy(), Xh[:,i].cpu().numpy(), label="Interpolated polynomial")
+
+                plot.plot(self.basis.nodes.cpu().numpy(), self.weight[0,i].cpu().numpy(), "x", label="Chebyshev node")
             
                 self.basis.visualize(plot)
                 plot.set_ylabel("$x_%d$" % i)
-
+        axes[-1].legend()
         axes[0].set_title(title)
 
         fname = "%s.png" % title
