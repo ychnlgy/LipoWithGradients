@@ -43,3 +43,4 @@ class Activation(torch.nn.Module):
                 self.basis.visualize(plot)
 
         matplotlib.pyplot.savefig(fname)
+        print("Saved polynomial activations to %s" % fname)

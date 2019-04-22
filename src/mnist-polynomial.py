@@ -105,7 +105,8 @@ def main(download=0, device="cuda"):
     
     assert IMAGESIZE == (32, 32)
     
-    model, act = create_baseline_model(CHANNELS, CLASSES).to(device)
+    model, act = create_baseline_model(CHANNELS, CLASSES)
+    model = model.to(device)
     act.visualize(k=4, fname="before.png")
     input()
     
