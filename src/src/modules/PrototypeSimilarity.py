@@ -1,4 +1,4 @@
-import torch, math
+import torch, math, numpy
 
 from .CosineSimilarity import CosineSimilarity
 
@@ -36,7 +36,7 @@ class PrototypeSimilarity(torch.nn.Module):
 
     def visualize(self, title, figsize):
         if self.visualizing > 0:
-            self.do_visualization(numpy.concatenate(self.stored_visuals, axis=0))
+            self.do_visualization(numpy.concatenate(self.stored_visuals, axis=0), title, figsize)
             self.visualizing = 0
             self.stored_visuals = []
 
