@@ -104,7 +104,9 @@ def main(download=0, device="cuda"):
     
     assert IMAGESIZE == (32, 32)
     
-    model = create_baseline_model(CHANNELS, CLASSES).to(device)
+    model, act = create_baseline_model(CHANNELS, CLASSES).to(device)
+    act.visualize(k=4, fname="before.png")
+    input()
     
     lossf = torch.nn.CrossEntropyLoss()
     optim = torch.optim.Adam(model.parameters())

@@ -2,6 +2,9 @@ import torch, math
 
 from . import chebyshev, LagrangeBasis
 
+import matplotlib
+matplotlib.use("agg")
+
 class Activation(torch.nn.Module):
 
     def __init__(self, input_size, n_degree):
@@ -23,3 +26,20 @@ class Activation(torch.nn.Module):
 
     def reset_parameters(self):
         self.weight.data.zero_()
+
+    def visualize(self, k, fname):
+        with torch.no_grad():
+            fig, axes = matplotlib.pyplot.subplots(nrows=k, ncols=1, sharex=True, sharey=True)
+            n = 1000
+            for i in range(k):
+                v = torch.linspace(-1, 1, n)
+                X = torch.zeros(n, self.d)
+                X[:,i] = v
+                Xh = self.forward(X)
+
+                plot = axes[i]
+                plot.plot(v.numpy(), Xh[:,i].numpy())
+            
+                self.basis.visualize(plot)
+
+        matplotlib.pyplot.savefig(fname)

@@ -14,10 +14,11 @@ class LagrangeBasis(torch.nn.Module):
         xj = nodes.view(1, n, 1)
 
         denominator = (xj-xm).prod(dim=2)
-        return LagrangeBasis(xm, denominator)
+        return LagrangeBasis(xm, denominator, nodes)
 
-    def __init__(self, xm, denominator):
+    def __init__(self, xm, denominator, nodes):
         super().__init__()
+        self.nodes = nodes
         self.register_buffer("xm", xm)
         self.xm.requires_grad = False
         self.register_buffer("dn", denominator)
@@ -41,3 +42,7 @@ class LagrangeBasis(torch.nn.Module):
         X = X.view(-1, 1, 1)
         out = (X-self.xm).prod(dim=-1)/self.dn
         return out.view(*shape, out.size(-1))
+
+    def visualize(self, plot):
+        pass
+        
