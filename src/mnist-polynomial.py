@@ -35,8 +35,8 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(32, 64, 3, padding=1, stride=2) # 32 -> 16
                 ),
                 shortcut = torch.nn.Sequential(
-                    torch.nn.AvgPool2d(2),
-                    torch.nn.Conv2d(32, 64, 1)
+                    torch.nn.Conv2d(32, 64, 1),
+                    torch.nn.MaxPool2d(2)
                 )
             ),
             src.modules.ResBlock(
@@ -54,8 +54,9 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(64, 128, 3, padding=1, stride=2) # 16 -> 8
                 ),
                 shortcut = torch.nn.Sequential(
-                    torch.nn.AvgPool2d(2),
-                    torch.nn.Conv2d(64, 128, 1)
+                    
+                    torch.nn.Conv2d(64, 128, 1),
+                    torch.nn.MaxPool2d(2)
                 )
             ),
             src.modules.ResBlock(
@@ -79,8 +80,8 @@ def create_baseline_model(D, C):
                     #torch.nn.Conv2d(64, 128, 3, padding=1, stride=2) # 8 -> 4
                 ),
                 shortcut = torch.nn.Sequential(
-                    torch.nn.AvgPool2d(2),
-                    torch.nn.Conv2d(128, 256, 1)
+                    torch.nn.Conv2d(128, 256, 1),
+                    torch.nn.MaxPool2d(2)
                 )
             )
         ),
