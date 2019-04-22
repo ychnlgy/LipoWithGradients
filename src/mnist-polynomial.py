@@ -16,6 +16,7 @@ def _random_crop(x, padding, W, H):
     return x[:,w_i:w_i+W,h_i:h_i+H]
 
 def create_baseline_model(D, C):
+    act = src.modules.polynomial.Activation(32, n_degree=32)
     return torch.nn.Sequential(
         torch.nn.Conv2d(D, 32, 3, padding=1),
         src.modules.ResNet(
@@ -63,10 +64,10 @@ def create_baseline_model(D, C):
                     #torch.nn.Conv2d(64, 128, 3, padding=1),
                     
                     torch.nn.BatchNorm2d(128),
-                    #torch.nn.ReLU(),
-                    src.modules.PrototypeSimilarity(128, 64),
-                    src.modules.polynomial.Activation(64, n_degree=16),
-                    torch.nn.Conv2d(64, 128, 3, padding=1, stride=2),
+                    torch.nn.ReLU(),
+##                    src.modules.PrototypeSimilarity(128, 64),
+##                    src.modules.polynomial.Activation(64, n_degree=16),
+                    torch.nn.Conv2d(128, 128, 3, padding=1, stride=2),
                     #src.modules.PrototypeSimilarity(128, 64),
                     #src.modules.polynomial.Activation(64, n_degree=4),
                     #torch.nn.Conv2d(64, 128, 3, padding=1, stride=2) # 8 -> 4
@@ -86,9 +87,9 @@ def create_baseline_model(D, C):
         #torch.nn.Dropout(p=0.2),
         #torch.nn.ReLU(),
         src.modules.PrototypeSimilarity(256, 32),
-        src.modules.polynomial.Activation(32, n_degree=32),
+        act,
         torch.nn.Linear(32, C)
-    )
+    ), act
 
 @src.util.main
 def main(download=0, device="cuda"):
