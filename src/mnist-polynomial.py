@@ -23,9 +23,9 @@ def create_baseline_model(D, C):
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
                     torch.nn.BatchNorm2d(32),
-                    torch.nn.ReLU(),
-                    #src.modules.PrototypeSimilarity(32, 32),
-                    #src.modules.polynomial.Activation(32, n_degree=3),
+                    #torch.nn.ReLU(),
+                    src.modules.PrototypeSimilarity(32, 32),
+                    src.modules.polynomial.Activation(32, n_degree=3),
                     #torch.nn.Conv2d(32, 32, 3, padding=1),
                     
                     #torch.nn.BatchNorm2d(32),
@@ -42,9 +42,9 @@ def create_baseline_model(D, C):
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
                     torch.nn.BatchNorm2d(64),
-                    torch.nn.ReLU(),
-                    #src.modules.PrototypeSimilarity(64, 64),
-                    #src.modules.polynomial.Activation(64, n_degree=3),
+                    #torch.nn.ReLU(),
+                    src.modules.PrototypeSimilarity(64, 64),
+                    src.modules.polynomial.Activation(64, n_degree=3),
                     #torch.nn.Conv2d(64, 64, 3, padding=1),
                     
                     #torch.nn.BatchNorm2d(64),
@@ -62,9 +62,9 @@ def create_baseline_model(D, C):
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
                     torch.nn.BatchNorm2d(128),
-                    torch.nn.ReLU(),
-                    #src.modules.PrototypeSimilarity(128, 128),
-                    #src.modules.polynomial.Activation(128, n_degree=16),
+                    #torch.nn.ReLU(),
+                    src.modules.PrototypeSimilarity(128, 128),
+                    src.modules.polynomial.Activation(128, n_degree=16),
                     #torch.nn.Conv2d(128, 128, 3, padding=1),
                     #src.modules.PrototypeSimilarity(128, 64),
                     #src.modules.polynomial.Activation(64, n_degree=4),
