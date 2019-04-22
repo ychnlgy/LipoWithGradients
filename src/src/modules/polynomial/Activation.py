@@ -38,6 +38,7 @@ class Activation(torch.nn.Module):
         x = x.cpu().numpy()
         for i in range(k):
             axes[i].plot(x, y)
+            axes[i].set_xlim([-1, 1])
             axes[i].set_xlabel("$x_%d$" % i)
         axes[k//2].set_title(title)
         fname = "%s.png" % title
@@ -58,6 +59,7 @@ class Activation(torch.nn.Module):
                 Xh = self.forward(X.to(device))
 
                 plot = axes[i]
+                plot.set_xlim([-1, 1])
                 plot.plot(v.cpu().numpy(), Xh[:,i].cpu().numpy(), label="Interpolated polynomial activation")
 
                 plot.plot(self.basis.nodes.cpu().numpy(), self.weight[0,i].cpu().numpy(), "x", label="Learned Chebyshev node")
