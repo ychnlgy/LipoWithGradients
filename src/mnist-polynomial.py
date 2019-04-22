@@ -92,7 +92,7 @@ def create_baseline_model(D, C):
     ), act
 
 @src.util.main
-def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-3):
+def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2):
 
     download = int(download)
     visualize_relu = int(visualize_relu)
@@ -165,7 +165,7 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-3):
                 
             print("Test accuracy: %.5f" % test_avg.peek())
 
-            if not epoch % 10:
+            if not epoch % 1:
                 act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100), figsize=FIGSIZE)
         
     act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d" % epochs, figsize=FIGSIZE)
