@@ -92,9 +92,10 @@ def create_baseline_model(D, C):
     ), act
 
 @src.util.main
-def main(download=0, device="cuda"):
+def main(download=0, device="cuda", visualize_relu=0):
 
     download = int(download)
+    visualize_relu = int(visualize_relu)
     
     (
         data_X, data_Y, test_X, test_Y, CLASSES, CHANNELS, IMAGESIZE
@@ -110,6 +111,11 @@ def main(download=0, device="cuda"):
 
     NUM_VISUAL_ACTIVATIONS = 5
     FIGSIZE = (20, 6)
+
+    if visualize_relu:
+        act.visualize_relu(k=NUM_VISUAL_ACTIVATIONS, title="ReLU", figsize=FIGSIZE)
+        raise SystemExit
+
     act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Initial state", figsize=FIGSIZE)
     
     lossf = torch.nn.CrossEntropyLoss()
@@ -143,11 +149,7 @@ def main(download=0, device="cuda"):
             
             sched.step(data_avg.peek())
 
-            if epoch == 10:
-                act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch 10", figsize=FIGSIZE)
-
-            if epoch == 50:
-                act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch 50", figsize=FIGSIZE)
+            
 
             model.eval()
             with torch.no_grad():
@@ -161,5 +163,8 @@ def main(download=0, device="cuda"):
                     test_avg.update(acc.item())
                 
             print("Test accuracy: %.5f" % test_avg.peek())
+
+            if not epoch % 10:
+                act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100), figsize=FIGSIZE)
         
     act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d" % epochs, figsize=FIGSIZE)

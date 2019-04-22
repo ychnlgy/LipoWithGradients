@@ -27,6 +27,20 @@ class Activation(torch.nn.Module):
     def reset_parameters(self):
         self.weight.data.zero_()
 
+    def visualize_relu(self, k, title, figsize):
+        fig, axes = matplotlib.pyplot.subplots(
+            nrows=1, ncols=k, sharex=True, sharey=True, figsize=figsize
+        )
+        model = torch.nn.ReLU()
+        n = 1000
+        x = torch.linspace(-1, 1, n)
+        y = model(x).cpu().numpy()
+        x = x.cpu().numpy()
+        for i in range(k):
+            axes[i].plot(x, y)
+            axes[i].set_xlabel("$x_%d$" % i)
+        axes[k//2].set_title("ReLU")
+
     def visualize(self, k, title, figsize):
         device = self.weight.device
         with torch.no_grad():
@@ -51,13 +65,8 @@ class Activation(torch.nn.Module):
             
                 plot.set_xlabel("$x_%d$" % i)
 
-        
-        
-
-        import math
-        mid = math.floor(k/2.0)
-        axes[mid].legend(bbox_to_anchor=[1.1, -0.1])
-        axes[mid].set_title(title)
+        axes[k//2].legend(bbox_to_anchor=[1.1, -0.1])
+        axes[k//2].set_title(title)
 
         fname = "%s.png" % title
         matplotlib.pyplot.savefig(fname, bbox_inches="tight")
