@@ -58,5 +58,5 @@ class PrototypeSimilarity(torch.nn.Module):
             plot.set_xlabel("$x_%d$" % i)
 
         axes[k//2].set_title(title)
-        pyplot.savefig("%s.png" % title)
+        pyplot.savefig("%s.png" % title, bbox_inches="tight")
         [ax.cla() for ax in axes]
