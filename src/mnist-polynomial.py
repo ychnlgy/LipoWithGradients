@@ -109,7 +109,7 @@ def main(download=0, device="cuda"):
     model = model.to(device)
 
     NUM_VISUAL_ACTIVATIONS = 4
-    FIGSIZE = (12, 9)
+    FIGSIZE = (8, 10)
     act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Initial state", figsize=FIGSIZE)
     
     lossf = torch.nn.CrossEntropyLoss()

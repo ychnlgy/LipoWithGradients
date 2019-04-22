@@ -42,7 +42,4 @@ class LagrangeBasis(torch.nn.Module):
         X = X.view(-1, 1, 1)
         out = (X-self.xm).prod(dim=-1)/self.dn
         return out.view(*shape, out.size(-1))
-
-    def visualize(self, plot):
-        pass
         
