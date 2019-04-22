@@ -31,9 +31,12 @@ def lipschitz_max_grad(net, X_observe, X_target, Y_target, k=1):
             backpropogation should begin.
 
     '''
-    X_choice, Y_choice = _rand_diff_choice(X_observe, X_target, Y_target)
-    X_interp = _rand_blend(X_observe, X_choice)
-    Y_interp = net(X_interp)
+    device = X_observe.device
+    X_observe = X_observe.cpu()
+    with torch.no_grad():
+        X_choice, Y_choice = _rand_diff_choice(X_observe, X_target, Y_target)
+        X_interp = _rand_blend(X_observe, X_choice)
+    Y_interp = net(X_interp.to(device))
     grad = torch.autograd.grad(
         [Y_interp.mean()],
         net.parameters(),
