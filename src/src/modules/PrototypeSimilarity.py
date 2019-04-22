@@ -1,4 +1,7 @@
-import torch, math, numpy
+import torch, math, numpy, matplotlib
+
+matplotlib.use("agg")
+from matplotlib import pyplot
 
 from .CosineSimilarity import CosineSimilarity
 
@@ -14,6 +17,7 @@ class PrototypeSimilarity(torch.nn.Module):
         self.similarity = similarity
         self.visualizing = 0
         self.stored_visuals = []
+        self._axes = None
         self.reset_parameters()
 
     def forward(self, X):
@@ -41,5 +45,18 @@ class PrototypeSimilarity(torch.nn.Module):
             self.visualizing = 0
             self.stored_visuals = []
 
-    def do_visualization(self, visuals):
-        pass
+    def do_visualization(self, visuals, title, figsize):
+        k = visuals.shape[1]
+        if self._axes is None:
+            _, self._axes = pyplot.subplots(nrows=1, ncols=k, sharex=True, sharey=True, figsize=figsize)
+
+        axes = self._axes
+        for i in range(k):
+            plot = axes[i]
+            plot.set_xlim([-1, 1])
+            plot.hist(visuals[:,i], bins=40)
+            plot.set_xlabel("$x_%d$" % i)
+
+        axes[k//2].set_title(title)
+        pyplot.savefig("%s.png" % title)
+        [ax.cla() for ax in axes]
