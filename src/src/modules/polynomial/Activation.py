@@ -31,7 +31,7 @@ class Activation(torch.nn.Module):
         device = self.weight.device
         with torch.no_grad():
             fig, axes = matplotlib.pyplot.subplots(
-                nrows=k, ncols=1, sharex=True, sharey=True, figsize=figsize
+                nrows=1, ncols=k, sharex=True, sharey=True, figsize=figsize
             )
             n = 1000
             for i in range(k):
@@ -49,9 +49,15 @@ class Activation(torch.nn.Module):
                 for node in self.basis.nodes[1:]:
                     plot.axvline(x=node.numpy(), linestyle=":")
             
-                plot.set_ylabel("$x_%d$" % i)
-        axes[-1].legend(bbox_to_anchor=[1.5, 0.5])
-        axes[0].set_title(title)
+                plot.set_xlabel("$x_%d$" % i)
+
+        
+        
+
+        import math
+        mid = math.ceil(k/2.0)
+        axes[mid].legend(bbox_to_anchor=[0, 1.5])
+        axes[mid].set_title(title)
 
         fname = "%s.png" % title
         matplotlib.pyplot.savefig(fname, bbox_inches="tight")
