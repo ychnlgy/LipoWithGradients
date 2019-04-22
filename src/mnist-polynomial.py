@@ -26,7 +26,7 @@ def create_baseline_model(D, C):
                     torch.nn.ReLU(),
                     #src.modules.PrototypeSimilarity(32, 32),
                     #src.modules.polynomial.Activation(32, n_degree=3),
-                    torch.nn.Conv2d(32, 32, 3, padding=1, stride=2),
+                    torch.nn.Conv2d(32, 32, 3, padding=1),
                     
                     torch.nn.BatchNorm2d(32),
                     torch.nn.ReLU(),
@@ -129,7 +129,7 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2):
     act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Initial state", figsize=FIGSIZE)
     
     lossf = torch.nn.CrossEntropyLoss()
-    optim = torch.optim.Adam(model.parameters())
+    optim = torch.optim.Adam(model.parameters(), weight_decay=1e-6)
     #optim = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-4)
     sched = torch.optim.lr_scheduler.ReduceLROnPlateau(optim, patience=3, factor=0.5, verbose=True)
     
