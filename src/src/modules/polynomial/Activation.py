@@ -41,9 +41,12 @@ class Activation(torch.nn.Module):
                 Xh = self.forward(X.to(device))
 
                 plot = axes[i]
-                plot.plot(v.cpu().numpy(), Xh[:,i].cpu().numpy(), label="Interpolated polynomial")
+                plot.plot(v.cpu().numpy(), Xh[:,i].cpu().numpy(), label="Interpolated polynomial activation")
 
-                plot.plot(self.basis.nodes.cpu().numpy(), self.weight[0,i].cpu().numpy(), "x", label="Chebyshev node")
+                plot.plot(self.basis.nodes.cpu().numpy(), self.weight[0,i].cpu().numpy(), "x", label="Learned Chebyshev node")
+
+                for node in self.basis.nodes:
+                    plot.axvline(x=node.numpy(), ":", label="Chebyshev x-position")
             
                 plot.set_ylabel("$x_%d$" % i)
         axes[-1].legend()
