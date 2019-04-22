@@ -52,10 +52,10 @@ class Activation(torch.nn.Module):
     def visualize(self, k, title, figsize):
         device = self.weight.device
         with torch.no_grad():
-            if self._axes is None:
-                fig, self._axes = matplotlib.pyplot.subplots(
-                    nrows=1, ncols=k, sharex=True, sharey=True, figsize=figsize
-                )
+            #if self._axes is None:
+            fig, self._axes = matplotlib.pyplot.subplots(
+                nrows=1, ncols=k, sharex=True, sharey=True, figsize=figsize
+            )
             axes = self._axes
             n = 1000
             for i in range(k):
