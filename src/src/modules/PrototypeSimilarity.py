@@ -29,7 +29,7 @@ class PrototypeSimilarity(torch.nn.Module):
         if self.visualizing > 0:
             self.store_visuals(output)
         if self.training:
-            self._loss = (1-output**2).mean() + (output.mean(dim=0)**2).sum()
+            self._loss = 0#(1-output**2).mean() + (output.mean(dim=0)**2).sum()
         return output
 
     def loss(self):
