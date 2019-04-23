@@ -5,11 +5,10 @@ from . import chebyshev, LagrangeBasis
 import matplotlib
 matplotlib.use("agg")
 
-class Activation(torch.nn.Module):
+class Activation(torch.nn.Linear):
 
     def __init__(self, input_size, n_degree):
-        super().__init__()
-        self.net = torch.nn.Linear(input_size, input_size)
+        super().__init__(input_size, input_size)
 
     def forward(self, X):
         return self.net(X)
