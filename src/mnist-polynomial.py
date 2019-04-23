@@ -33,15 +33,7 @@ class PartModel(torch.nn.Module):
 def create_baseline_model(D, C):
     act = src.modules.polynomial.Activation(256, n_degree=32)
     sim = src.modules.PrototypeSimilarity(256, 256)
-    model = torch.nn.Sequential(
-        sim,
-        #torch.nn.Tanh(),
-        act,
-        
-        torch.nn.Linear(256, C)
-    )
-    return PartModel( 
-        body = torch.nn.Sequential(
+    return torch.nn.Sequential(
         torch.nn.Conv2d(D, 32, 3, padding=1),
         src.modules.ResNet(
             src.modules.ResBlock(
@@ -110,8 +102,11 @@ def create_baseline_model(D, C):
         ),
         torch.nn.AvgPool2d(4),
         src.modules.Reshape(256),
-    ),
-        main = model
+        sim,
+        #torch.nn.Tanh(),
+        act,
+        
+        torch.nn.Linear(256, C)
     ), act, sim
 
 @src.util.main
