@@ -30,6 +30,21 @@ class PartModel(torch.nn.Module):
     def parameters(self):
         return self.main.parameters()
 
+class Random(torch.nn.Module):
+
+    def __init__(self, p, a, b):
+        super().__init__()
+        self.p = p
+        self.a = a
+        self.b = b
+
+    def forward(self, X):
+        r1 = torch.rand_like(X)
+        r2 = torch.rand_like(X)
+        I = r1 < self.p
+        X[I] = r2[I]*(self.b-self.a)+self.a
+        return X
+
 def create_baseline_model(D, C):
     act = src.modules.polynomial.Activation(256, n_degree=32)
     sim = src.modules.PrototypeSimilarity(256, 256)
@@ -103,6 +118,7 @@ def create_baseline_model(D, C):
         torch.nn.AvgPool2d(4),
         src.modules.Reshape(256),
         sim,
+        Random(p=0.2, a=-1, b=1),
         #torch.nn.Tanh(),
         act,
         
@@ -141,7 +157,7 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1
     act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Initial state", figsize=FIGSIZE)
     
     lossf = torch.nn.CrossEntropyLoss()
-    optim = torch.optim.Adam(model.parameters()) #, weight_decay=1e-6
+    optim = torch.optim.Adam(model.parameters(), weight_decay=1e-6) #
     #optim = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-4)
     sched = torch.optim.lr_scheduler.ReduceLROnPlateau(optim, patience=3, factor=0.5, verbose=True)
     
