@@ -122,6 +122,7 @@ def create_baseline_model(D, C):
         Random(p=0.2, a=-1, b=1),
         #torch.nn.Tanh(),
         act,
+        torch.nn.Dropout(p=0.2),
         
         torch.nn.Linear(256, C)
     ), act, sim
