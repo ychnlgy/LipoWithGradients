@@ -101,14 +101,14 @@ def create_baseline_model(D, C):
         #torch.nn.Dropout(p=0.2),
         
         #torch.nn.ReLU(),
-        src.modules.ResNet(
-            src.modules.ResBlock(
-                block = torch.nn.Sequential(
-                    sim,
-                    act
-                )
-            )
-        ),
+##        src.modules.ResNet(
+##            src.modules.ResBlock(
+##                block = torch.nn.Sequential(
+##                    sim,
+##                    act
+##                )
+##            )
+##        ),
         
         torch.nn.Linear(256, C)
     ), act, sim
