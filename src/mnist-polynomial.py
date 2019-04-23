@@ -169,7 +169,7 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1
                 Yh = model(X)
                 loss = lossf(Yh, Y) # + gradpenalty*src.algorithm.grad_penalty.lipschitz_max_grad(model, X, data_X, data_Y)
                 optim.zero_grad()
-                (loss+ gradpenalty*sim.loss()).backward()
+                loss.backward()
                 optim.step()
                 
                 data_avg.update(loss.item())
