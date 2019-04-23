@@ -119,7 +119,7 @@ def create_baseline_model(D, C):
         torch.nn.AvgPool2d(4),
         src.modules.Reshape(256),
         sim,
-        Random(p=0.2, a=-1, b=1),
+        Random(p=0.5, a=-1, b=1),
         #torch.nn.Tanh(),
         act,
         torch.nn.Dropout(p=0.2),
