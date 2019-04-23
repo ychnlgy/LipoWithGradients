@@ -40,7 +40,7 @@ def create_baseline_model(D, C):
         
         torch.nn.Linear(256, C)
     )
-    return PartModel(
+    return PartModel( 
         body = torch.nn.Sequential(
         torch.nn.Conv2d(D, 32, 3, padding=1),
         src.modules.ResNet(
