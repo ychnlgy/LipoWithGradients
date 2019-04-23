@@ -88,8 +88,8 @@ def create_baseline_model(D, C):
         torch.nn.AvgPool2d(4),
         src.modules.Reshape(256),
         
-        #sim,
-        torch.nn.Tanh(),
+        sim,
+        #torch.nn.Tanh(),
         act,
         
         torch.nn.Linear(256, C)
@@ -113,6 +113,7 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1
     assert IMAGESIZE == (32, 32)
     
     model, act, sim = create_baseline_model(CHANNELS, CLASSES)
+    print(sim.weight)
     model = model.to(device)
 
     NUM_VISUAL_ACTIVATIONS = 5
@@ -176,5 +177,6 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1
             if not epoch % cycles:
                 sim.visualize(title="Epoch %d (prototype outputs)" % epoch, figsize=FIGSIZE)
                 act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100), figsize=FIGSIZE)
-        
+
+        print(sim.weight)
     #act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d" % epochs, figsize=FIGSIZE)
