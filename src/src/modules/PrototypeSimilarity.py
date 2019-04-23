@@ -18,6 +18,7 @@ class PrototypeSimilarity(torch.nn.Module):
         self.visualizing = 0
         self.stored_visuals = []
         self._axes = None
+        self._loss = 0
         self.reset_parameters()
 
     def forward(self, X):
@@ -27,7 +28,14 @@ class PrototypeSimilarity(torch.nn.Module):
         output = self.similarity(X, P)
         if self.visualizing > 0:
             self.store_visuals(output)
+        if self.training:
+            self._loss = (output.sum(dim=1)**2).mean()
         return output
+
+    def loss(self):
+        out = self._loss
+        self._loss = 0
+        return out
 
     def reset_parameters(self):
         torch.nn.init.kaiming_uniform_(self.weight, a=math.sqrt(5))

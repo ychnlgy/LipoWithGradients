@@ -147,18 +147,20 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1
 
     for epoch in range(epochs):
         
-        model.train()
+        
 
         if not epoch % cycles:
             sim.set_visualization_count(NUM_VISUAL_ACTIVATIONS)
         
         with tqdm.tqdm(dataloader, ncols=80) as bar:
+            
+            model.train()
             for X, Y in bar:
                 X = random_crop(X, padding=2).to(device)
                 Y = Y.to(device)
                 
                 Yh = model(X)
-                loss = lossf(Yh, Y)# + gradpenalty*src.algorithm.grad_penalty.lipschitz_max_grad(model, X, data_X, data_Y)
+                loss = lossf(Yh, Y) + gradpenalty*sim.loss()# + gradpenalty*src.algorithm.grad_penalty.lipschitz_max_grad(model, X, data_X, data_Y)
                 optim.zero_grad()
                 loss.backward()
                 optim.step()
@@ -168,8 +170,6 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1
                 bar.set_description("E%d train loss: %.5f" % (epoch, data_avg.peek()))
             
             sched.step(data_avg.peek())
-
-            
 
             model.eval()
             with torch.no_grad():
