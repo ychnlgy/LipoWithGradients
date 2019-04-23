@@ -9,24 +9,29 @@ class Activation(torch.nn.Module):
 
     def __init__(self, input_size, n_degree):
         super().__init__()
-        self.d = input_size
-        self.n = n_degree + 1
-        self.basis = LagrangeBasis.create(
-            chebyshev.get_nodes(n_degree+1)
-        )
-        self.weight = torch.nn.Parameter(
-            torch.zeros(1, self.d, self.n)
-        )
-        self._axes = None
+        self.net = torch.nn.Linear(input_size, input_size)
 
     def forward(self, X):
-        B = self.basis(X)
-        B = B.view(-1, self.d, self.n)
-        L = (self.weight * B).sum(dim=-1)
-        return L.view(X.size())
-
-    def reset_parameters(self):
-        self.weight.data.zero_()
+        return self.net(X)
+    
+##        self.d = input_size
+##        self.n = n_degree + 1
+##        self.basis = LagrangeBasis.create(
+##            chebyshev.get_nodes(n_degree+1)
+##        )
+##        self.weight = torch.nn.Parameter(
+##            torch.zeros(1, self.d, self.n)
+##        )
+##        self._axes = None
+##
+##    def forward(self, X):
+##        B = self.basis(X)
+##        B = B.view(-1, self.d, self.n)
+##        L = (self.weight * B).sum(dim=-1)
+##        return L.view(X.size())
+##
+##    def reset_parameters(self):
+##        self.weight.data.zero_()
 
     def visualize_relu(self, k, title, figsize):
         if self._axes is None:
