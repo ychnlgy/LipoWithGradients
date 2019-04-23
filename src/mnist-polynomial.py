@@ -55,7 +55,6 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(64, 128, 3, padding=1, stride=2) # 16 -> 8
                 ),
                 shortcut = torch.nn.Sequential(
-                    
                     torch.nn.Conv2d(64, 128, 1),
                     torch.nn.AvgPool2d(2)
                 )
@@ -88,39 +87,9 @@ def create_baseline_model(D, C):
         ),
         torch.nn.AvgPool2d(4),
         src.modules.Reshape(256),
-        #torch.nn.Linear(256, 1024),
         
-        
-        #torch.nn.Linear(256, 1024),
-        #torch.nn.Dropout(p=0.2),
-        #torch.nn.ReLU(),
-        #torch.nn.Linear(1024, C)
-        
-        #src.modules.PrototypeSimilarity(256, 64),
-        #src.modules.polynomial.Activation(64, n_degree=8),
-        #torch.nn.Dropout(p=0.2),
-        
-        #torch.nn.ReLU(),
-        src.modules.ResNet(
-            src.modules.ResBlock(
-                block = torch.nn.Sequential(
-                    src.modules.PrototypeSimilarity(256, 256),
-                    src.modules.polynomial.Activation(256, n_degree=32)
-                )
-            ),
-            src.modules.ResBlock(
-                block = torch.nn.Sequential(
-                    src.modules.PrototypeSimilarity(256, 256),
-                    src.modules.polynomial.Activation(256, n_degree=32)
-                )
-            ),
-            src.modules.ResBlock(
-                block = torch.nn.Sequential(
-                    sim,
-                    act
-                )
-            )
-        ),
+        sim,
+        act,
         
         torch.nn.Linear(256, C)
     ), act, sim
