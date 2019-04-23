@@ -96,12 +96,13 @@ def create_baseline_model(D, C):
     ), act, sim
 
 @src.util.main
-def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1):
+def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1, epochs=100):
 
     download = int(download)
     visualize_relu = int(visualize_relu)
     gradpenalty = float(gradpenalty)
     cycles = int(cycles)
+    epochs = int(epochs)
     
     (
         data_X, data_Y, test_X, test_Y, CLASSES, CHANNELS, IMAGESIZE
@@ -129,15 +130,11 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1
     optim = torch.optim.Adam(model.parameters(), weight_decay=1e-6) #
     #optim = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-4)
     sched = torch.optim.lr_scheduler.ReduceLROnPlateau(optim, patience=3, factor=0.5, verbose=True)
-
-    epochs = 400
     
     data_avg = src.util.MovingAverage(momentum=0.99)
     test_avg = src.util.MovingAverage(momentum=0.99)
 
     for epoch in range(epochs):
-        
-        
 
         if not epoch % cycles:
             sim.set_visualization_count(NUM_VISUAL_ACTIVATIONS)
