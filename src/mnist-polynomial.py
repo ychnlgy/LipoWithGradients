@@ -15,10 +15,33 @@ def _random_crop(x, padding, W, H):
     h_i = random.randint(0, padding)
     return x[:,w_i:w_i+W,h_i:h_i+H]
 
+class PartModel(torch.nn.Module):
+
+    def __init__(self, body, main):
+        super().__init__()
+        self.body = body
+        self.main = main
+
+    def forward(self, X):
+        with torch.no_grad():
+            X = self.body(X)
+        return self.main(X)
+
+    def parameters(self):
+        return self.main.parameters()
+
 def create_baseline_model(D, C):
     act = src.modules.polynomial.Activation(256, n_degree=32)
     sim = src.modules.PrototypeSimilarity(256, 256)
-    return torch.nn.Sequential(
+    model = torch.nn.Sequential(
+        sim,
+        #torch.nn.Tanh(),
+        act,
+        
+        torch.nn.Linear(256, C)
+    )
+    return PartModel(
+        body = torch.nn.Sequential(
         torch.nn.Conv2d(D, 32, 3, padding=1),
         src.modules.ResNet(
             src.modules.ResBlock(
@@ -87,12 +110,8 @@ def create_baseline_model(D, C):
         ),
         torch.nn.AvgPool2d(4),
         src.modules.Reshape(256),
-        
-        sim,
-        #torch.nn.Tanh(),
-        act,
-        
-        torch.nn.Linear(256, C)
+    ),
+        main = model
     ), act, sim
 
 @src.util.main
