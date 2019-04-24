@@ -1,6 +1,8 @@
 from . import polynomial, pad
 from .Savable import Savable
 from .Transpose import Transpose
+from .Contiguous import Contiguous
+from .Permute import Permute
 from .Noise import Noise
 from .Reshape import Reshape
 from .PrototypeSimilarity import PrototypeSimilarity
