@@ -56,7 +56,7 @@ class Random(torch.nn.Module):
 
 def create_baseline_model(D, C):
     
-    d = 64
+    d = 32
 
     act = src.modules.polynomial.Activation(d*4, n_degree=32)
     sim = src.modules.PrototypeSimilarity(d*4, d*4)
@@ -119,7 +119,7 @@ def create_baseline_model(D, C):
                     
                     src.modules.PrototypeSimilarity(d*4, d*4),
                     Random(p=0.05, a=-1, b=1),
-                    src.modules.polynomial.Activation(d*4, n_degree=32),
+                    src.modules.polynomial.Activation(d*4, n_degree=4),
                     torch.nn.Dropout2d(p=0.05),
                     torch.nn.Conv2d(d*4, d*8, 1),
                     torch.nn.BatchNorm2d(d*8),
