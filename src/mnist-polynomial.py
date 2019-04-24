@@ -190,7 +190,7 @@ def create_baseline_model(D, C):
         src.modules.Reshape(d*8),
 
         torch.nn.Linear(d*8, d*16),
-        torch.nn.Dropout(p=0.2),
+        #torch.nn.Dropout(p=0.2),
         torch.nn.ReLU(),
         torch.nn.Linear(d*16, C)
         
