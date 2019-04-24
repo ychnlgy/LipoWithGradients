@@ -117,11 +117,11 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*4, d*4, 3, padding=1),
                     torch.nn.BatchNorm2d(d*4),
                     
-                    src.modules.PrototypeSimilarity(d*4, 32),
+                    sim,
                     Random(p=0.05, a=-1, b=1),
-                    src.modules.polynomial.Activation(32, n_degree=16),
+                    act,
                     torch.nn.Dropout2d(p=0.05),
-                    torch.nn.Conv2d(32, d*8, 1),
+                    torch.nn.Conv2d(d*4, d*8, 1),
                     torch.nn.BatchNorm2d(d*8),
 
                     torch.nn.ReLU(),
@@ -135,16 +135,9 @@ def create_baseline_model(D, C):
         src.modules.Reshape(d*8),
         
         torch.nn.ReLU(),
-        #torch.nn.Linear(d*8, d*16),
-        #torch.nn.ReLU(),
-        #torch.nn.Linear(d*16, C)
-
-        torch.nn.Linear(d*8, d*4),
-        sim,
-        Random(p=0.05, a=-1, b=1),
-        act,
-        torch.nn.Dropout(p=0.05),
-        torch.nn.Linear(d*4, C)
+        torch.nn.Linear(d*8, d*16),
+        torch.nn.ReLU(),
+        torch.nn.Linear(d*16, C)
         
     ), act, sim
 
