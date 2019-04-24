@@ -135,7 +135,7 @@ def create_baseline_model(D, C):
                 block = torch.nn.Sequential(
                     torch.nn.Conv2d(64, 64, 3, padding=1),
                     torch.nn.BatchNorm2d(64),
-                    torch.nn.LeakyReLU()
+                    torch.nn.LeakyReLU(),
                     
                     torch.nn.Conv2d(64, 128, 3, padding=1, stride=2), # 16 -> 8
                     torch.nn.BatchNorm2d(128),
