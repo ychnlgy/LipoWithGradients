@@ -245,3 +245,5 @@ def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300):
                     try:
                         with SERVICE.create("Epoch %d" % epoch) as email:
                             email.attach(fname)
+                    except:
+                        pass
