@@ -49,8 +49,8 @@ class Activation(torch.nn.Module):
         matplotlib.pyplot.savefig(fname, bbox_inches="tight")
         print("Saved ReLU activations to %s" % fname)
 
-    def visualize(self, plot, k, title, figsize):
-        axes = plot[1,:]
+    def visualize(self, mainplot, k, title, figsize):
+        axes = mainplot[1,:]
         device = self.weight.device
         with torch.no_grad():
             #if self._axes is None:
@@ -76,7 +76,7 @@ class Activation(torch.nn.Module):
 
         axes[k//2].legend(bbox_to_anchor=[1.1, -0.1])
         axes[k//2].set_ylabel("Polynomial output")
-        plot[0,k//2].set_title(title)
+        mainplot[0,k//2].set_title(title)
 
         fname = "%s.png" % title
         matplotlib.pyplot.savefig(fname, bbox_inches="tight")
