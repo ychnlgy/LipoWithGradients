@@ -162,8 +162,8 @@ def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300):
     data_X = (data_X-miu)#/std
     test_X = (test_X-miu)#/std
     
-    dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=64, shuffle=True)
-    testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=128)
+    dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=32, shuffle=True)
+    testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=64)
     
     assert IMAGESIZE == (32, 32)
     
