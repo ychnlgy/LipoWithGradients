@@ -46,6 +46,7 @@ class PrototypeSimilarity(torch.nn.Module):
                 self.do_visualization(numpy.concatenate(self.stored_visuals, axis=0), title, figsize)
             self.visualizing = 0
             self.stored_visuals = []
+            return self._axes[1,:]
 
     def do_visualization(self, visuals, title, figsize):
         k = visuals.shape[1]
@@ -60,4 +61,3 @@ class PrototypeSimilarity(torch.nn.Module):
             #plot.set_xlabel("$x_%d$" % i)
 
         axes[k//2].set_ylabel(title)
-        return self._axes[1,:]
