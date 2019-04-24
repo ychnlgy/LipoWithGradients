@@ -56,7 +56,7 @@ class Random(torch.nn.Module):
 
 def create_baseline_model(D, C):
     
-    d = 32
+    d = 64
 
     act = src.modules.polynomial.Activation(d*4, n_degree=32)
     sim = src.modules.PrototypeSimilarity(d*4, d*4)
@@ -75,11 +75,11 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d, d, 3, padding=1),
                     torch.nn.BatchNorm2d(d),
 
-                    src.modules.PrototypeSimilarity(d, d),
+                    src.modules.PrototypeSimilarity(d, 32),
                     Random(p=0.05, a=-1, b=1),
-                    src.modules.polynomial.Activation(d, n_degree=3),
+                    src.modules.polynomial.Activation(32, n_degree=4),
                     torch.nn.Dropout2d(p=0.05),
-                    torch.nn.Conv2d(d, d*2, 1),
+                    torch.nn.Conv2d(32, d*2, 1),
                     torch.nn.BatchNorm2d(d*2),
 
                     torch.nn.ReLU(),
@@ -96,11 +96,11 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*2, d*2, 3, padding=1),
                     torch.nn.BatchNorm2d(d*2),
                     
-                    src.modules.PrototypeSimilarity(d*2, d*2),
+                    src.modules.PrototypeSimilarity(d*2, 32),
                     Random(p=0.05, a=-1, b=1),
-                    src.modules.polynomial.Activation(d*2, n_degree=8),
+                    src.modules.polynomial.Activation(32, n_degree=16),
                     torch.nn.Dropout2d(p=0.05),
-                    torch.nn.Conv2d(d*2, d*4, 1),
+                    torch.nn.Conv2d(32, d*4, 1),
                     torch.nn.BatchNorm2d(d*4),
 
                     torch.nn.ReLU(),
@@ -117,11 +117,11 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*4, d*4, 3, padding=1),
                     torch.nn.BatchNorm2d(d*4),
                     
-                    src.modules.PrototypeSimilarity(d*4, d*4),
+                    src.modules.PrototypeSimilarity(d*4, 32),
                     Random(p=0.05, a=-1, b=1),
-                    src.modules.polynomial.Activation(d*4, n_degree=4),
+                    src.modules.polynomial.Activation(32, n_degree=16),
                     torch.nn.Dropout2d(p=0.05),
-                    torch.nn.Conv2d(d*4, d*8, 1),
+                    torch.nn.Conv2d(32, d*8, 1),
                     torch.nn.BatchNorm2d(d*8),
 
                     torch.nn.ReLU(),
