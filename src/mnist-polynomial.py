@@ -4,6 +4,15 @@ import torch, tqdm, random, numpy
 
 import src, datasets
 
+SERVICE = None
+
+try:
+    import mailupdater
+    SERVICE = mailupdater.Service(input("Email address: "))
+except:
+    pass
+
+
 def random_crop(X, padding):
     N, C, W, H = X.size()
     X = torch.nn.functional.pad(X, [padding]*4, mode="constant")
@@ -97,9 +106,9 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*2, d*2, 3, padding=1),
                     torch.nn.BatchNorm2d(d*2),
 
-                    src.modules.PrototypeSimilarity(d*2, 32),
+                    src.modules.PrototypeSimilarity(d*2, 64),
                     Random(p=0.05, a=-1, b=1),
-                    src.modules.polynomial.Activation(32, n_degree=4),
+                    src.modules.polynomial.Activation(64, n_degree=8),
                     
                     torch.nn.Dropout2d(p=0.05),
                     torch.nn.Conv2d(32, d*4, 1),
@@ -162,7 +171,7 @@ def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300):
     data_X = (data_X-miu)#/std
     test_X = (test_X-miu)#/std
     
-    dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=128, shuffle=True)
+    dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=32, shuffle=True)
     testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=128)
     
     assert IMAGESIZE == (32, 32)
@@ -228,6 +237,11 @@ def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300):
 
             if cycles > 0 and not epoch % cycles:
                 plot = sim.visualize(title="Prototype outputs count", figsize=FIGSIZE)
-                act.visualize(plot, k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100), figsize=FIGSIZE)
+                fname = act.visualize(plot, k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100), figsize=FIGSIZE)
 
     #act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d" % epochs, figsize=FIGSIZE)
+
+                if SERVICE is not None:
+                    try:
+                        with SERVICE.create("Epoch %d" % epoch) as email:
+                            email.attach(fname)
