@@ -190,7 +190,6 @@ def create_baseline_model(D, C):
         src.modules.Reshape(d*8),
 
         torch.nn.Linear(d*8, d*16),
-        #torch.nn.Dropout(p=0.2),
         torch.nn.ReLU(),
         torch.nn.Linear(d*16, C)
         
@@ -217,10 +216,10 @@ def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300):
     ) = datasets.cifar.get(download)
 
     miu = data_X.mean(dim=0).unsqueeze(0)
-    std = data_X.std(dim=0).unsqueeze(0)
+    #std = data_X.std(dim=0).unsqueeze(0)
 
-    data_X = (data_X-miu)/std
-    test_X = (test_X-miu)/std
+    data_X = (data_X-miu)#/std
+    test_X = (test_X-miu)#/std
     
     dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=128, shuffle=True)
     testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=256)
