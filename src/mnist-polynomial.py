@@ -181,7 +181,7 @@ def create_baseline_model(D, C):
                     torch.nn.BatchNorm2d(256),
                     torch.nn.LeakyReLU(),
                 ),
-                shortcut = torch.nn.Conv2d(128, 256, 1),
+                shortcut = torch.nn.Conv2d(128, 256, 1, stride=2),
                 activation = torch.nn.LeakyReLU()
             )
         ),
