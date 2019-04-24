@@ -47,7 +47,7 @@ class Random(torch.nn.Module):
         return X
 
 def create_baseline_model(D, C):
-    act = src.modules.polynomial.Activation(256, n_degree=32)
+    act = src.modules.polynomial.Activation(256, n_degree=64)
     sim = src.modules.PrototypeSimilarity(256, 256)
     return torch.nn.Sequential(
         torch.nn.Conv2d(D, 32, 3, padding=1),
@@ -118,11 +118,12 @@ def create_baseline_model(D, C):
         ),
         torch.nn.AvgPool2d(4),
         src.modules.Reshape(256),
+        torch.nn.Linear(256, 256),
         sim,
-        Random(p=0.2, a=-1, b=1),
+        Random(p=0.4, a=-1, b=1),
         #torch.nn.Tanh(),
         act,
-        torch.nn.Dropout(p=0.2),
+        torch.nn.Dropout(p=0.4),
         
         torch.nn.Linear(256, C)
     ), act, sim
