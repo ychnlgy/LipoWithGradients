@@ -58,127 +58,131 @@ def create_baseline_model(D, C):
     act = src.modules.polynomial.Activation(256, n_degree=32)
     sim = src.modules.PrototypeSimilarity(256, 256)
     return torch.nn.Sequential(
+        
         torch.nn.Conv2d(D, 32, 3, padding=1),
+        torch.nn.BatchNorm2d(32),
+        torch.nn.LeakyReLU(),
+        
         src.modules.ResNet(
 
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
-                    torch.nn.BatchNorm2d(32),
-                    torch.nn.ReLU(),
                     torch.nn.Conv2d(32, 32, 3, padding=1),
-                    
                     torch.nn.BatchNorm2d(32),
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(32, 32, 3, padding=1)
-                )
+                    torch.nn.LeakyReLU(),
+                    
+                    torch.nn.Conv2d(32, 32, 3, padding=1),
+                    torch.nn.BatchNorm2d(32),
+                    torch.nn.LeakyReLU(),
+                ),
+                activation = torch.nn.LeakyReLU()
             ),
 
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
-                    torch.nn.BatchNorm2d(32),
-                    torch.nn.ReLU(),
                     torch.nn.Conv2d(32, 32, 3, padding=1),
-                    
                     torch.nn.BatchNorm2d(32),
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(32, 32, 3, padding=1)
-                )
+                    torch.nn.LeakyReLU(),
+                    
+                    torch.nn.Conv2d(32, 32, 3, padding=1),
+                    torch.nn.BatchNorm2d(32),
+                    torch.nn.LeakyReLU(),
+                ),
+                activation = torch.nn.LeakyReLU()
             ),
             
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
-                    torch.nn.BatchNorm2d(32),
-                    torch.nn.ReLU(),
                     torch.nn.Conv2d(32, 32, 3, padding=1),
-                    
                     torch.nn.BatchNorm2d(32),
-                    torch.nn.ReLU(),
+                    torch.nn.LeakyReLU(),
+                    
                     torch.nn.Conv2d(32, 64, 3, padding=1, stride=2) # 32 -> 16
+                    torch.nn.BatchNorm2d(64),
+                    torch.nn.LeakyReLU()
                 ),
-                shortcut = torch.nn.Sequential(
-                    torch.nn.Conv2d(32, 64, 1),
-                    torch.nn.AvgPool2d(2)
-                )
+                shortcut = torch.nn.Conv2d(32, 64, 1, stride=2),
+                activation = torch.nn.LeakyReLU()
             ),
 
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
-                    torch.nn.BatchNorm2d(64),
-                    torch.nn.ReLU(),
                     torch.nn.Conv2d(64, 64, 3, padding=1),
-                    
                     torch.nn.BatchNorm2d(64),
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(64, 64, 3, padding=1)
-                )
+                    torch.nn.LeakyReLU(),
+
+                    torch.nn.Conv2d(64, 64, 3, padding=1),
+                    torch.nn.BatchNorm2d(64),
+                    torch.nn.LeakyReLU()
+                ),
+                activation = torch.nn.LeakyReLU()
             ),
 
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
-                    torch.nn.BatchNorm2d(64),
-                    torch.nn.ReLU(),
                     torch.nn.Conv2d(64, 64, 3, padding=1),
-                    
                     torch.nn.BatchNorm2d(64),
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(64, 64, 3, padding=1)
-                )
+                    torch.nn.LeakyReLU(),
+                    
+                    torch.nn.Conv2d(64, 64, 3, padding=1),
+                    torch.nn.BatchNorm2d(64),
+                    torch.nn.LeakyReLU()
+                ),
+                activation = torch.nn.LeakyReLU()
             ),
             
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
-                    torch.nn.BatchNorm2d(64),
-                    torch.nn.ReLU(),
                     torch.nn.Conv2d(64, 64, 3, padding=1),
-                    
                     torch.nn.BatchNorm2d(64),
-                    torch.nn.ReLU(),
+                    torch.nn.LeakyReLU()
+                    
                     torch.nn.Conv2d(64, 128, 3, padding=1, stride=2) # 16 -> 8
+                    torch.nn.BatchNorm2d(128),
+                    torch.nn.LeakyReLU()
                 ),
-                shortcut = torch.nn.Sequential(
-                    torch.nn.Conv2d(64, 128, 1),
-                    torch.nn.AvgPool2d(2)
-                )
+                shortcut = torch.nn.Conv2d(64, 128, 1),
+                activation = torch.nn.LeakyReLU()
             ),
 
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
-                    torch.nn.BatchNorm2d(128),
-                    torch.nn.ReLU(),
                     torch.nn.Conv2d(128, 128, 3, padding=1),
-                    
                     torch.nn.BatchNorm2d(128),
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(128, 128, 3, padding=1)
-                )
+                    torch.nn.LeakyReLU(),
+                    
+                    torch.nn.Conv2d(128, 128, 3, padding=1),
+                    torch.nn.BatchNorm2d(128),
+                    torch.nn.LeakyReLU()
+                ),
+                activation = torch.nn.LeakyReLU()
             ),
 
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
-                    torch.nn.BatchNorm2d(128),
-                    torch.nn.ReLU(),
                     torch.nn.Conv2d(128, 128, 3, padding=1),
-                    
                     torch.nn.BatchNorm2d(128),
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(128, 128, 3, padding=1)
-                )
+                    torch.nn.LeakyReLU(),
+                    
+                    torch.nn.Conv2d(128, 128, 3, padding=1),
+                    torch.nn.BatchNorm2d(128),
+                    torch.nn.LeakyReLU()
+                ),
+                activation = torch.nn.LeakyReLU()
             ),
             
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
-                    torch.nn.BatchNorm2d(128),
-                    torch.nn.ReLU(),
                     torch.nn.Conv2d(128, 128, 3, padding=1),
-                    
                     torch.nn.BatchNorm2d(128),
-                    torch.nn.ReLU(),
+                    torch.nn.LeakyReLU(),
+                    
                     torch.nn.Conv2d(128, 256, 3, padding=1, stride=2),
+                    torch.nn.BatchNorm2d(256),
+                    torch.nn.LeakyReLU(),
                 ),
-                shortcut = torch.nn.Sequential(
-                    torch.nn.Conv2d(128, 256, 1),
-                    torch.nn.AvgPool2d(2)
-                )
+                shortcut = torch.nn.Conv2d(128, 256, 1),
+                activation = torch.nn.LeakyReLU()
             )
         ),
         torch.nn.AvgPool2d(4),
