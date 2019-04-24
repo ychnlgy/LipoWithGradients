@@ -120,10 +120,10 @@ def create_baseline_model(D, C):
         src.modules.Reshape(256),
         torch.nn.Linear(256, 256),
         sim,
-        Random(p=0.4, a=-1, b=1),
+        Random(p=0.05, a=-1, b=1),
         #torch.nn.Tanh(),
         act,
-        torch.nn.Dropout(p=0.4),
+        torch.nn.Dropout(p=0.05),
         
         torch.nn.Linear(256, C)
     ), act, sim
