@@ -5,32 +5,34 @@ from . import chebyshev, LagrangeBasis
 import matplotlib
 matplotlib.use("agg")
 
-class Activation(torch.nn.Linear):
+EPS = 1e-16
+
+class Activation(torch.nn.Module):
 
     def __init__(self, input_size, n_degree):
-        super().__init__(input_size, input_size)
+        super().__init__()
+        self.d = input_size
+        self.n = n_degree + 1
+        self.basis = LagrangeBasis.create(
+            chebyshev.get_nodes(n_degree+1)
+        )
+        self.weight = torch.nn.Parameter(
+            torch.zeros(1, self.d, self.n)
+        )
+        self._axes = None
 
     def forward(self, X):
-        return self.net(X)
-    
-##        self.d = input_size
-##        self.n = n_degree + 1
-##        self.basis = LagrangeBasis.create(
-##            chebyshev.get_nodes(n_degree+1)
-##        )
-##        self.weight = torch.nn.Parameter(
-##            torch.zeros(1, self.d, self.n)
-##        )
-##        self._axes = None
-##
-##    def forward(self, X):
-##        B = self.basis(X)
-##        B = B.view(-1, self.d, self.n)
-##        L = (self.weight * B).sum(dim=-1)
-##        return L.view(X.size())
-##
-##    def reset_parameters(self):
-##        self.weight.data.zero_()
+        B = self.basis(X)
+        B = B.view(-1, self.d, self.n)
+        self._grad_div = B.mean(dim=0).unsqueeze(0).clone().detach()
+        L = (self.weight * B).sum(dim=-1)
+        return L.view(X.size())
+
+    def step(self):
+        self.weight.grad /= self._grad_div+EPS
+
+    def reset_parameters(self):
+        self.weight.data.zero_()
 
     def visualize_relu(self, k, title, figsize):
         if self._axes is None:
