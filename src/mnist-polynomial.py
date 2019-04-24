@@ -99,7 +99,7 @@ def create_baseline_model(D, C):
 
                     src.modules.PrototypeSimilarity(d*2, 32),
                     Random(p=0.05, a=-1, b=1),
-                    src.modules.polynomial.Activation(32, n_degree=16),
+                    src.modules.polynomial.Activation(32, n_degree=4),
                     
                     torch.nn.Dropout2d(p=0.05),
                     torch.nn.Conv2d(32, d*4, 1),
