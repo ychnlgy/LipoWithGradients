@@ -1,4 +1,6 @@
-import torch, tqdm, random
+import torch, tqdm, random, numpy
+
+import scipy.misc
 
 import src, datasets
 
@@ -14,6 +16,13 @@ def _random_crop(x, padding, W, H):
     w_i = random.randint(0, padding)
     h_i = random.randint(0, padding)
     return x[:,w_i:w_i+W,h_i:h_i+H]
+
+def random_flip(X):
+    N = len(X)
+    numpy.flip(X.numpy(), axis=2)
+    im = X[0].permute(1, 2, 0)
+    scipy.misc.imsave("temp.png", im.numpy())
+    input("Here")
 
 class PartModel(torch.nn.Module):
 
@@ -140,6 +149,12 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1
     (
         data_X, data_Y, test_X, test_Y, CLASSES, CHANNELS, IMAGESIZE
     ) = datasets.cifar.get(download)
+
+    miu = data_X.mean(dim=0).unsqueeze(0)
+    std = data_X.std(dim=0).unsqueeze(0)
+
+    data_X = (data_X-miu)/std
+    test_X = (test_X-miu)/std
     
     dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=64, shuffle=True)
     testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=128)
@@ -176,7 +191,8 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1
             
             model.train()
             for X, Y in bar:
-                X = random_crop(X, padding=2).to(device)
+                X = random_flip(X)
+                X = random_crop(X, padding=4).to(device)
                 Y = Y.to(device)
                 
                 Yh = model(X)
