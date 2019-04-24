@@ -133,7 +133,7 @@ def create_baseline_model(D, C):
                     act,
                     
                     torch.nn.Dropout2d(p=0.05),
-                    torch.nn.Conv2d(d, d*8, 1),
+                    torch.nn.Conv2d(d*2, d*8, 1),
                     torch.nn.BatchNorm2d(d*8),
 
                     torch.nn.ReLU(),
