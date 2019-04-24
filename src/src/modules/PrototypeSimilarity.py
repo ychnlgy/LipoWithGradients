@@ -60,4 +60,4 @@ class PrototypeSimilarity(torch.nn.Module):
             plot.hist(visuals[:,i], bins=100)
             #plot.set_xlabel("$x_%d$" % i)
 
-        axes[k//2].set_ylabel(title)
+        axes[0].set_ylabel(title)

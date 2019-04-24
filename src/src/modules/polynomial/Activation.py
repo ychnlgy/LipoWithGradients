@@ -75,7 +75,7 @@ class Activation(torch.nn.Module):
                 plot.set_xlabel("$x_%d$" % i)
 
         axes[k//2].legend(bbox_to_anchor=[1.1, -0.1])
-        axes[k//2].set_ylabel("Polynomial output")
+        axes[0].set_ylabel("Polynomial output")
         mainplot[0,k//2].set_title(title)
 
         fname = "%s.png" % title

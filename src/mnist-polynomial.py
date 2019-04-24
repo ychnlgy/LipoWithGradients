@@ -150,7 +150,7 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1
     model = model.to(device)
 
     NUM_VISUAL_ACTIVATIONS = 5
-    FIGSIZE = (20, 16)
+    FIGSIZE = (20, 12)
 
     if visualize_relu:
         act.visualize_relu(k=NUM_VISUAL_ACTIVATIONS, title="ReLU", figsize=FIGSIZE)
