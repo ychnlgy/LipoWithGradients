@@ -159,8 +159,8 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1
     act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Initial state", figsize=FIGSIZE)
     
     lossf = torch.nn.CrossEntropyLoss()
-    optim = torch.optim.Adam(model.parameters(), lr=1e-4, weight_decay=1e-4) #
-    #optim = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-4)
+    #optim = torch.optim.Adam(model.parameters(), lr=1e-4, weight_decay=1e-4) #
+    optim = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-4)
     sched = torch.optim.lr_scheduler.ReduceLROnPlateau(optim, patience=3, factor=0.5, verbose=True)
     
     data_avg = src.util.MovingAverage(momentum=0.99)
