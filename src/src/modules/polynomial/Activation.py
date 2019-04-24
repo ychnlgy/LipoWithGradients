@@ -83,4 +83,4 @@ class Activation(torch.nn.Module):
         print("Saved polynomial activations to %s" % fname)
         for i in range(2):
             for j in range(k):
-                axes[i,j].cla()
+                mainplot[i,j].cla()
