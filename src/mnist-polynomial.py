@@ -57,35 +57,36 @@ class Random(torch.nn.Module):
 def create_baseline_model(D, C):
     act = src.modules.polynomial.Activation(256, n_degree=32)
     sim = src.modules.PrototypeSimilarity(256, 256)
+    d = 64
     return torch.nn.Sequential(
         
-        torch.nn.Conv2d(D, 32, 3, padding=1),
-        torch.nn.BatchNorm2d(32),
+        torch.nn.Conv2d(D, d, 5, padding=2),
+        torch.nn.BatchNorm2d(d),
         torch.nn.LeakyReLU(),
         
         src.modules.ResNet(
 
-            src.modules.ResBlock(
-                block = torch.nn.Sequential(
-                    torch.nn.Conv2d(32, 32, 3, padding=1),
-                    torch.nn.BatchNorm2d(32),
-                    torch.nn.LeakyReLU(),
-                    
-                    torch.nn.Conv2d(32, 32, 3, padding=1),
-                    torch.nn.BatchNorm2d(32),
-                    torch.nn.LeakyReLU(),
-                ),
-                activation = torch.nn.LeakyReLU()
-            ),
+##            src.modules.ResBlock(
+##                block = torch.nn.Sequential(
+##                    torch.nn.Conv2d(d, d, 3, padding=1),
+##                    torch.nn.BatchNorm2d(d),
+##                    torch.nn.LeakyReLU(),
+##                    
+##                    torch.nn.Conv2d(d, d, 3, padding=1),
+##                    torch.nn.BatchNorm2d(d),
+##                    torch.nn.LeakyReLU(),
+##                ),
+##                activation = torch.nn.LeakyReLU()
+##            ),
 
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
-                    torch.nn.Conv2d(32, 32, 3, padding=1),
-                    torch.nn.BatchNorm2d(32),
+                    torch.nn.Conv2d(d, d, 3, padding=1),
+                    torch.nn.BatchNorm2d(d),
                     torch.nn.LeakyReLU(),
                     
-                    torch.nn.Conv2d(32, 32, 3, padding=1),
-                    torch.nn.BatchNorm2d(32),
+                    torch.nn.Conv2d(d, d, 3, padding=1),
+                    torch.nn.BatchNorm2d(d),
                     torch.nn.LeakyReLU(),
                 ),
                 activation = torch.nn.LeakyReLU()
@@ -93,39 +94,39 @@ def create_baseline_model(D, C):
             
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
-                    torch.nn.Conv2d(32, 32, 3, padding=1),
-                    torch.nn.BatchNorm2d(32),
+                    torch.nn.Conv2d(d, d, 3, padding=1),
+                    torch.nn.BatchNorm2d(d),
                     torch.nn.LeakyReLU(),
                     
-                    torch.nn.Conv2d(32, 64, 3, padding=1, stride=2), # 32 -> 16
-                    torch.nn.BatchNorm2d(64),
+                    torch.nn.Conv2d(d, d*2, 3, padding=1, stride=2), # 32 -> 16
+                    torch.nn.BatchNorm2d(d*2),
                     torch.nn.LeakyReLU()
                 ),
-                shortcut = torch.nn.Conv2d(32, 64, 1, stride=2),
+                shortcut = torch.nn.Conv2d(d, d*2, 1, stride=2),
                 activation = torch.nn.LeakyReLU()
             ),
 
+##            src.modules.ResBlock(
+##                block = torch.nn.Sequential(
+##                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
+##                    torch.nn.BatchNorm2d(d*2),
+##                    torch.nn.LeakyReLU(),
+##
+##                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
+##                    torch.nn.BatchNorm2d(d*2),
+##                    torch.nn.LeakyReLU()
+##                ),
+##                activation = torch.nn.LeakyReLU()
+##            ),
+
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
-                    torch.nn.Conv2d(64, 64, 3, padding=1),
-                    torch.nn.BatchNorm2d(64),
-                    torch.nn.LeakyReLU(),
-
-                    torch.nn.Conv2d(64, 64, 3, padding=1),
-                    torch.nn.BatchNorm2d(64),
-                    torch.nn.LeakyReLU()
-                ),
-                activation = torch.nn.LeakyReLU()
-            ),
-
-            src.modules.ResBlock(
-                block = torch.nn.Sequential(
-                    torch.nn.Conv2d(64, 64, 3, padding=1),
-                    torch.nn.BatchNorm2d(64),
+                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
+                    torch.nn.BatchNorm2d(d*2),
                     torch.nn.LeakyReLU(),
                     
-                    torch.nn.Conv2d(64, 64, 3, padding=1),
-                    torch.nn.BatchNorm2d(64),
+                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
+                    torch.nn.BatchNorm2d(d*2),
                     torch.nn.LeakyReLU()
                 ),
                 activation = torch.nn.LeakyReLU()
@@ -133,39 +134,39 @@ def create_baseline_model(D, C):
             
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
-                    torch.nn.Conv2d(64, 64, 3, padding=1),
-                    torch.nn.BatchNorm2d(64),
+                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
+                    torch.nn.BatchNorm2d(d*2),
                     torch.nn.LeakyReLU(),
                     
-                    torch.nn.Conv2d(64, 128, 3, padding=1, stride=2), # 16 -> 8
+                    torch.nn.Conv2d(d*2, d*4, 3, padding=1, stride=2), # 16 -> 8
                     torch.nn.BatchNorm2d(128),
                     torch.nn.LeakyReLU()
                 ),
-                shortcut = torch.nn.Conv2d(64, 128, 1, stride=2),
+                shortcut = torch.nn.Conv2d(d*2, d*4, 1, stride=2),
                 activation = torch.nn.LeakyReLU()
             ),
 
-            src.modules.ResBlock(
-                block = torch.nn.Sequential(
-                    torch.nn.Conv2d(128, 128, 3, padding=1),
-                    torch.nn.BatchNorm2d(128),
-                    torch.nn.LeakyReLU(),
-                    
-                    torch.nn.Conv2d(128, 128, 3, padding=1),
-                    torch.nn.BatchNorm2d(128),
-                    torch.nn.LeakyReLU()
-                ),
-                activation = torch.nn.LeakyReLU()
-            ),
+##            src.modules.ResBlock(
+##                block = torch.nn.Sequential(
+##                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
+##                    torch.nn.BatchNorm2d(d*4),
+##                    torch.nn.LeakyReLU(),
+##                    
+##                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
+##                    torch.nn.BatchNorm2d(d*4),
+##                    torch.nn.LeakyReLU()
+##                ),
+##                activation = torch.nn.LeakyReLU()
+##            ),
 
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
-                    torch.nn.Conv2d(128, 128, 3, padding=1),
-                    torch.nn.BatchNorm2d(128),
+                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
+                    torch.nn.BatchNorm2d(d*4),
                     torch.nn.LeakyReLU(),
                     
-                    torch.nn.Conv2d(128, 128, 3, padding=1),
-                    torch.nn.BatchNorm2d(128),
+                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
+                    torch.nn.BatchNorm2d(d*4),
                     torch.nn.LeakyReLU()
                 ),
                 activation = torch.nn.LeakyReLU()
@@ -173,25 +174,25 @@ def create_baseline_model(D, C):
             
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
-                    torch.nn.Conv2d(128, 128, 3, padding=1),
-                    torch.nn.BatchNorm2d(128),
+                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
+                    torch.nn.BatchNorm2d(d*4),
                     torch.nn.LeakyReLU(),
                     
-                    torch.nn.Conv2d(128, 256, 3, padding=1, stride=2),
-                    torch.nn.BatchNorm2d(256),
+                    torch.nn.Conv2d(d*4, d*8, 3, padding=1, stride=2),
+                    torch.nn.BatchNorm2d(d*8),
                     torch.nn.LeakyReLU(),
                 ),
-                shortcut = torch.nn.Conv2d(128, 256, 1, stride=2),
+                shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2),
                 activation = torch.nn.LeakyReLU()
             )
         ),
         torch.nn.AvgPool2d(4),
-        src.modules.Reshape(256),
+        src.modules.Reshape(d*8),
 
-        torch.nn.Linear(256, 1024),
+        torch.nn.Linear(d*8, d*16),
         torch.nn.Dropout(p=0.2),
         torch.nn.ReLU(),
-        torch.nn.Linear(1024, C)
+        torch.nn.Linear(d*16, C)
         
         
         #torch.nn.Linear(256, 256),
@@ -241,7 +242,7 @@ def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300):
     
     lossf = torch.nn.CrossEntropyLoss()
     #optim = torch.optim.Adam(model.parameters(), lr=1e-4, weight_decay=1e-4) #
-    optim = torch.optim.SGD(model.parameters(), lr=0.1, momentum=0.9, weight_decay=5e-4, nesterov=True)
+    optim = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-4, nesterov=False)
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(optim, T_max=epochs)
     
     data_avg = src.util.MovingAverage(momentum=0.99)
