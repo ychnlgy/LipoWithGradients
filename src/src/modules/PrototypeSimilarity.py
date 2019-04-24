@@ -47,7 +47,14 @@ class PrototypeSimilarity(torch.nn.Module):
         self.visualizing = count
 
     def store_visuals(self, output):
-        self.stored_visuals.append(output[:,:self.visualizing].clone().detach().cpu().numpy())
+        output = output[:,:self.visualizing].clone().detach()
+        
+        if len(output.shape) == 4:
+            output = output.permute(0, 2, 3, 1).view(-1, output.size(1))
+
+        assert len(output.shape) == 2
+        
+        self.stored_visuals.append(output.cpu().numpy())
 
     def visualize(self, title, figsize):
         if self.visualizing > 0:

@@ -64,7 +64,6 @@ class Activation(torch.nn.Module):
         axes = mainplot[1,:]
         device = self.weight.device
         with torch.no_grad():
-            #if self._axes is None:
             
             n = 1000
             for i in range(k):
