@@ -58,8 +58,8 @@ def create_baseline_model(D, C):
     
     d = 64
 
-    act = src.modules.polynomial.Activation(d*4, n_degree=32)
-    sim = src.modules.PrototypeSimilarity(d*4, d*4)
+    sim = src.modules.PrototypeSimilarity(d*4, 64)
+    act = src.modules.polynomial.Activation(64, n_degree=32)
     
     return torch.nn.Sequential(
         
