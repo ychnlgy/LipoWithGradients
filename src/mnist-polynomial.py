@@ -204,7 +204,6 @@ def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300):
 
     download = int(download)
     visualize_relu = int(visualize_relu)
-    gradpenalty = float(gradpenalty)
     cycles = int(cycles)
     epochs = int(epochs)
     
