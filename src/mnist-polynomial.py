@@ -75,13 +75,9 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d, d, 3, padding=1),
                     torch.nn.BatchNorm2d(d),
 
-                    src.modules.Permute(0, 2, 3, 1),
-                    src.modules.Contiguous(),
                     src.modules.PrototypeSimilarity(d, 32),
                     Random(p=0.05, a=-1, b=1),
                     src.modules.polynomial.Activation(32, n_degree=4),
-                    src.modules.Permute(0, 3, 1, 2),
-                    src.modules.Contiguous(),
                     
                     torch.nn.Dropout2d(p=0.05),
                     torch.nn.Conv2d(32, d*2, 1),
@@ -101,13 +97,9 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*2, d*2, 3, padding=1),
                     torch.nn.BatchNorm2d(d*2),
 
-                    src.modules.Permute(0, 2, 3, 1),
-                    src.modules.Contiguous(),
                     src.modules.PrototypeSimilarity(d*2, 32),
                     Random(p=0.05, a=-1, b=1),
                     src.modules.polynomial.Activation(32, n_degree=16),
-                    src.modules.Permute(0, 3, 1, 2),
-                    src.modules.Contiguous(),
                     
                     torch.nn.Dropout2d(p=0.05),
                     torch.nn.Conv2d(32, d*4, 1),
@@ -127,13 +119,9 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*4, d*4, 3, padding=1),
                     torch.nn.BatchNorm2d(d*4),
 
-                    src.modules.Permute(0, 2, 3, 1),
-                    src.modules.Contiguous(),
                     sim,
                     Random(p=0.05, a=-1, b=1),
                     act,
-                    src.modules.Permute(0, 3, 1, 2),
-                    src.modules.Contiguous(),
                     
                     torch.nn.Dropout2d(p=0.05),
                     torch.nn.Conv2d(d, d*8, 1),

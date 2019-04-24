@@ -29,10 +29,10 @@ class LagrangeBasis(torch.nn.Module):
         '''
 
         Input:
-            X - torch Tensor of size (N, *, D)
+            X - torch Tensor of size (*)
 
         Output:
-            L - torch Tensor of size (N, *, D, n), where n is the
+            L - torch Tensor of size (*, n), where n is the
                 number of nodes for the Lagrange basis.
 
         '''

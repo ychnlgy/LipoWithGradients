@@ -23,6 +23,15 @@ class PrototypeSimilarity(torch.nn.Module):
         self.reset_parameters()
 
     def forward(self, X):
+        '''
+
+        Input:
+            X - torch Tensor of size (N, D, *), input features.
+
+        Output:
+            P - torch Tensor of size (N, C, *), prototype classifications.
+        
+        '''
         X = X.unsqueeze(1)
         e = len(X.shape) - len(self.weight.shape)
         P = self.weight.view(*self.weight.shape, *([1]*e))

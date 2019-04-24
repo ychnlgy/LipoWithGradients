@@ -17,15 +17,26 @@ class Activation(torch.nn.Module):
             chebyshev.get_nodes(n_degree+1)
         )
         self.weight = torch.nn.Parameter(
-            torch.zeros(1, self.d, self.n)
+            torch.zeros(self.d, self.n)
         )
         self._axes = None
 
     def forward(self, X):
+        '''
+
+        Input:
+            X - torch Tensor of size (N, D, *), input features.
+
+        Output:
+            P - torch Tensor of size (N, D, *), polynomial output.
+
+        '''
         B = self.basis(X)
-        B = B.view(-1, self.d, self.n)
+        e = len(B.shape) - len(self.weight.shape)
+        w = self.weight.view(1, self.d, *([1]*e), self.n)
         L = (self.weight * B).sum(dim=-1)
-        return L.view(X.size())
+        assert L.size() == X.size()
+        return L
 
     def reset_parameters(self):
         self.weight.data.zero_()
