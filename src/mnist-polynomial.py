@@ -71,7 +71,7 @@ def create_baseline_model(D, C):
                     block = torch.nn.Sequential(
                         torch.nn.Conv2d(d, d//4, 1),
                         torch.nn.BatchNorm2d(d//4),
-                        torch.nn.ReLU()
+                        torch.nn.ReLU(),
                         
                         torch.nn.Conv2d(d//4, d//4, 3, padding=1),
                         torch.nn.BatchNorm2d(d//4),
@@ -89,7 +89,7 @@ def create_baseline_model(D, C):
                 block = torch.nn.Sequential(
                     torch.nn.Conv2d(d, d//4, 1),
                     torch.nn.BatchNorm2d(d//4),
-                    torch.nn.ReLU()
+                    torch.nn.ReLU(),
                     
                     torch.nn.Conv2d(d//4, d//4, 3, padding=1),
                     torch.nn.BatchNorm2d(d//4),
@@ -108,7 +108,7 @@ def create_baseline_model(D, C):
                     block = torch.nn.Sequential(
                         torch.nn.Conv2d(d*2, d//2, 1),
                         torch.nn.BatchNorm2d(d//2),
-                        torch.nn.ReLU()
+                        torch.nn.ReLU(),
                         
                         torch.nn.Conv2d(d//2, d//2, 3, padding=1),
                         torch.nn.BatchNorm2d(d//2),
@@ -126,7 +126,7 @@ def create_baseline_model(D, C):
                 block = torch.nn.Sequential(
                     torch.nn.Conv2d(d*2, d//2, 1),
                     torch.nn.BatchNorm2d(d//2),
-                    torch.nn.ReLU()
+                    torch.nn.ReLU(),
                     
                     torch.nn.Conv2d(d//2, d//2, 3, padding=1),
                     torch.nn.BatchNorm2d(d//2),
@@ -145,7 +145,7 @@ def create_baseline_model(D, C):
                     block = torch.nn.Sequential(
                         torch.nn.Conv2d(d*4, d, 1),
                         torch.nn.BatchNorm2d(d),
-                        torch.nn.ReLU()
+                        torch.nn.ReLU(),
                         
                         torch.nn.Conv2d(d, d, 3, padding=1),
                         torch.nn.BatchNorm2d(d),
@@ -163,7 +163,7 @@ def create_baseline_model(D, C):
                 block = torch.nn.Sequential(
                     torch.nn.Conv2d(d*4, d, 1),
                     torch.nn.BatchNorm2d(d),
-                    torch.nn.ReLU()
+                    torch.nn.ReLU(),
                     
                     torch.nn.Conv2d(d, d, 3, padding=1),
                     torch.nn.BatchNorm2d(d),
