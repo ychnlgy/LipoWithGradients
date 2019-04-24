@@ -111,7 +111,7 @@ def create_baseline_model(D, C):
                     src.modules.polynomial.Activation(64, n_degree=8),
                     
                     torch.nn.Dropout2d(p=0.05),
-                    torch.nn.Conv2d(32, d*4, 1),
+                    torch.nn.Conv2d(64, d*4, 1),
                     torch.nn.BatchNorm2d(d*4),
 
                     torch.nn.ReLU(),
@@ -172,7 +172,7 @@ def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300):
     test_X = (test_X-miu)#/std
     
     dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=32, shuffle=True)
-    testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=128)
+    testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=64)
     
     assert IMAGESIZE == (32, 32)
     
