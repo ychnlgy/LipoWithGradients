@@ -60,18 +60,39 @@ def create_baseline_model(D, C):
     return torch.nn.Sequential(
         torch.nn.Conv2d(D, 32, 3, padding=1),
         src.modules.ResNet(
+
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
                     torch.nn.BatchNorm2d(32),
                     torch.nn.ReLU(),
-                    #src.modules.PrototypeSimilarity(32, 32),
-                    #src.modules.polynomial.Activation(32, n_degree=3),
                     torch.nn.Conv2d(32, 32, 3, padding=1),
                     
                     torch.nn.BatchNorm2d(32),
                     torch.nn.ReLU(),
-                    #src.modules.PrototypeSimilarity(32, 32),
-                    #src.modules.polynomial.Activation(32, n_degree=3),
+                    torch.nn.Conv2d(32, 32, 3, padding=1)
+                )
+            ),
+
+            src.modules.ResBlock(
+                block = torch.nn.Sequential(
+                    torch.nn.BatchNorm2d(32),
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(32, 32, 3, padding=1),
+                    
+                    torch.nn.BatchNorm2d(32),
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(32, 32, 3, padding=1)
+                )
+            ),
+            
+            src.modules.ResBlock(
+                block = torch.nn.Sequential(
+                    torch.nn.BatchNorm2d(32),
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(32, 32, 3, padding=1),
+                    
+                    torch.nn.BatchNorm2d(32),
+                    torch.nn.ReLU(),
                     torch.nn.Conv2d(32, 64, 3, padding=1, stride=2) # 32 -> 16
                 ),
                 shortcut = torch.nn.Sequential(
@@ -79,18 +100,39 @@ def create_baseline_model(D, C):
                     torch.nn.AvgPool2d(2)
                 )
             ),
+
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
                     torch.nn.BatchNorm2d(64),
                     torch.nn.ReLU(),
-                    #src.modules.PrototypeSimilarity(64, 64),
-                    #src.modules.polynomial.Activation(64, n_degree=3),
                     torch.nn.Conv2d(64, 64, 3, padding=1),
                     
                     torch.nn.BatchNorm2d(64),
                     torch.nn.ReLU(),
-                    #src.modules.PrototypeSimilarity(64, 32),
-                    #src.modules.polynomial.Activation(32, n_degree=3),
+                    torch.nn.Conv2d(64, 64, 3, padding=1)
+                )
+            ),
+
+            src.modules.ResBlock(
+                block = torch.nn.Sequential(
+                    torch.nn.BatchNorm2d(64),
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(64, 64, 3, padding=1),
+                    
+                    torch.nn.BatchNorm2d(64),
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(64, 64, 3, padding=1)
+                )
+            ),
+            
+            src.modules.ResBlock(
+                block = torch.nn.Sequential(
+                    torch.nn.BatchNorm2d(64),
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(64, 64, 3, padding=1),
+                    
+                    torch.nn.BatchNorm2d(64),
+                    torch.nn.ReLU(),
                     torch.nn.Conv2d(64, 128, 3, padding=1, stride=2) # 16 -> 8
                 ),
                 shortcut = torch.nn.Sequential(
@@ -98,25 +140,40 @@ def create_baseline_model(D, C):
                     torch.nn.AvgPool2d(2)
                 )
             ),
+
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
                     torch.nn.BatchNorm2d(128),
                     torch.nn.ReLU(),
-                    #src.modules.PrototypeSimilarity(128, 128),
-                    #src.modules.polynomial.Activation(128, n_degree=16),
                     torch.nn.Conv2d(128, 128, 3, padding=1),
-                    #src.modules.PrototypeSimilarity(128, 64),
-                    #src.modules.polynomial.Activation(64, n_degree=4),
-                    #torch.nn.Conv2d(64, 128, 3, padding=1),
                     
                     torch.nn.BatchNorm2d(128),
                     torch.nn.ReLU(),
-##                    src.modules.PrototypeSimilarity(128, 128),
-##                    src.modules.polynomial.Activation(128, n_degree=16),
+                    torch.nn.Conv2d(128, 128, 3, padding=1)
+                )
+            ),
+
+            src.modules.ResBlock(
+                block = torch.nn.Sequential(
+                    torch.nn.BatchNorm2d(128),
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(128, 128, 3, padding=1),
+                    
+                    torch.nn.BatchNorm2d(128),
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(128, 128, 3, padding=1)
+                )
+            ),
+            
+            src.modules.ResBlock(
+                block = torch.nn.Sequential(
+                    torch.nn.BatchNorm2d(128),
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(128, 128, 3, padding=1),
+                    
+                    torch.nn.BatchNorm2d(128),
+                    torch.nn.ReLU(),
                     torch.nn.Conv2d(128, 256, 3, padding=1, stride=2),
-                    #src.modules.PrototypeSimilarity(128, 64),
-                    #src.modules.polynomial.Activation(64, n_degree=4),
-                    #torch.nn.Conv2d(64, 128, 3, padding=1, stride=2) # 8 -> 4
                 ),
                 shortcut = torch.nn.Sequential(
                     torch.nn.Conv2d(128, 256, 1),
@@ -126,18 +183,24 @@ def create_baseline_model(D, C):
         ),
         torch.nn.AvgPool2d(4),
         src.modules.Reshape(256),
-        torch.nn.Linear(256, 256),
-        sim,
-        Random(p=0.05, a=-1, b=1),
-        #torch.nn.Tanh(),
-        act,
-        torch.nn.Dropout(p=0.05),
+
+        torch.nn.Linear(256, 1024),
+        torch.nn.Dropout(p=0.2),
+        torch.nn.ReLU(),
+        torch.nn.Linear(1024, C)
         
-        torch.nn.Linear(256, C)
+        
+        #torch.nn.Linear(256, 256),
+        #sim,
+        #Random(p=0.05, a=-1, b=1),
+        #act,
+        #torch.nn.Dropout(p=0.05),
+        
+        #torch.nn.Linear(256, C)
     ), act, sim
 
 @src.util.main
-def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1, epochs=100):
+def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300):
 
     download = int(download)
     visualize_relu = int(visualize_relu)
@@ -155,8 +218,8 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1
     data_X = (data_X-miu)/std
     test_X = (test_X-miu)/std
     
-    dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=64, shuffle=True)
-    testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=128)
+    dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=128, shuffle=True)
+    testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=256)
     
     assert IMAGESIZE == (32, 32)
     
@@ -175,15 +238,15 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1
     
     lossf = torch.nn.CrossEntropyLoss()
     #optim = torch.optim.Adam(model.parameters(), lr=1e-4, weight_decay=1e-4) #
-    optim = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-4)
-    sched = torch.optim.lr_scheduler.ReduceLROnPlateau(optim, patience=3, factor=0.5, verbose=True)
+    optim = torch.optim.SGD(model.parameters(), lr=0.1, momentum=0.9, weight_decay=5e-4)
+    sched = torch.optim.lr_scheduler.CosineAnnealingLR(optim, T_max=epochs)
     
     data_avg = src.util.MovingAverage(momentum=0.99)
     test_avg = src.util.MovingAverage(momentum=0.99)
 
     for epoch in range(epochs):
 
-        if not epoch % cycles:
+        if cycles > 0 and not epoch % cycles:
             sim.set_visualization_count(NUM_VISUAL_ACTIVATIONS)
         
         with tqdm.tqdm(dataloader, ncols=80) as bar:
@@ -219,7 +282,7 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1
                 
             print("Test accuracy: %.5f" % test_avg.peek())
 
-            if not epoch % cycles:
+            if cycles > 0 and not epoch % cycles:
                 plot = sim.visualize(title="Prototype outputs count", figsize=FIGSIZE)
                 act.visualize(plot, k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100), figsize=FIGSIZE)
 
