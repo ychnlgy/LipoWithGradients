@@ -237,7 +237,7 @@ def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300):
     
     lossf = torch.nn.CrossEntropyLoss()
     #optim = torch.optim.Adam(model.parameters(), lr=1e-4, weight_decay=1e-4) #
-    optim = torch.optim.SGD(model.parameters(), lr=0.1, momentum=0.9, weight_decay=5e-4)
+    optim = torch.optim.SGD(model.parameters(), lr=0.1, momentum=0.9, weight_decay=5e-4, nesterov=True)
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(optim, T_max=epochs)
     
     data_avg = src.util.MovingAverage(momentum=0.99)
