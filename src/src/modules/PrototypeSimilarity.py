@@ -50,7 +50,7 @@ class PrototypeSimilarity(torch.nn.Module):
         output = output[:,:self.visualizing].clone().detach()
         
         if len(output.shape) == 4:
-            output = output.permute(0, 2, 3, 1).view(-1, output.size(1))
+            output = output.permute(0, 2, 3, 1).contiguous().view(-1, output.size(1))
 
         assert len(output.shape) == 2
         
