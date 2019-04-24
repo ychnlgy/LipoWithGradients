@@ -156,7 +156,7 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1
         act.visualize_relu(k=NUM_VISUAL_ACTIVATIONS, title="ReLU", figsize=FIGSIZE)
         raise SystemExit
 
-    act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Initial state", figsize=FIGSIZE)
+    #act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Initial state", figsize=FIGSIZE)
     
     lossf = torch.nn.CrossEntropyLoss()
     #optim = torch.optim.Adam(model.parameters(), lr=1e-4, weight_decay=1e-4) #
