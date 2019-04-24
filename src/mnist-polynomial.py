@@ -97,7 +97,7 @@ def create_baseline_model(D, C):
                     torch.nn.BatchNorm2d(32),
                     torch.nn.LeakyReLU(),
                     
-                    torch.nn.Conv2d(32, 64, 3, padding=1, stride=2) # 32 -> 16
+                    torch.nn.Conv2d(32, 64, 3, padding=1, stride=2), # 32 -> 16
                     torch.nn.BatchNorm2d(64),
                     torch.nn.LeakyReLU()
                 ),
@@ -137,7 +137,7 @@ def create_baseline_model(D, C):
                     torch.nn.BatchNorm2d(64),
                     torch.nn.LeakyReLU()
                     
-                    torch.nn.Conv2d(64, 128, 3, padding=1, stride=2) # 16 -> 8
+                    torch.nn.Conv2d(64, 128, 3, padding=1, stride=2), # 16 -> 8
                     torch.nn.BatchNorm2d(128),
                     torch.nn.LeakyReLU()
                 ),
