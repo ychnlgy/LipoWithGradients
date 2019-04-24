@@ -17,7 +17,7 @@ class Activation(torch.nn.Module):
             chebyshev.get_nodes(n_degree+1)
         )
         self.weight = torch.nn.Parameter(
-            torch.zeros(self.d, self.n)
+            torch.zeros(1, self.d, self.n)
         )
         self._axes = None
 
