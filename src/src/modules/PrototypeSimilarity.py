@@ -51,7 +51,7 @@ class PrototypeSimilarity(torch.nn.Module):
     def do_visualization(self, visuals, title, figsize):
         k = visuals.shape[1]
         if self._axes is None:
-           _, self._axes = pyplot.subplots(nrows=2, ncols=k, sharex=True, sharey=True, figsize=figsize)
+           _, self._axes = pyplot.subplots(nrows=2, ncols=k, sharex=True, sharey="row", figsize=figsize)
 
         axes = self._axes[0,:]
         for i in range(k):
