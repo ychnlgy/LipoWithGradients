@@ -204,7 +204,7 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1
             print("Test accuracy: %.5f" % test_avg.peek())
 
             if not epoch % cycles:
-                sim.visualize(title="Epoch %d (prototype outputs)" % epoch, figsize=FIGSIZE)
-                act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100), figsize=FIGSIZE)
+                plot = sim.visualize(title="Prototype outputs count" % epoch, figsize=FIGSIZE)
+                act.visualize(plot, k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100), figsize=FIGSIZE)
 
     #act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d" % epochs, figsize=FIGSIZE)

@@ -31,10 +31,9 @@ class Activation(torch.nn.Module):
         self.weight.data.zero_()
 
     def visualize_relu(self, k, title, figsize):
-        if self._axes is None:
-            fig, self._axes = matplotlib.pyplot.subplots(
-                nrows=1, ncols=k, sharex=True, sharey=True, figsize=figsize
-            )
+        fig, self._axes = matplotlib.pyplot.subplots(
+            nrows=1, ncols=k, sharex=True, sharey=True, figsize=figsize
+        )
         axes = self._axes
         model = torch.nn.ReLU()
         n = 1000
@@ -49,16 +48,13 @@ class Activation(torch.nn.Module):
         fname = "%s.png" % title
         matplotlib.pyplot.savefig(fname, bbox_inches="tight")
         print("Saved ReLU activations to %s" % fname)
-        [ax.cla() for ax in axes]
 
-    def visualize(self, k, title, figsize):
+    def visualize(self, plot, k, title, figsize):
+        axes = plot[1,:]
         device = self.weight.device
         with torch.no_grad():
             #if self._axes is None:
-            fig, self._axes = matplotlib.pyplot.subplots(
-                nrows=1, ncols=k, sharex=True, sharey=True, figsize=figsize
-            )
-            axes = self._axes
+            
             n = 1000
             for i in range(k):
                 v = torch.linspace(-1, 1, n)
@@ -79,9 +75,12 @@ class Activation(torch.nn.Module):
                 plot.set_xlabel("$x_%d$" % i)
 
         axes[k//2].legend(bbox_to_anchor=[1.1, -0.1])
-        axes[k//2].set_title(title)
+        axes[k//2].set_y_label("Polynomial output")
+        plot[0,k//2].set_title(title)
 
         fname = "%s.png" % title
         matplotlib.pyplot.savefig(fname, bbox_inches="tight")
         print("Saved polynomial activations to %s" % fname)
-        [ax.cla() for ax in axes]
+        for i in range(2):
+            for j in range(k):
+                axes[i,j].cla()

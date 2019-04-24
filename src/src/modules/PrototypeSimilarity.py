@@ -49,16 +49,15 @@ class PrototypeSimilarity(torch.nn.Module):
 
     def do_visualization(self, visuals, title, figsize):
         k = visuals.shape[1]
-        #if self._axes is None:
-        _, self._axes = pyplot.subplots(nrows=1, ncols=k, sharex=True, sharey=True, figsize=figsize)
+        if self._axes is None:
+           _, self._axes = pyplot.subplots(nrows=2, ncols=k, sharex=True, sharey=True, figsize=figsize)
 
-        axes = self._axes
+        axes = self._axes[0,:]
         for i in range(k):
             plot = axes[i]
             plot.set_xlim([-1, 1])
-            plot.hist(visuals[:,i], bins=40)
-            plot.set_xlabel("$x_%d$" % i)
+            plot.hist(visuals[:,i], bins=1000)
+            #plot.set_xlabel("$x_%d$" % i)
 
-        axes[k//2].set_title(title)
-        pyplot.savefig("%s.png" % title, bbox_inches="tight")
-        [ax.cla() for ax in axes]
+        axes[k//2].set_y_label(title)
+        return self._axes[1,:]
