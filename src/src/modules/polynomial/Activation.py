@@ -34,7 +34,7 @@ class Activation(torch.nn.Module):
         B = self.basis(X)
         e = len(B.shape) - len(self.weight.shape)
         w = self.weight.view(1, self.d, *([1]*e), self.n)
-        L = (self.weight * B).sum(dim=-1)
+        L = (w * B).sum(dim=-1)
         assert L.size() == X.size()
         return L
 
