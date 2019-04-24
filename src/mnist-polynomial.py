@@ -183,6 +183,7 @@ def main(download=0, device="cuda", visualize_relu=0, gradpenalty=1e-2, cycles=1
                 optim.zero_grad()
                 loss.backward()
                 #act.step()
+                act.weight.grad *= 1e-4
                 optim.step()
                 
                 data_avg.update(loss.item())
