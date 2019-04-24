@@ -24,12 +24,8 @@ class Activation(torch.nn.Module):
     def forward(self, X):
         B = self.basis(X)
         B = B.view(-1, self.d, self.n)
-        self._grad_div = B.mean(dim=0).unsqueeze(0).clone().detach()
         L = (self.weight * B).sum(dim=-1)
         return L.view(X.size())
-
-    def step(self):
-        self.weight.grad /= self._grad_div+EPS
 
     def reset_parameters(self):
         self.weight.data.zero_()
