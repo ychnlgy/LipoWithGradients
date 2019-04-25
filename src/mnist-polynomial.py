@@ -228,7 +228,8 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email
     #act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Initial state", figsize=FIGSIZE)
     
     lossf = torch.nn.CrossEntropyLoss()
-    optim = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-4)
+    #optim = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-4)
+    optim = torch.optim.Adam(model.parameters(), weight_decay=1e-6)
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(optim, T_max=epochs)
     
     data_avg = src.util.MovingAverage(momentum=0.99)
