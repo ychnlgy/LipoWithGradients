@@ -148,7 +148,7 @@ def create_baseline_model(D, C):
                 block = torch.nn.Sequential(
                     torch.nn.ReLU(),
                     torch.nn.Conv2d(d*2, d*2, 3, padding=1),
-                    torch.nn.BatchNorm2d(d),
+                    torch.nn.BatchNorm2d(d*2),
 
                     src.modules.PrototypeSimilarity(d*2, 16),
                     src.modules.polynomial.Activation(16, n_degree=16),
