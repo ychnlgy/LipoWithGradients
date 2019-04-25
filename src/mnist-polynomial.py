@@ -255,7 +255,7 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email
                 g_act.append(act.weight.grad.norm().item())
                 g_sim.append(sim.weight.grad.norm().item())
                 g_pre.append(pre.weight.grad.norm().item())
-                g_pst.append(pst.weight.grad.norm().item())
+                g_pst.append(post.weight.grad.norm().item())
                 
                 optim.step()
                 
