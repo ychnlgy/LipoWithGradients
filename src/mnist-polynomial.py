@@ -63,8 +63,8 @@ def create_baseline_model(D, C):
     
     d = 64
 
-    sim = src.modules.PrototypeSimilarity(d*4, 8)
-    act = src.modules.polynomial.Activation(8, n_degree=32)
+    sim = src.modules.PrototypeSimilarity(d*4, 4)
+    act = src.modules.polynomial.Activation(4, n_degree=16)
     pre = torch.nn.Conv2d(d*4, d*4, 3, padding=1)
     post = torch.nn.Conv2d(8, d*8, 1, stride=2)
     
@@ -224,7 +224,7 @@ def create_baseline_model(D, C):
 #GRAD_PRE = []
 #GRAD_PST = []
 
-def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email=""):
+def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=100, email=""):
 
     download = int(download)
     visualize_relu = int(visualize_relu)
