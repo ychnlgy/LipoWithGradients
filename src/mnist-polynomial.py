@@ -64,7 +64,7 @@ def create_baseline_model(D, C):
     d = 64
 
     sim = src.modules.PrototypeSimilarity(d*4, 5)
-    act = src.modules.polynomial.Activation(5, n_degree=32)
+    act = src.modules.polynomial.Activation(5, n_degree=16)
     
     return torch.nn.Sequential(
         
@@ -216,7 +216,7 @@ def create_baseline_model(D, C):
 #GRAD_PRE = []
 #GRAD_PST = []
 
-def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=100, email=""):
+def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email=""):
 
     download = int(download)
     visualize_relu = int(visualize_relu)
