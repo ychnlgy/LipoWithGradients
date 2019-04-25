@@ -246,6 +246,9 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email
     
     model, act, sim, pre, post = create_baseline_model(CHANNELS, CLASSES)
 
+    num_params = sum(torch.numel(p) for p in model.parameters() if p.requires_grad)
+    print("Parameters: %d" % num_params)
+
     model = torch.nn.DataParallel(model).to(device)
 
     NUM_VISUAL_ACTIVATIONS = 5
