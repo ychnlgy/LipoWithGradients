@@ -15,7 +15,7 @@ class PrototypeSimilarity(torch.nn.Module):
         self.D = features
         #self.register_buffer("weight", torch.zeros(1, classes, features))
         #self.weight.requires_grad = False
-        self.weight = torch.nn.Parameter(torch.zeros(1, classes, features))
+        #self.weight = torch.nn.Parameter(torch.zeros(1, classes, features))
         self.similarity = similarity
         self.visualizing = 0
         self.stored_visuals = []
@@ -32,10 +32,10 @@ class PrototypeSimilarity(torch.nn.Module):
             P - torch Tensor of size (N, C, *), prototype classifications.
         
         '''
-        X = X.unsqueeze(1)
-        e = len(X.shape) - len(self.weight.shape)
-        P = self.weight.view(*self.weight.shape, *([1]*e))
-        output = self.similarity(X, P)
+        #X = X.unsqueeze(1)
+        #e = len(X.shape) - len(self.weight.shape)
+        #P = self.weight.view(*self.weight.shape, *([1]*e))
+        output = torch.nn.functional.tanh(X)#self.similarity(X, P)
         if self.visualizing > 0:
             self.store_visuals(output)
         return output

@@ -155,7 +155,8 @@ def create_baseline_model(D, C):
 
                     #sim,
                     torch.nn.Conv2d(d*4, d*4, 1),
-                    torch.nn.Tanh(),
+                    sim,
+                    #torch.nn.Tanh(),
                     #Random(p=0.05, a=-1, b=1),
                     act,
                     
