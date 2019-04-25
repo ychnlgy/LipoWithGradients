@@ -24,7 +24,7 @@ def random_flip(X):
     scipy.misc.imsave("t0.png", X[I][0].permute(1, 2, 0).numpy())
     
     X[I] = new
-    scipy.misc.imsave("t0.png", X[I][0].permute(1, 2, 0).numpy())
+    scipy.misc.imsave("t1.png", X[I][0].permute(1, 2, 0).numpy())
     input("Here")
     return X
 
