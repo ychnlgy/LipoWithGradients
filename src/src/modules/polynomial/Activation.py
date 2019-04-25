@@ -60,7 +60,8 @@ class Activation(torch.nn.Module):
         matplotlib.pyplot.savefig(fname, bbox_inches="tight")
         print("Saved ReLU activations to %s" % fname)
 
-    def visualize(self, mainplot, k, title, figsize):
+    def visualize(self, sim, k, title, figsize):
+        mainplot = sim.visualize(title="Prototype outputs count", figsize=figsize)
         axes = mainplot[1,:]
         device = self.weight.device
         with torch.no_grad():

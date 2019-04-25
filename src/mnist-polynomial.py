@@ -4,15 +4,6 @@ import torch, tqdm, random, numpy
 
 import src, datasets
 
-SERVICE = None
-
-try:
-    import mailupdater
-    SERVICE = mailupdater.Service(input("Email address: "))
-except:
-    pass
-
-
 def random_crop(X, padding):
     N, C, W, H = X.size()
     X = torch.nn.functional.pad(X, [padding]*4, mode="constant")
@@ -65,10 +56,16 @@ class Random(torch.nn.Module):
 
 def create_baseline_model(D, C):
     
-    d = 64
+    d = 32
 
-    sim = src.modules.PrototypeSimilarity(d*4, d*2)
-    act = src.modules.polynomial.Activation(d*2, n_degree=16)
+    #sim1
+    #act1
+
+    #sim2
+    #act2
+
+    sim = src.modules.PrototypeSimilarity(d*4, d*4)
+    act = src.modules.polynomial.Activation(d*4, n_degree=32)
     
     return torch.nn.Sequential(
         
@@ -84,12 +81,12 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d, d, 3, padding=1),
                     torch.nn.BatchNorm2d(d),
 
-                    src.modules.PrototypeSimilarity(d, 32),
+                    src.modules.PrototypeSimilarity(d, d),
                     Random(p=0.05, a=-1, b=1),
-                    src.modules.polynomial.Activation(32, n_degree=4),
+                    src.modules.polynomial.Activation(d, n_degree=32),
                     
                     torch.nn.Dropout2d(p=0.05),
-                    torch.nn.Conv2d(32, d*2, 1),
+                    torch.nn.Conv2d(d, d*2, 1),
                     torch.nn.BatchNorm2d(d*2),
 
                     torch.nn.ReLU(),
@@ -106,12 +103,12 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*2, d*2, 3, padding=1),
                     torch.nn.BatchNorm2d(d*2),
 
-                    src.modules.PrototypeSimilarity(d*2, 64),
+                    src.modules.PrototypeSimilarity(d*2, d*2),
                     Random(p=0.05, a=-1, b=1),
-                    src.modules.polynomial.Activation(64, n_degree=8),
+                    src.modules.polynomial.Activation(d*2, n_degree=32),
                     
                     torch.nn.Dropout2d(p=0.05),
-                    torch.nn.Conv2d(64, d*4, 1),
+                    torch.nn.Conv2d(d*2, d*4, 1),
                     torch.nn.BatchNorm2d(d*4),
 
                     torch.nn.ReLU(),
@@ -133,7 +130,7 @@ def create_baseline_model(D, C):
                     act,
                     
                     torch.nn.Dropout2d(p=0.05),
-                    torch.nn.Conv2d(d*2, d*8, 1),
+                    torch.nn.Conv2d(d*4, d*8, 1),
                     torch.nn.BatchNorm2d(d*8),
 
                     torch.nn.ReLU(),
@@ -154,25 +151,29 @@ def create_baseline_model(D, C):
     ), act, sim
 
 @src.util.main
-def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300):
+def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email=""):
 
     download = int(download)
     visualize_relu = int(visualize_relu)
     cycles = int(cycles)
     epochs = int(epochs)
+
+    service = None
+    if email:
+        import mailupdater
+        service = mailupdater.Service(email)
     
     (
         data_X, data_Y, test_X, test_Y, CLASSES, CHANNELS, IMAGESIZE
     ) = datasets.cifar.get(download)
 
     miu = data_X.mean(dim=0).unsqueeze(0)
-    #std = data_X.std(dim=0).unsqueeze(0)
 
-    data_X = (data_X-miu)#/std
-    test_X = (test_X-miu)#/std
+    data_X = (data_X-miu)
+    test_X = (test_X-miu)
     
-    dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=64, shuffle=True)
-    testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=128)
+    dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=32, shuffle=True)
+    testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=64)
     
     assert IMAGESIZE == (32, 32)
     
@@ -190,8 +191,7 @@ def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300):
     #act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Initial state", figsize=FIGSIZE)
     
     lossf = torch.nn.CrossEntropyLoss()
-    #optim = torch.optim.Adam(model.parameters(), lr=1e-4, weight_decay=1e-4) #
-    optim = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-4, nesterov=False)
+    optim = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-4)
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(optim, T_max=epochs)
     
     data_avg = src.util.MovingAverage(momentum=0.99)
@@ -211,7 +211,7 @@ def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300):
                 Y = Y.to(device)
                 
                 Yh = model(X)
-                loss = lossf(Yh, Y) # + gradpenalty*src.algorithm.grad_penalty.lipschitz_max_grad(model, X, data_X, data_Y)
+                loss = lossf(Yh, Y)
                 optim.zero_grad()
                 loss.backward()
                 optim.step()
@@ -236,14 +236,18 @@ def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300):
             print("Test accuracy: %.5f" % test_avg.peek())
 
             if cycles > 0 and not epoch % cycles:
-                plot = sim.visualize(title="Prototype outputs count", figsize=FIGSIZE)
-                fname = act.visualize(plot, k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100), figsize=FIGSIZE)
+                fname = act.visualize(
+                    sim,
+                    k=NUM_VISUAL_ACTIVATIONS,
+                    title="Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100),
+                    figsize=FIGSIZE
+                )
 
     #act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d" % epochs, figsize=FIGSIZE)
 
-                if SERVICE is not None:
+                if service is not None:
                     try:
-                        with SERVICE.create("Epoch %d" % epoch) as email:
+                        with service.create("Epoch %d" % epoch) as email:
                             email.attach(fname)
                     except:
                         pass
