@@ -262,12 +262,16 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email
                 #g_sim.append(sim.weight.grad.norm().item())
                 #g_pre.append(pre.weight.grad.norm().item())
                 #g_pst.append(post.weight.grad.norm().item())
+                rel = sim.weight.grad.norm(dim=-1) > 1e-8
+                print(rel.long().sum().item(), torch.numel(rel))
                 
                 optim.step()
                 
                 data_avg.update(loss.item())
                 
                 bar.set_description("E%d train loss: %.5f" % (epoch, data_avg.peek()))
+
+            
 
             #GRAD_ACT.append(statistics.mean(g_act))
             #GRAD_SIM.append(statistics.mean(g_sim))

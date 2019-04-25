@@ -30,16 +30,11 @@ class PrototypeSimilarity(torch.nn.Module):
             P - torch Tensor of size (N, C, *), prototype classifications.
         
         '''
-        torch.cuda.empty_cache()
-        input("ProtoSim - before")
-
         X = X.unsqueeze(1)
         e = len(X.shape) - len(self.weight.shape)
         P = self.weight.view(*self.weight.shape, *([1]*e))
         output = self.similarity(X, P)
 
-
-        input("ProtoSim - after")
         if self.visualizing > 0:
             self.store_visuals(output)
         return output
