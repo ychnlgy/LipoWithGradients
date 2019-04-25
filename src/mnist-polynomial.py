@@ -56,7 +56,7 @@ class Random(torch.nn.Module):
 
 def create_baseline_model(D, C):
     
-    d = 16
+    d = 32
 
     sim = src.modules.PrototypeSimilarity(d*4, d*4)
     act = src.modules.polynomial.Activation(d*4, n_degree=32)
@@ -198,8 +198,8 @@ def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email=
     data_X = (data_X-miu)
     test_X = (test_X-miu)
     
-    dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=32, shuffle=True)
-    testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=64)
+    dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=64, shuffle=True)
+    testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=128)
     
     assert IMAGESIZE == (32, 32)
     
