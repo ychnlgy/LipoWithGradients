@@ -58,28 +58,22 @@ class PrototypeSimilarity(torch.nn.Module):
 
     def visualize(self, title, figsize):
         if self.visualizing > 0:
-            self.do_visualization(numpy.concatenate(self.stored_visuals, axis=0), title, figsize)
+            if self.stored_visuals:
+                self.do_visualization(numpy.concatenate(self.stored_visuals, axis=0), title, figsize)
             self.visualizing = 0
             self.stored_visuals = []
             return self._axes
 
     def do_visualization(self, visuals, title, figsize):
-        if len(visuals) > 0:
-            k = visuals.shape[1]
-            nrows = 2
-        else:
-            k = 5
-            nrows = 1
+        k = visuals.shape[1]
             
         if self._axes is None:
-           _, self._axes = pyplot.subplots(nrows=nrows, ncols=k, sharex=True, sharey="row", figsize=figsize)
+           _, self._axes = pyplot.subplots(nrows=2, ncols=k, sharex=True, sharey="row", figsize=figsize)
 
-        if len(visuals) > 0:
-            axes = self._axes[0,:]
-            for i in range(k):
-                plot = axes[i]
-                plot.set_xlim([-1, 1])
-                plot.hist(visuals[:,i], bins=100)
-                #plot.set_xlabel("$x_%d$" % i)
+        axes = self._axes[0,:]
+        for i in range(k):
+            plot = axes[i]
+            plot.set_xlim([-1, 1])
+            plot.hist(visuals[:,i], bins=100)
 
-            axes[0].set_ylabel(title)
+        axes[0].set_ylabel(title)

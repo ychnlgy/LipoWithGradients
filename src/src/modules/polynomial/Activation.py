@@ -4,6 +4,7 @@ from . import chebyshev, LagrangeBasis
 
 import matplotlib
 matplotlib.use("agg")
+from matplotlib import pyplot
 
 EPS = 1e-16
 
@@ -62,6 +63,10 @@ class Activation(torch.nn.Module):
 
     def visualize(self, sim, k, title, figsize):
         mainplot = sim.visualize(title="Prototype outputs count", figsize=figsize)
+        if mainplot is None:
+            if self._axes is None:
+                self._axes = pyplot.subplots(nrows=1, ncols=k, sharex=True, sharey="row", figsize=figsize)
+            mainplot = self._axes
         axes = mainplot[1,:]
         device = self.weight.device
         with torch.no_grad():
