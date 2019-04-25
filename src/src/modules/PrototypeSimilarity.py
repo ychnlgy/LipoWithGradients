@@ -13,9 +13,7 @@ class PrototypeSimilarity(torch.nn.Module):
         super().__init__()
         self.C = classes
         self.D = features
-        #self.register_buffer("weight", torch.zeros(1, classes, features))
-        #self.weight.requires_grad = False
-        #self.weight = torch.nn.Parameter(torch.zeros(1, classes, features))
+        self.weight = torch.nn.Parameter(torch.zeros(1, classes, features))
         self.similarity = similarity
         self.visualizing = 0
         self.stored_visuals = []
