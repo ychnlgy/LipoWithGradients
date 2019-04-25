@@ -158,10 +158,10 @@ def create_baseline_model(D, C):
                     torch.nn.BatchNorm2d(d*4),
 
                     sim,
-                    Random(p=0.05, a=-1, b=1),
+                    #Random(p=0.05, a=-1, b=1),
                     act,
                     
-                    torch.nn.Dropout2d(p=0.05),
+                    #torch.nn.Dropout2d(p=0.05),
                     post,
                     torch.nn.BatchNorm2d(d*8),
                 ),
