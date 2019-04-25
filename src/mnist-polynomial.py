@@ -205,7 +205,7 @@ def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email=
     
     model, act, sim = create_baseline_model(CHANNELS, CLASSES)
 
-    model = model.to(device)
+    model = torch.nn.DataParallel(model).to(device)
 
     NUM_VISUAL_ACTIVATIONS = 5
     FIGSIZE = (20, 12)
