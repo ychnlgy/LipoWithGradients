@@ -134,39 +134,39 @@ def create_baseline_model(D, C):
                 )
             ),
 
-##            # 8 -> 4
-##            src.modules.ResBlock(
-##                block = torch.nn.Sequential(
-##                    torch.nn.ReLU(),
-##                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
-##                    torch.nn.BatchNorm2d(d*4),
-##
-##                    torch.nn.ReLU(),
-##                    torch.nn.Conv2d(d*4, d*8, 3, padding=1, stride=2),
-##                    torch.nn.BatchNorm2d(d*8),
-##                ),
-##                shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2)
-##            ),
-
-            
-
             # 8 -> 4
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
                     torch.nn.ReLU(),
-                    pre,
+                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
                     torch.nn.BatchNorm2d(d*4),
 
-                    sim,
-                    #Random(p=0.05, a=-1, b=1),
-                    act,
-                    
-                    #torch.nn.Dropout2d(p=0.05),
-                    post,
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(d*4, d*8, 3, padding=1, stride=2),
                     torch.nn.BatchNorm2d(d*8),
                 ),
-                shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2),
-            )
+                shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2)
+            ),
+
+            
+
+##            # 8 -> 4
+##            src.modules.ResBlock(
+##                block = torch.nn.Sequential(
+##                    torch.nn.ReLU(),
+##                    pre,
+##                    torch.nn.BatchNorm2d(d*4),
+##
+##                    sim,
+##                    Random(p=0.05, a=-1, b=1),
+##                    act,
+##                    
+##                    torch.nn.Dropout2d(p=0.05),
+##                    post,
+##                    torch.nn.BatchNorm2d(d*8),
+##                ),
+##                shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2),
+##            )
         ),
         torch.nn.AvgPool2d(4),
         src.modules.Reshape(d*8),
@@ -304,7 +304,7 @@ def plot_grads():
     import matplotlib
     matplotlib.use("agg")
 
-    fig, axes = matplotlib.pyplot.subplots(nrows=4, sharex=True)
+    fig, axes = matplotlib.pyplot.subplots(nrows=4, sharex=True, figsize=(12, 8))
 
     for i, (title, y) in enumerate([
         ("Pre-activation", GRAD_PRE),
@@ -321,9 +321,12 @@ def plot_grads():
     matplotlib.pyplot.savefig("grads.png", bbox_inches="tight")
 
 @src.util.main
-def main(**kwargs):
+def main(plotg=0, **kwargs):
+    plotg = int(plotg)
     try:
         _main(**kwargs)
     except:
-        plot_grads()
         raise
+    finally:
+        if plotg:
+            plot_grads()

@@ -30,10 +30,10 @@ class PrototypeSimilarity(torch.nn.Module):
             P - torch Tensor of size (N, C, *), prototype classifications.
         
         '''
-        #X = X.unsqueeze(1)
-        #e = len(X.shape) - len(self.weight.shape)
-        #P = self.weight.view(*self.weight.shape, *([1]*e))
-        output = torch.nn.functional.tanh(X)#self.similarity(X, P)
+        X = X.unsqueeze(1)
+        e = len(X.shape) - len(self.weight.shape)
+        P = self.weight.view(*self.weight.shape, *([1]*e))
+        output = self.similarity(X, P)
         if self.visualizing > 0:
             self.store_visuals(output)
         return output
