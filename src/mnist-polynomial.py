@@ -63,10 +63,10 @@ def create_baseline_model(D, C):
     
     d = 64
 
-    sim = src.modules.PrototypeSimilarity(d*4, 16)
-    act = src.modules.polynomial.Activation(16, n_degree=32)
+    sim = src.modules.PrototypeSimilarity(d*4, 8)
+    act = src.modules.polynomial.Activation(8, n_degree=32)
     pre = torch.nn.Conv2d(d*4, d*4, 3, padding=1)
-    post = torch.nn.Conv2d(16, d*8, 1, stride=2)
+    post = torch.nn.Conv2d(8, d*8, 1, stride=2)
     
     return torch.nn.Sequential(
         
@@ -152,12 +152,12 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*2, d*2, 3, padding=1),
                     torch.nn.BatchNorm2d(d*2),
 
-                    src.modules.PrototypeSimilarity(d*2, 16),
+                    src.modules.PrototypeSimilarity(d*2, 8),
                     Random(p=0.05, a=-1, b=1),
-                    src.modules.polynomial.Activation(16, n_degree=16),
+                    src.modules.polynomial.Activation(8, n_degree=16),
                     torch.nn.Dropout2d(p=0.05),
                     
-                    torch.nn.Conv2d(16, d*4, 1, stride=2),
+                    torch.nn.Conv2d(8, d*4, 1, stride=2),
                     torch.nn.BatchNorm2d(d*4),
                 ),
                 shortcut = torch.nn.Conv2d(d*2, d*4, 1, stride=2)
