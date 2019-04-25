@@ -67,7 +67,11 @@ class Activation(torch.nn.Module):
             if self._axes is None:
                 self._axes = pyplot.subplots(nrows=1, ncols=k, sharex=True, sharey="row", figsize=figsize)
             mainplot = self._axes
-        axes = mainplot[1,:]
+            axes = mainplot
+            top = mainplot
+        else:
+            axes = mainplot[1,:]
+            top = mainplot[0,:]
         device = self.weight.device
         with torch.no_grad():
             
@@ -92,12 +96,11 @@ class Activation(torch.nn.Module):
 
         axes[k//2].legend(bbox_to_anchor=[1.1, -0.1])
         axes[0].set_ylabel("Polynomial output")
-        mainplot[0,k//2].set_title(title)
+        top[k//2].set_title(title)
 
         fname = "%s.png" % title
         matplotlib.pyplot.savefig(fname, bbox_inches="tight")
         print("Saved polynomial activations to %s" % fname)
-        for i in range(2):
-            for j in range(k):
-                mainplot[i,j].cla()
+        [plot.cla() for plot in axes]
+        [plot.cla() for plot in top]
         return fname
