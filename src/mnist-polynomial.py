@@ -82,10 +82,10 @@ def create_baseline_model(D, C):
                     torch.nn.BatchNorm2d(d),
 
                     src.modules.PrototypeSimilarity(d, d),
-                    Random(p=0.05, a=-1, b=1),
+                    #Random(p=0.05, a=-1, b=1),
                     src.modules.polynomial.Activation(d, n_degree=8),
                     
-                    torch.nn.Dropout2d(p=0.05),
+                    #torch.nn.Dropout2d(p=0.05),
                     torch.nn.Conv2d(d, d*2, 1),
                     torch.nn.BatchNorm2d(d*2),
 
@@ -104,10 +104,10 @@ def create_baseline_model(D, C):
                     torch.nn.BatchNorm2d(d*2),
 
                     src.modules.PrototypeSimilarity(d*2, d*2),
-                    Random(p=0.05, a=-1, b=1),
+                    #Random(p=0.05, a=-1, b=1),
                     src.modules.polynomial.Activation(d*2, n_degree=16),
                     
-                    torch.nn.Dropout2d(p=0.05),
+                    #torch.nn.Dropout2d(p=0.05),
                     torch.nn.Conv2d(d*2, d*4, 1),
                     torch.nn.BatchNorm2d(d*4),
 
@@ -126,10 +126,10 @@ def create_baseline_model(D, C):
                     torch.nn.BatchNorm2d(d*4),
 
                     sim,
-                    Random(p=0.05, a=-1, b=1),
+                    #Random(p=0.05, a=-1, b=1),
                     act,
                     
-                    torch.nn.Dropout2d(p=0.05),
+                    #torch.nn.Dropout2d(p=0.05),
                     torch.nn.Conv2d(d*4, d*8, 1),
                     torch.nn.BatchNorm2d(d*8),
 
