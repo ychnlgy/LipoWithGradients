@@ -56,7 +56,7 @@ class Random(torch.nn.Module):
 
 def create_baseline_model(D, C):
     
-    d = 16
+    d = 8
 
     #sim1
     #act1
