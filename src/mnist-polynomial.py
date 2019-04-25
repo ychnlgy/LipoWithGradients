@@ -111,7 +111,7 @@ def create_baseline_model(D, C):
                     src.modules.PrototypeSimilarity(d, 16),
                     src.modules.polynomial.Activation(16, n_degree=8),
                     
-                    torch.nn.Conv2d(d, d*2, 1, stride=2),
+                    torch.nn.Conv2d(16, d*2, 1, stride=2),
                     torch.nn.BatchNorm2d(d*2),
                 ),
                 shortcut = torch.nn.Conv2d(d, d*2, 1, stride=2)
@@ -153,7 +153,7 @@ def create_baseline_model(D, C):
                     src.modules.PrototypeSimilarity(d*2, 16),
                     src.modules.polynomial.Activation(16, n_degree=16),
                     
-                    torch.nn.Conv2d(d*2, d*4, 1, stride=2),
+                    torch.nn.Conv2d(16, d*4, 1, stride=2),
                     torch.nn.BatchNorm2d(d*4),
                 ),
                 shortcut = torch.nn.Conv2d(d*2, d*4, 1, stride=2)
