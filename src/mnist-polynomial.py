@@ -139,39 +139,39 @@ def create_baseline_model(D, C):
                 )
             ),
 
-            # 8 -> 4
-            src.modules.ResBlock(
-                block = torch.nn.Sequential(
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
-                    torch.nn.BatchNorm2d(d*4),
-
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(d*4, d*8, 3, padding=1, stride=2),
-                    torch.nn.BatchNorm2d(d*8),
-                ),
-                shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2)
-            ),
-
-            
-
 ##            # 8 -> 4
 ##            src.modules.ResBlock(
 ##                block = torch.nn.Sequential(
 ##                    torch.nn.ReLU(),
-##                    pre,
+##                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
 ##                    torch.nn.BatchNorm2d(d*4),
 ##
-##                    sim,
-##                    Random(p=0.05, a=-1, b=1),
-##                    act,
-##                    
-##                    torch.nn.Dropout2d(p=0.05),
-##                    post,
+##                    torch.nn.ReLU(),
+##                    torch.nn.Conv2d(d*4, d*8, 3, padding=1, stride=2),
 ##                    torch.nn.BatchNorm2d(d*8),
 ##                ),
-##                shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2),
-##            )
+##                shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2)
+##            ),
+
+            
+
+            # 8 -> 4
+            src.modules.ResBlock(
+                block = torch.nn.Sequential(
+                    torch.nn.ReLU(),
+                    pre,
+                    torch.nn.BatchNorm2d(d*4),
+
+                    sim,
+                    Random(p=0.05, a=-1, b=1),
+                    act,
+                    
+                    torch.nn.Dropout2d(p=0.05),
+                    post,
+                    torch.nn.BatchNorm2d(d*8),
+                ),
+                shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2),
+            )
         ),
         torch.nn.AvgPool2d(4),
         src.modules.Reshape(d*8),
@@ -290,10 +290,11 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email
             print("Test accuracy: %.5f" % test_avg.peek())
 
             if cycles > 0 and not epoch % cycles:
+                title = "Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100)
                 fname = act.visualize(
                     sim,
                     k=NUM_VISUAL_ACTIVATIONS,
-                    title="Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100),
+                    title=title,
                     figsize=FIGSIZE
                 )
 
@@ -301,7 +302,7 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email
 
                 if service is not None:
                     try:
-                        with service.create("Epoch %d" % epoch) as email:
+                        with service.create(title) as email:
                             email.attach(fname)
                     except:
                         pass

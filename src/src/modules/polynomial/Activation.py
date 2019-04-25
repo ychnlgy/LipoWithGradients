@@ -32,10 +32,18 @@ class Activation(torch.nn.Module):
             P - torch Tensor of size (N, D, *), polynomial output.
 
         '''
+        torch.cuda.empty_cache()
+        input("Basis - before")
         B = self.basis(X)
+        input("Basis - after")
+        
         e = len(B.shape) - len(self.weight.shape)
+
+        torch.cuda.empty_cache()
+        input("Mult+Sum - before")
         w = self.weight.view(1, self.d, *([1]*e), self.n)
         L = (w * B).sum(dim=-1)
+        input("Mult+Sum - after")
         assert L.size() == X.size()
         return L
 
