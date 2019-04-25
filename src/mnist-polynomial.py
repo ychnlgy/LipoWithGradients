@@ -253,7 +253,7 @@ def create_baseline_model(D, C):
         torch.nn.ReLU(),
         torch.nn.Linear(d*16, C)
         
-    ), act, sim, pre, post
+    ), act, sim
 
 #GRAD_ACT = []
 #GRAD_SIM = []
@@ -286,7 +286,7 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=100, email
     
     assert IMAGESIZE == (32, 32)
     
-    model, act, sim, pre, post = create_baseline_model(CHANNELS, CLASSES)
+    model, act, sim = create_baseline_model(CHANNELS, CLASSES)
 
     num_params = sum(torch.numel(p) for p in model.parameters() if p.requires_grad)
     print("Parameters: %d" % num_params)
