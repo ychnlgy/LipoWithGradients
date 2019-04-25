@@ -65,7 +65,7 @@ class Activation(torch.nn.Module):
         mainplot = sim.visualize(title="Prototype outputs count", figsize=figsize)
         if mainplot is None:
             if self._axes is None:
-                self._axes = pyplot.subplots(nrows=1, ncols=k, sharex=True, sharey="row", figsize=figsize)
+                _, self._axes = pyplot.subplots(nrows=1, ncols=k, sharex=True, sharey="row", figsize=figsize)
             mainplot = self._axes
             axes = mainplot
             top = mainplot
