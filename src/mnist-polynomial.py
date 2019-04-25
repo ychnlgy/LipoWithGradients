@@ -1,6 +1,6 @@
 import torch, tqdm, random, numpy, statistics
 
-import scipy.misc
+#import scipy.misc
 
 import src, datasets
 
@@ -25,10 +25,7 @@ def random_flip(X):
 def _random_flip(X, axis):
     N = len(X)
     I = torch.rand(N) < 0.5
-    scipy.misc.imsave("before.png", X[I][0].permute(1, 2, 0).numpy())
     X[I] = torch.from_numpy(numpy.flip(X[I].numpy(), axis=axis).copy())
-    scipy.misc.imsave("after.png", X[I][0].permute(1, 2, 0).numpy())
-    input("here")
     return X
 
 class PartModel(torch.nn.Module):
