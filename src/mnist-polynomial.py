@@ -63,10 +63,10 @@ def create_baseline_model(D, C):
     
     d = 64
 
-    sim = src.modules.PrototypeSimilarity(d*4, d)
-    act = src.modules.polynomial.Activation(d, n_degree=32)
+    sim = src.modules.PrototypeSimilarity(d*4, 5)
+    act = src.modules.polynomial.Activation(5, n_degree=32)
     pre = torch.nn.Conv2d(d*4, d*4, 3, padding=1)
-    post = torch.nn.Conv2d(d, d*8, 1, stride=2)
+    post = torch.nn.Conv2d(5, d*8, 1, stride=2)
     
     return torch.nn.Sequential(
         
@@ -262,8 +262,6 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email
                 #g_sim.append(sim.weight.grad.norm().item())
                 #g_pre.append(pre.weight.grad.norm().item())
                 #g_pst.append(post.weight.grad.norm().item())
-                rel = sim.weight.grad.norm(dim=-1) > 1e-8
-                print(rel.long().sum().item(), torch.numel(rel))
                 
                 optim.step()
                 
