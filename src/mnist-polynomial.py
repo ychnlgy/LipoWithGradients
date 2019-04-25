@@ -178,10 +178,10 @@ def create_baseline_model(D, C):
         
     ), act, sim, pre, post
 
-GRAD_ACT = []
-GRAD_SIM = []
-GRAD_PRE = []
-GRAD_PST = []
+#GRAD_ACT = []
+#GRAD_SIM = []
+#GRAD_PRE = []
+#GRAD_PST = []
 
 def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email=""):
 
@@ -234,10 +234,10 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email
         if cycles > 0 and not epoch % cycles:
             sim.set_visualization_count(NUM_VISUAL_ACTIVATIONS)
 
-        g_act = []
-        g_sim = []
-        g_pre = []
-        g_pst = []
+        #g_act = []
+        #g_sim = []
+        #g_pre = []
+        #g_pst = []
         
         with tqdm.tqdm(dataloader, ncols=80) as bar:
             
@@ -252,10 +252,10 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email
                 optim.zero_grad()
                 loss.backward()
                 
-                g_act.append(act.weight.grad.norm().item())
-                g_sim.append(sim.weight.grad.norm().item())
-                g_pre.append(pre.weight.grad.norm().item())
-                g_pst.append(post.weight.grad.norm().item())
+                #g_act.append(act.weight.grad.norm().item())
+                #g_sim.append(sim.weight.grad.norm().item())
+                #g_pre.append(pre.weight.grad.norm().item())
+                #g_pst.append(post.weight.grad.norm().item())
                 
                 optim.step()
                 
@@ -263,10 +263,10 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email
                 
                 bar.set_description("E%d train loss: %.5f" % (epoch, data_avg.peek()))
 
-            GRAD_ACT.append(statistics.mean(g_act))
-            GRAD_SIM.append(statistics.mean(g_sim))
-            GRAD_PRE.append(statistics.mean(g_pre))
-            GRAD_PST.append(statistics.mean(g_pst))
+            #GRAD_ACT.append(statistics.mean(g_act))
+            #GRAD_SIM.append(statistics.mean(g_sim))
+            #GRAD_PRE.append(statistics.mean(g_pre))
+            #GRAD_PST.append(statistics.mean(g_pst))
             
             sched.step(data_avg.peek())
 
