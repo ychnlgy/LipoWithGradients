@@ -20,7 +20,7 @@ def _random_crop(x, padding, W, H):
 def random_flip(X):
     N = len(X)
     I = torch.rand(N) < 0.5
-    new = torch.from_numpy(numpy.flip(X[I].numpy(), axis=2))
+    new = torch.from_numpy(numpy.flip(X[I].numpy(), axis=2).copy())
     scipy.misc.imsave("t0.png", X[I][0].permute(1, 2, 0).numpy())
     
     X[I] = new
