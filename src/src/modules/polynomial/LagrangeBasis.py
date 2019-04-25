@@ -40,6 +40,7 @@ class LagrangeBasis(torch.nn.Module):
         device = X.device
         shape = X.size()
         X = X.view(-1, 1, 1)
+        print(X.shape, self.xm.shape)
         out = (X-self.xm).prod(dim=-1)/self.dn
         return out.view(*shape, out.size(-1))
         
