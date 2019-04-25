@@ -119,31 +119,17 @@ def create_baseline_model(D, C):
 ##                shortcut = torch.nn.Conv2d(d, d*2, 1, stride=2)
 ##            ),
 
-##            src.modules.ResBlock(
-##                block = torch.nn.Sequential(
-##                    torch.nn.ReLU(),
-##                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
-##                    torch.nn.BatchNorm2d(d*2),
-##                    
-##                    torch.nn.ReLU(),
-##                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
-##                    torch.nn.BatchNorm2d(d*2),
-##                )
-##            ),
-
-##            # 16 -> 8
-##            src.modules.ResBlock(
-##                block = torch.nn.Sequential(
-##                    torch.nn.ReLU(),
-##                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
-##                    torch.nn.BatchNorm2d(d*2),
-##
-##                    torch.nn.ReLU(),
-##                    torch.nn.Conv2d(d*2, d*4, 3, padding=1, stride=2),
-##                    torch.nn.BatchNorm2d(d*4),
-##                ),
-##                shortcut = torch.nn.Conv2d(d*2, d*4, 1, stride=2)
-##            ),
+            src.modules.ResBlock(
+                block = torch.nn.Sequential(
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
+                    torch.nn.BatchNorm2d(d*2),
+                    
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
+                    torch.nn.BatchNorm2d(d*2),
+                )
+            ),
 
             # 16 -> 8
             src.modules.ResBlock(
@@ -152,62 +138,76 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*2, d*2, 3, padding=1),
                     torch.nn.BatchNorm2d(d*2),
 
-                    src.modules.PrototypeSimilarity(d*2, 8),
-                    Random(p=0.05, a=-1, b=1),
-                    src.modules.polynomial.Activation(8, n_degree=16),
-                    torch.nn.Dropout2d(p=0.05),
-                    
-                    torch.nn.Conv2d(8, d*4, 1, stride=2),
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(d*2, d*4, 3, padding=1, stride=2),
                     torch.nn.BatchNorm2d(d*4),
                 ),
                 shortcut = torch.nn.Conv2d(d*2, d*4, 1, stride=2)
             ),
 
+##            # 16 -> 8
 ##            src.modules.ResBlock(
 ##                block = torch.nn.Sequential(
 ##                    torch.nn.ReLU(),
-##                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
-##                    torch.nn.BatchNorm2d(d*4),
-##                    
-##                    torch.nn.ReLU(),
-##                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
-##                    torch.nn.BatchNorm2d(d*4),
-##                )
-##            ),
-
-##            # 8 -> 4
-##            src.modules.ResBlock(
-##                block = torch.nn.Sequential(
-##                    torch.nn.ReLU(),
-##                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
-##                    torch.nn.BatchNorm2d(d*4),
+##                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
+##                    torch.nn.BatchNorm2d(d*2),
 ##
-##                    torch.nn.ReLU(),
-##                    torch.nn.Conv2d(d*4, d*8, 3, padding=1, stride=2),
-##                    torch.nn.BatchNorm2d(d*8),
+##                    src.modules.PrototypeSimilarity(d*2, 8),
+##                    Random(p=0.05, a=-1, b=1),
+##                    src.modules.polynomial.Activation(8, n_degree=16),
+##                    torch.nn.Dropout2d(p=0.05),
+##                    
+##                    torch.nn.Conv2d(8, d*4, 1, stride=2),
+##                    torch.nn.BatchNorm2d(d*4),
 ##                ),
-##                shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2)
+##                shortcut = torch.nn.Conv2d(d*2, d*4, 1, stride=2)
 ##            ),
 
-            
+            src.modules.ResBlock(
+                block = torch.nn.Sequential(
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
+                    torch.nn.BatchNorm2d(d*4),
+                    
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
+                    torch.nn.BatchNorm2d(d*4),
+                )
+            ),
 
             # 8 -> 4
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
                     torch.nn.ReLU(),
-                    pre,
+                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
                     torch.nn.BatchNorm2d(d*4),
 
-                    sim,
-                    Random(p=0.05, a=-1, b=1),
-                    act,
-                    torch.nn.Dropout2d(p=0.05),
-                    
-                    post,
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(d*4, d*8, 3, padding=1, stride=2),
                     torch.nn.BatchNorm2d(d*8),
                 ),
-                shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2),
-            )
+                shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2)
+            ),
+
+            
+
+##            # 8 -> 4
+##            src.modules.ResBlock(
+##                block = torch.nn.Sequential(
+##                    torch.nn.ReLU(),
+##                    pre,
+##                    torch.nn.BatchNorm2d(d*4),
+##
+##                    sim,
+##                    Random(p=0.05, a=-1, b=1),
+##                    act,
+##                    torch.nn.Dropout2d(p=0.05),
+##                    
+##                    post,
+##                    torch.nn.BatchNorm2d(d*8),
+##                ),
+##                shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2),
+##            )
         ),
         torch.nn.AvgPool2d(4),
         src.modules.Reshape(d*8),
