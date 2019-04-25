@@ -18,14 +18,17 @@ def _random_crop(x, padding, W, H):
     return x[:,w_i:w_i+W,h_i:h_i+H]
 
 def random_flip(X):
-    X = _random_flip(X, axis=2)
-    X = _random_flip(X, axis=3)
+    #X = _random_flip(X, axis=2) # vertical
+    X = _random_flip(X, axis=3) # horizontal
     return X
 
 def _random_flip(X, axis):
     N = len(X)
     I = torch.rand(N) < 0.5
+    scipy.misc.imsave("before.png", X[I][0].permute(1, 2, 0).numpy())
     X[I] = torch.from_numpy(numpy.flip(X[I].numpy(), axis=axis).copy())
+    scipy.misc.imsave("after.png", X[I][0].permute(1, 2, 0).numpy())
+    input("here")
     return X
 
 class PartModel(torch.nn.Module):
