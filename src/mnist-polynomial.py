@@ -1,4 +1,4 @@
-import torch, tqdm, random, numpy
+import torch, tqdm, random, numpy, statistics
 
 #import scipy.misc
 
@@ -6,7 +6,7 @@ import src, datasets
 
 def random_crop(X, padding):
     N, C, W, H = X.size()
-    X = torch.nn.functional.pad(X, [padding]*4, mode="constant")
+    X = torch.nn.functional.pad(X, [padding]*4, mode="reflect")
     out = [
         _random_crop(X[i], padding, W, H) for i in range(N)
     ]
@@ -60,6 +60,8 @@ def create_baseline_model(D, C):
 
     sim = src.modules.PrototypeSimilarity(d*4, d*4)
     act = src.modules.polynomial.Activation(d*4, n_degree=32)
+    pre = torch.nn.Conv2d(d*4, d*4, 3, padding=1)
+    post = torch.nn.Conv2d(d*4, d*8, 1, stride=2)
     
     return torch.nn.Sequential(
         
@@ -132,22 +134,6 @@ def create_baseline_model(D, C):
                 )
             ),
 
-            # 8 -> 4
-            src.modules.ResBlock(
-                block = torch.nn.Sequential(
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
-                    torch.nn.BatchNorm2d(d*4),
-
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(d*4, d*8, 3, padding=1, stride=2),
-                    torch.nn.BatchNorm2d(d*8),
-                ),
-                shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2)
-            ),
-
-            
-
 ##            # 8 -> 4
 ##            src.modules.ResBlock(
 ##                block = torch.nn.Sequential(
@@ -155,16 +141,32 @@ def create_baseline_model(D, C):
 ##                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
 ##                    torch.nn.BatchNorm2d(d*4),
 ##
-##                    sim,
-##                    Random(p=0.05, a=-1, b=1),
-##                    act,
-##                    
-##                    torch.nn.Dropout2d(p=0.05),
-##                    torch.nn.Conv2d(d*4, d*8, 1, stride=2),
+##                    torch.nn.ReLU(),
+##                    torch.nn.Conv2d(d*4, d*8, 3, padding=1, stride=2),
 ##                    torch.nn.BatchNorm2d(d*8),
 ##                ),
-##                shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2),
-##            )
+##                shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2)
+##            ),
+
+            
+
+            # 8 -> 4
+            src.modules.ResBlock(
+                block = torch.nn.Sequential(
+                    torch.nn.ReLU(),
+                    pre,
+                    torch.nn.BatchNorm2d(d*4),
+
+                    sim,
+                    Random(p=0.05, a=-1, b=1),
+                    act,
+                    
+                    torch.nn.Dropout2d(p=0.05),
+                    post,
+                    torch.nn.BatchNorm2d(d*8),
+                ),
+                shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2),
+            )
         ),
         torch.nn.AvgPool2d(4),
         src.modules.Reshape(d*8),
@@ -174,10 +176,14 @@ def create_baseline_model(D, C):
         torch.nn.ReLU(),
         torch.nn.Linear(d*16, C)
         
-    ), act, sim
+    ), act, sim, pre, post
 
-@src.util.main
-def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email=""):
+GRAD_ACT = []
+GRAD_SIM = []
+GRAD_PRE = []
+GRAD_PST = []
+
+def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email=""):
 
     download = int(download)
     visualize_relu = int(visualize_relu)
@@ -203,7 +209,7 @@ def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email=
     
     assert IMAGESIZE == (32, 32)
     
-    model, act, sim = create_baseline_model(CHANNELS, CLASSES)
+    model, act, sim, pre, post = create_baseline_model(CHANNELS, CLASSES)
 
     model = torch.nn.DataParallel(model).to(device)
 
@@ -227,6 +233,11 @@ def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email=
 
         if cycles > 0 and not epoch % cycles:
             sim.set_visualization_count(NUM_VISUAL_ACTIVATIONS)
+
+        g_act = []
+        g_sim = []
+        g_pre = []
+        g_pst = []
         
         with tqdm.tqdm(dataloader, ncols=80) as bar:
             
@@ -240,11 +251,22 @@ def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email=
                 loss = lossf(Yh, Y)
                 optim.zero_grad()
                 loss.backward()
+                
+                g_act.append(act.weight.grad.norm().item())
+                g_sim.append(sim.weight.grad.norm().item())
+                g_pre.append(pre.weight.grad.norm().item())
+                g_pst.append(pst.weight.grad.norm().item())
+                
                 optim.step()
                 
                 data_avg.update(loss.item())
                 
                 bar.set_description("E%d train loss: %.5f" % (epoch, data_avg.peek()))
+
+            GRAD_ACT.append(statistics.mean(g_act))
+            GRAD_SIM.append(statistics.mean(g_sim))
+            GRAD_PRE.append(statistics.mean(g_pre))
+            GRAD_PST.append(statistics.mean(g_pst))
             
             sched.step(data_avg.peek())
 
@@ -277,3 +299,31 @@ def main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email=
                             email.attach(fname)
                     except:
                         pass
+
+def plot_grads():
+    import matplotlib
+    matplotlib.use("agg")
+
+    fig, axes = matplotlib.pyplot.subplots(nrows=4, sharex=True)
+
+    for i, (title, y) in enumerate([
+        ("Pre-activation", GRAD_PRE),
+        ("Prototype cosine-similarity", GRAD_SIM),
+        ("Polynomial weights", GRAD_ACT),
+        ("Post-activation", GRAD_PST)
+    ]):
+        axes[i].set_ylabel(title)
+        axes[i].plot(y)
+
+    axes[0].set_title("Gradient norm across training epochs")
+    axes[-1].set_xlabel("Epochs")
+
+    matplotlib.pyplot.savefig("grads.png", bbox_inches="tight")
+
+@src.util.main
+def main(**kwargs):
+    try:
+        _main(**kwargs)
+    except:
+        plot_grads()
+        raise
