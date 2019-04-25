@@ -63,10 +63,10 @@ def create_baseline_model(D, C):
     
     d = 64
 
-    sim = src.modules.PrototypeSimilarity(d*4, d*4)
-    act = src.modules.polynomial.Activation(d*4, n_degree=32)
+    sim = src.modules.PrototypeSimilarity(d*4, d)
+    act = src.modules.polynomial.Activation(d, n_degree=32)
     pre = torch.nn.Conv2d(d*4, d*4, 3, padding=1)
-    post = torch.nn.Conv2d(d*4, d*8, 1, stride=2)
+    post = torch.nn.Conv2d(d, d*8, 1, stride=2)
     
     return torch.nn.Sequential(
         
@@ -209,8 +209,8 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email
     data_X = (data_X-miu)
     test_X = (test_X-miu)
     
-    dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=64, shuffle=True)
-    testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=128)
+    dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=32, shuffle=True)
+    testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=64)
     
     assert IMAGESIZE == (32, 32)
     
