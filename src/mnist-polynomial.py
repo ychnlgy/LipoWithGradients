@@ -63,10 +63,10 @@ def create_baseline_model(D, C):
     
     d = 64
 
-    sim = src.modules.PrototypeSimilarity(d*4, 5)
-    act = src.modules.polynomial.Activation(5, n_degree=32)
+    sim = src.modules.PrototypeSimilarity(d*4, 16)
+    act = src.modules.polynomial.Activation(16, n_degree=32)
     pre = torch.nn.Conv2d(d*4, d*4, 3, padding=1)
-    post = torch.nn.Conv2d(5, d*8, 1, stride=2)
+    post = torch.nn.Conv2d(16, d*8, 1, stride=2)
     
     return torch.nn.Sequential(
         
@@ -75,17 +75,31 @@ def create_baseline_model(D, C):
         
         src.modules.ResNet(
 
-            src.modules.ResBlock(
-                block = torch.nn.Sequential(
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(d, d, 3, padding=1),
-                    torch.nn.BatchNorm2d(d),
-                    
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(d, d, 3, padding=1),
-                    torch.nn.BatchNorm2d(d),
-                )
-            ),
+##            src.modules.ResBlock(
+##                block = torch.nn.Sequential(
+##                    torch.nn.ReLU(),
+##                    torch.nn.Conv2d(d, d, 3, padding=1),
+##                    torch.nn.BatchNorm2d(d),
+##                    
+##                    torch.nn.ReLU(),
+##                    torch.nn.Conv2d(d, d, 3, padding=1),
+##                    torch.nn.BatchNorm2d(d),
+##                )
+##            ),
+
+##            # 32 -> 16
+##            src.modules.ResBlock(
+##                block = torch.nn.Sequential(
+##                    torch.nn.ReLU(),
+##                    torch.nn.Conv2d(d, d, 3, padding=1),
+##                    torch.nn.BatchNorm2d(d),
+##
+##                    torch.nn.ReLU(),
+##                    torch.nn.Conv2d(d, d*2, 3, padding=1, stride=2),
+##                    torch.nn.BatchNorm2d(d*2),
+##                ),
+##                shortcut = torch.nn.Conv2d(d, d*2, 1, stride=2)
+##            ),
 
             # 32 -> 16
             src.modules.ResBlock(
@@ -94,50 +108,68 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d, d, 3, padding=1),
                     torch.nn.BatchNorm2d(d),
 
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(d, d*2, 3, padding=1, stride=2),
+                    src.modules.PrototypeSimilarity(d, 16),
+                    src.modules.polynomial.Activation(16, n_degree=8),
+                    
+                    torch.nn.Conv2d(d, d*2, 1, stride=2),
                     torch.nn.BatchNorm2d(d*2),
                 ),
                 shortcut = torch.nn.Conv2d(d, d*2, 1, stride=2)
             ),
 
-            src.modules.ResBlock(
-                block = torch.nn.Sequential(
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
-                    torch.nn.BatchNorm2d(d*2),
-                    
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
-                    torch.nn.BatchNorm2d(d*2),
-                )
-            ),
+##            src.modules.ResBlock(
+##                block = torch.nn.Sequential(
+##                    torch.nn.ReLU(),
+##                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
+##                    torch.nn.BatchNorm2d(d*2),
+##                    
+##                    torch.nn.ReLU(),
+##                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
+##                    torch.nn.BatchNorm2d(d*2),
+##                )
+##            ),
+
+##            # 16 -> 8
+##            src.modules.ResBlock(
+##                block = torch.nn.Sequential(
+##                    torch.nn.ReLU(),
+##                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
+##                    torch.nn.BatchNorm2d(d*2),
+##
+##                    torch.nn.ReLU(),
+##                    torch.nn.Conv2d(d*2, d*4, 3, padding=1, stride=2),
+##                    torch.nn.BatchNorm2d(d*4),
+##                ),
+##                shortcut = torch.nn.Conv2d(d*2, d*4, 1, stride=2)
+##            ),
 
             # 16 -> 8
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
                     torch.nn.ReLU(),
                     torch.nn.Conv2d(d*2, d*2, 3, padding=1),
-                    torch.nn.BatchNorm2d(d*2),
+                    torch.nn.BatchNorm2d(d),
 
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(d*2, d*4, 3, padding=1, stride=2),
+                    src.modules.PrototypeSimilarity(d*2, 16),
+                    src.modules.polynomial.Activation(16, n_degree=16),
+                    
+                    torch.nn.Conv2d(d*2, d*4, 1, stride=2),
                     torch.nn.BatchNorm2d(d*4),
                 ),
                 shortcut = torch.nn.Conv2d(d*2, d*4, 1, stride=2)
             ),
 
-            src.modules.ResBlock(
-                block = torch.nn.Sequential(
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
-                    torch.nn.BatchNorm2d(d*4),
-                    
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
-                    torch.nn.BatchNorm2d(d*4),
-                )
-            ),
+##            src.modules.ResBlock(
+##                block = torch.nn.Sequential(
+##                    torch.nn.ReLU(),
+##                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
+##                    torch.nn.BatchNorm2d(d*4),
+##                    
+##                    torch.nn.ReLU(),
+##                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
+##                    torch.nn.BatchNorm2d(d*4),
+##                )
+##            ),
 
 ##            # 8 -> 4
 ##            src.modules.ResBlock(
@@ -163,10 +195,8 @@ def create_baseline_model(D, C):
                     torch.nn.BatchNorm2d(d*4),
 
                     sim,
-                    Random(p=0.05, a=-1, b=1),
                     act,
                     
-                    torch.nn.Dropout2d(p=0.05),
                     post,
                     torch.nn.BatchNorm2d(d*8),
                 ),
@@ -209,8 +239,8 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email
     data_X = (data_X-miu)
     test_X = (test_X-miu)
     
-    dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=32, shuffle=True)
-    testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=64)
+    dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=64, shuffle=True)
+    testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=128)
     
     assert IMAGESIZE == (32, 32)
     
