@@ -296,7 +296,7 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=150, email
 
     #act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d" % epochs, figsize=FIGSIZE)
 
-            if service is not None:
+            if service is not None and not epoch % cycles:
                 title = "Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg*100)
                 try:
                     with service.create(title) as email:
