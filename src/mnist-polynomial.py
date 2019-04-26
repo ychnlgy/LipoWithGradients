@@ -137,9 +137,12 @@ def create_baseline_model(D, C):
         
         src.modules.ResNet(
             create_baseblock(d),
+            create_baseblock(d),
             create_skipblock(d), # 32 -> 16
             create_baseblock(d*2),
+            create_baseblock(d*2),
             create_skipblock(d*2), # 16 -> 8
+            create_baseblock(d*4),
             create_baseblock(d*4),
             create_skipblock(d*4) # 8 -> 4
         ),
@@ -207,7 +210,7 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=150, email
     
     data_avg = src.util.MovingAverage(momentum=0.99)
 
-    for epoch in range(epochs):
+    for epoch in range(1, epochs+1):
 
         
 
@@ -225,7 +228,7 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=150, email
             for X, Y in bar:
                 X = random_flip(X)
                 X = random_crop(X, padding=4)
-                X = random_cutout(X, l=16)
+                X = random_cutout(X, l=8)
                 X = X.to(device)
                 Y = Y.to(device)
                 
