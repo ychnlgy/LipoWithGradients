@@ -62,10 +62,12 @@ class Random(torch.nn.Module):
 
 def create_midact(d):
     return torch.nn.Sequential(
-        src.modules.PrototypeSimilarity(d, 32),
-        torch.nn.Conv2d(32, d, 1),
-        torch.nn.BatchNorm2d(d),
-        torch.nn.ReLU()
+        torch.nn.Tanh(),
+        src.modules.polynomial.Activation(d, n_degree=6),
+        #src.modules.PrototypeSimilarity(d, 32),
+        #torch.nn.Conv2d(32, d, 1),
+        #torch.nn.BatchNorm2d(d),
+        #torch.nn.ReLU()
     )
         #torch.nn.ReLU()
 
