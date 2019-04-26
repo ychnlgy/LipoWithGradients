@@ -67,7 +67,7 @@ def create_baseblock(d):
             torch.nn.Conv2d(d, d, 3, padding=1),
             torch.nn.BatchNorm2d(d),
             
-            torch.nn.Tanh(),
+            torch.nn.ReLU(),
             torch.nn.Conv2d(d, d, 3, padding=1),
             torch.nn.BatchNorm2d(d),
         )
