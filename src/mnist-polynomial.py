@@ -188,7 +188,7 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=150, email
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(optim, T_max=epochs)
     
     data_avg = src.util.MovingAverage(momentum=0.99)
-    test_avg = src.util.MovingAverage(momentum=0.99)
+    test_avg = src.util.MovingAverage(momentum=0.0)
 
     for epoch in range(epochs):
 
