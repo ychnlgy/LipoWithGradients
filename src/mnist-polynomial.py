@@ -250,9 +250,6 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*4, d*4, 3, padding=1),
                     torch.nn.BatchNorm2d(d*4),
 
-                    #torch.nn.Tanh(),
-                    #sim,
-                    #act,
                     torch.nn.ReLU(),
                     torch.nn.Conv2d(d*4, d*4, 3, padding=1),
                     torch.nn.BatchNorm2d(d*4),
