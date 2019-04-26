@@ -12,6 +12,24 @@ def random_crop(X, padding):
     ]
     return torch.stack(out, dim=0)
 
+def random_cutout(X, l):
+    N, C, W, H = X.size()
+    out = [
+        _random_cutout(X[i], l, W, H) for i in range(N)
+    ]
+    return torch.stach(out, dim=0)
+
+def _random_cutout(x, l, W, H):
+    xi = random.randint(-l, W)
+    yi = random.randint(-l, H)
+    xj = xi + l
+    yj = yi + l
+    xi = max(0, xi)
+    yi = max(0, yi)
+    x = x.clone()
+    x[:,xi:xj,yi:yj] = 0
+    return x
+
 def _random_crop(x, padding, W, H):
     w_i = random.randint(0, padding)
     h_i = random.randint(0, padding)
@@ -206,7 +224,9 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=150, email
             model.train()
             for X, Y in bar:
                 X = random_flip(X)
-                X = random_crop(X, padding=4).to(device)
+                X = random_crop(X, padding=4)
+                X = random_cutout(X, l=16)
+                X = X.to(device)
                 Y = Y.to(device)
                 
                 Yh = model(X)
