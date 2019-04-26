@@ -64,8 +64,8 @@ def create_baseline_model(D, C):
     
     d = 64
 
-    sim = src.modules.PrototypeSimilarity(d*4, 8, r=10)
-    act = src.modules.polynomial.Activation(8, n_degree=32, a=-10, b=10)
+    sim = src.modules.PrototypeSimilarity(d*4, 8, r=3)
+    act = src.modules.polynomial.Activation(8, n_degree=32, a=-4, b=4)
     
     return torch.nn.Sequential(
         
@@ -148,8 +148,8 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*4, d*4, 3, padding=1),
                     torch.nn.BatchNorm2d(d*4),
 
-                    src.modules.PrototypeSimilarity(d*4, 8, r=3),
-                    src.modules.polynomial.Activation(8, n_degree=32, a=-4, b=4),
+                    sim,
+                    act,
                     torch.nn.Conv2d(8, d*8, 1, stride=2),
                     torch.nn.BatchNorm2d(d*8),
                 ),
