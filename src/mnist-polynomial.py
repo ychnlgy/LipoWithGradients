@@ -92,7 +92,7 @@ def create_skipblock(d):
 
 def create_baseline_model(D, C):
     
-    d = 64
+    d = 32
 
     sim = src.modules.PrototypeSimilarity(d*4, 8)
     act = src.modules.polynomial.Activation(8, n_degree=32)
