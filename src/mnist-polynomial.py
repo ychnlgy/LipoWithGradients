@@ -17,7 +17,7 @@ def random_cutout(X, l):
     out = [
         _random_cutout(X[i], l, W, H) for i in range(N)
     ]
-    return torch.stach(out, dim=0)
+    return torch.stack(out, dim=0)
 
 def _random_cutout(x, l, W, H):
     xi = random.randint(-l, W)
@@ -27,6 +27,8 @@ def _random_cutout(x, l, W, H):
     xi = max(0, xi)
     yi = max(0, yi)
     x = x.clone()
+    print(x.shape)
+    input()
     x[:,xi:xj,yi:yj] = 0
     return x
 
