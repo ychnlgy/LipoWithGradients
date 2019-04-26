@@ -188,7 +188,6 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=150, email
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(optim, T_max=epochs)
     
     data_avg = src.util.MovingAverage(momentum=0.99)
-    test_avg = src.util.MovingAverage(momentum=0.0)
 
     for epoch in range(epochs):
 
@@ -244,6 +243,8 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=150, email
 
 ##            if cycles > 0 and not epoch % cycles:
 ##                sim.set_visualization_count(NUM_VISUAL_ACTIVATIONS)
+
+            test_acc = test_n = 0.0
             
             model.eval()
             with torch.no_grad():
@@ -252,11 +253,14 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=150, email
                     Y = Y.to(device)
                     Yh = model(X)
                     match = Yh.max(dim=1)[1] == Y
-                    acc = match.float().mean()
+                    acc = match.float().sum()
                     
-                    test_avg.update(acc.item())
+                    test_acc += acc.item()
+                    test_n += torch.numel(match)
 
-            print("Test accuracy: %.5f" % test_avg.peek())
+            test_avg = test_acc/test_n
+
+            print("Test accuracy: %.5f" % test_avg)
 
 ##            if cycles > 0 and not epoch % cycles:
 ##                title = "Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100)
@@ -270,7 +274,7 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=150, email
     #act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d" % epochs, figsize=FIGSIZE)
 
             if service is not None:
-                title = "Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100)
+                title = "Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg*100)
                 try:
                     with service.create(title) as email:
                         pass
