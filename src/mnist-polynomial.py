@@ -258,7 +258,7 @@ def create_baseline_model(D, C):
             
         ),
         torch.nn.AvgPool2d(8),
-        src.modules.Reshape(d*8),
+        src.modules.Reshape(d*4),
         
         torch.nn.ReLU(),
         torch.nn.Linear(d*4, 256),
