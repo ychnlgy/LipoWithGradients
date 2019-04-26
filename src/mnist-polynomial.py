@@ -65,7 +65,7 @@ def create_midact(d):
         #src.modules.PrototypeSimilarity(d, 8),
         #Random(p=0.05, a=-1, b=1),
         #src.modules.polynomial.Activation(d, n_degree=3),
-        #torch.nn.Dropout(p=0.05),
+        torch.nn.Dropout2d(p=0.05),
         #src.modules.PrototypeSimilarity(d, 32),
         #torch.nn.Conv2d(8, d, 1),
         #torch.nn.BatchNorm2d(d),
