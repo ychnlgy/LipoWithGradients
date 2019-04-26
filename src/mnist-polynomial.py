@@ -27,7 +27,7 @@ def _random_cutout(x, l, W, H):
     xi = max(0, xi)
     yi = max(0, yi)
     x = x.clone()
-    print(x.shape)
+    print(x.shape, xi, xj, yi, yj)
     x[:,xi:xj,yi:yj] = 0
     return x
 
