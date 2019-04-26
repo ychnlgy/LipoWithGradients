@@ -269,13 +269,13 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=150, email
 
     #act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d" % epochs, figsize=FIGSIZE)
 
-                if service is not None:
-                    title = "Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100)
-                    try:
-                        with service.create(title) as email:
-                            pass
-                    except:
+            if service is not None:
+                title = "Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100)
+                try:
+                    with service.create(title) as email:
                         pass
+                except:
+                    pass
 
 def plot_grads():
     import matplotlib
