@@ -108,7 +108,7 @@ def create_baseline_model(D, C):
 
                     #src.modules.PrototypeSimilarity(d*2, 8),
                     torch.nn.Tanh(),
-                    Random(p=0.05, a=-1, b=1),
+                    #Random(p=0.05, a=-1, b=1),
                     src.modules.polynomial.Activation(32, n_degree=16),
                     torch.nn.Dropout2d(p=0.05),
                     
@@ -126,7 +126,7 @@ def create_baseline_model(D, C):
 
                     #src.modules.PrototypeSimilarity(d*2, 8),
                     torch.nn.Tanh(),
-                    Random(p=0.05, a=-1, b=1),
+                    #Random(p=0.05, a=-1, b=1),
                     src.modules.polynomial.Activation(32, n_degree=16),
                     torch.nn.Dropout2d(p=0.05),
                     
@@ -144,7 +144,7 @@ def create_baseline_model(D, C):
 
                     #src.modules.PrototypeSimilarity(d*4, 8),
                     torch.nn.Tanh(),
-                    Random(p=0.05, a=-1, b=1),
+                    #Random(p=0.05, a=-1, b=1),
                     src.modules.polynomial.Activation(32, n_degree=16),
                     torch.nn.Dropout2d(p=0.05),
                     
@@ -162,7 +162,7 @@ def create_baseline_model(D, C):
 
                     #sim,
                     torch.nn.Tanh(),
-                    Random(p=0.05, a=-1, b=1),
+                    #Random(p=0.05, a=-1, b=1),
                     act,
                     torch.nn.Dropout2d(p=0.05),
                     
