@@ -86,18 +86,6 @@ def create_baseline_model(D, C):
                 )
             ),
 
-            src.modules.ResBlock(
-                block = torch.nn.Sequential(
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(d, d, 3, padding=1),
-                    torch.nn.BatchNorm2d(d),
-                    
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(d, d, 3, padding=1),
-                    torch.nn.BatchNorm2d(d),
-                )
-            ),
-
             # 32 -> 16
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
@@ -127,18 +115,6 @@ def create_baseline_model(D, C):
 ##                    torch.nn.BatchNorm2d(d*2),
 ##                )
 ##            ),
-
-            src.modules.ResBlock(
-                block = torch.nn.Sequential(
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
-                    torch.nn.BatchNorm2d(d*2),
-
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
-                    torch.nn.BatchNorm2d(d*2),
-                )
-            ),
 
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
@@ -201,17 +177,6 @@ def create_baseline_model(D, C):
 ##                    torch.nn.BatchNorm2d(d*4),
 ##                ),
 ##            ),
-            src.modules.ResBlock(
-                block = torch.nn.Sequential(
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
-                    torch.nn.BatchNorm2d(d*4),
-
-                    torch.nn.ReLU(),
-                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
-                    torch.nn.BatchNorm2d(d*4),
-                ),
-            ),
 
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
@@ -254,6 +219,7 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*4, d*8, 3, padding=1, stride=2),
                     torch.nn.BatchNorm2d(d*8),
                 ),
+                shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2)
             ),
             
         ),
