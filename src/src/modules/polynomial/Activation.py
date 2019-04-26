@@ -10,8 +10,10 @@ EPS = 1e-16
 
 class Activation(torch.nn.Module):
 
-    def __init__(self, input_size, n_degree, a=-1, b=1):
+    def __init__(self, input_size, n_degree):
         super().__init__()
+        b = self._calc_chebyshev_range(n_degree+1)
+        a = -b
         self.d = input_size
         self.n = n_degree + 1
         self.basis = LagrangeBasis.create(
@@ -39,6 +41,9 @@ class Activation(torch.nn.Module):
         L = (w * B).sum(dim=-1)
         assert L.size() == X.size()
         return L
+
+    def _calc_chebyshev_range(self, n):
+        return 1.0/math.cos(math.pi/(2*n))
 
     def reset_parameters(self):
         self.weight.data.zero_()
