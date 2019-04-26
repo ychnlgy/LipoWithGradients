@@ -201,8 +201,8 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=150, email
         
         with tqdm.tqdm(dataloader, ncols=80) as bar:
 
-            if cycles > 0 and not epoch % cycles:
-                sim.set_visualization_count(NUM_VISUAL_ACTIVATIONS)
+##            if cycles > 0 and not epoch % cycles:
+##                sim.set_visualization_count(NUM_VISUAL_ACTIVATIONS)
             
             model.train()
             for X, Y in bar:
@@ -226,14 +226,14 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=150, email
                 
                 bar.set_description("E%d train loss: %.5f" % (epoch, data_avg.peek()))
 
-            if cycles > 0 and not epoch % cycles:
-                title = "Epoch %d (%.4f train loss)" % (epoch, data_avg.peek())
-                fname = act.visualize(
-                    sim,
-                    k=NUM_VISUAL_ACTIVATIONS,
-                    title=title,
-                    figsize=FIGSIZE
-                )
+##            if cycles > 0 and not epoch % cycles:
+##                title = "Epoch %d (%.4f train loss)" % (epoch, data_avg.peek())
+##                fname = act.visualize(
+##                    sim,
+##                    k=NUM_VISUAL_ACTIVATIONS,
+##                    title=title,
+##                    figsize=FIGSIZE
+##                )
 
             #GRAD_ACT.append(statistics.mean(g_act))
             #GRAD_SIM.append(statistics.mean(g_sim))
@@ -242,8 +242,8 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=150, email
             
             sched.step(data_avg.peek())
 
-            if cycles > 0 and not epoch % cycles:
-                sim.set_visualization_count(NUM_VISUAL_ACTIVATIONS)
+##            if cycles > 0 and not epoch % cycles:
+##                sim.set_visualization_count(NUM_VISUAL_ACTIVATIONS)
             
             model.eval()
             with torch.no_grad():
@@ -255,24 +255,25 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=150, email
                     acc = match.float().mean()
                     
                     test_avg.update(acc.item())
-                
+
             print("Test accuracy: %.5f" % test_avg.peek())
 
-            if cycles > 0 and not epoch % cycles:
-                title = "Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100)
-                fname = act.visualize(
-                    sim,
-                    k=NUM_VISUAL_ACTIVATIONS,
-                    title=title,
-                    figsize=FIGSIZE
-                )
+##            if cycles > 0 and not epoch % cycles:
+##                title = "Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100)
+##                fname = act.visualize(
+##                    sim,
+##                    k=NUM_VISUAL_ACTIVATIONS,
+##                    title=title,
+##                    figsize=FIGSIZE
+##                )
 
     #act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %d" % epochs, figsize=FIGSIZE)
 
                 if service is not None:
+                    title = "Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg.peek()*100)
                     try:
                         with service.create(title) as email:
-                            email.attach(fname)
+                            pass
                     except:
                         pass
 
