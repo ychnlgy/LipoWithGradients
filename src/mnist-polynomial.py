@@ -62,7 +62,7 @@ class Random(torch.nn.Module):
 
 def create_baseline_model(D, C):
     
-    d = 16
+    d = 32
 
     sim = src.modules.PrototypeSimilarity(d*4, 8, r=10)
     act = src.modules.polynomial.Activation(8, n_degree=32, a=-10, b=10)
