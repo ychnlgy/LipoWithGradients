@@ -77,12 +77,12 @@ def create_baseblock(d):
     return src.modules.ResBlock(
         block = torch.nn.Sequential(
             #torch.nn.ReLU(),
-            create_midact(d),
+            #create_midact(d),
             torch.nn.Conv2d(d, d, 3, padding=1),
             torch.nn.BatchNorm2d(d),
             
             create_midact(d),
-            torch.nn.Conv2d(d, d, 3, padding=1),
+            torch.nn.Conv2d(d, d, 1),
             torch.nn.BatchNorm2d(d),
         )
     )
@@ -91,12 +91,12 @@ def create_skipblock(d):
     return src.modules.ResBlock(
         block = torch.nn.Sequential(
             #torch.nn.ReLU(),
-            create_midact(d),
+            #create_midact(d),
             torch.nn.Conv2d(d, d, 3, padding=1),
             torch.nn.BatchNorm2d(d),
 
             create_midact(d),
-            torch.nn.Conv2d(d, d*2,  3, padding=1, stride=2),
+            torch.nn.Conv2d(d, d*2,  1, stride=2),
             torch.nn.BatchNorm2d(d*2),
         ),
         shortcut = torch.nn.Conv2d(d, d*2, 1, stride=2)
