@@ -265,9 +265,9 @@ def create_baseline_model(D, C):
         src.modules.Reshape(d*8),
         
         torch.nn.ReLU(),
-        torch.nn.Linear(d*8, 1024),
+        torch.nn.Linear(d*8, 256),
         torch.nn.ReLU(),
-        torch.nn.Linear(1024, C)
+        torch.nn.Linear(256, C)
         
     ), act, sim
 
