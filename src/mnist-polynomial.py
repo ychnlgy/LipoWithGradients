@@ -80,8 +80,8 @@ def create_skipblock(d):
             torch.nn.Conv2d(d, d, 3, padding=1),
             torch.nn.BatchNorm2d(d),
 
-            torch.nn.Tanh(),
-            torch.nn.Conv2d(d, d*2, 3, padding=1, stride=2),
+            torch.nn.ReLU(),
+            torch.nn.Conv2d(d, d*2,  3, padding=1, stride=2),
             torch.nn.BatchNorm2d(d*2),
         ),
         shortcut = torch.nn.Conv2d(d, d*2, 1, stride=2)
