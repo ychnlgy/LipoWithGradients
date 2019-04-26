@@ -110,7 +110,7 @@ def create_baseline_model(D, C):
                     src.modules.polynomial.Activation(8, n_degree=16),
                     torch.nn.Dropout2d(p=0.05),
                     
-                    torch.nn.Conv2d(4, d*2, 1),
+                    torch.nn.Conv2d(8, d*2, 1),
                     torch.nn.BatchNorm2d(d*2),
                 )
             ),
@@ -127,7 +127,7 @@ def create_baseline_model(D, C):
                     src.modules.polynomial.Activation(8, n_degree=16),
                     torch.nn.Dropout2d(p=0.05),
                     
-                    torch.nn.Conv2d(4, d*4, 1, stride=2),
+                    torch.nn.Conv2d(8, d*4, 1, stride=2),
                     torch.nn.BatchNorm2d(d*4),
                 ),
                 shortcut = torch.nn.Conv2d(d*2, d*4, 1, stride=2)
@@ -144,7 +144,7 @@ def create_baseline_model(D, C):
                     src.modules.polynomial.Activation(8, n_degree=16),
                     torch.nn.Dropout2d(p=0.05),
                     
-                    torch.nn.Conv2d(5, d*4, 1),
+                    torch.nn.Conv2d(8, d*4, 1),
                     torch.nn.BatchNorm2d(d*4),
                 ),
             ),
