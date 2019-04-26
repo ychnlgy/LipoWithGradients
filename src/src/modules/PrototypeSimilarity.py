@@ -73,7 +73,7 @@ class PrototypeSimilarity(torch.nn.Module):
         axes = self._axes[0,:]
         for i in range(k):
             plot = axes[i]
-            plot.set_xlim([-1, 1])
+            plot.set_xlim([-self.r, self.r])
             plot.hist(visuals[:,i], bins=100)
 
         axes[0].set_ylabel(title)

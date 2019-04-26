@@ -106,8 +106,8 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*2, d*2, 3, padding=1),
                     torch.nn.BatchNorm2d(d*2),
 
-                    src.modules.PrototypeSimilarity(d*2, 8, r=10),
-                    src.modules.polynomial.Activation(8, n_degree=4, a=-10, b=10),
+                    src.modules.PrototypeSimilarity(d*2, 8, r=3),
+                    src.modules.polynomial.Activation(8, n_degree=16, a=-4, b=4),
                     torch.nn.Conv2d(8, d*2, 1),
                     torch.nn.BatchNorm2d(d*2),
                 )
@@ -120,8 +120,8 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*2, d*2, 3, padding=1),
                     torch.nn.BatchNorm2d(d*2),
 
-                    src.modules.PrototypeSimilarity(d*2, 8, r=10),
-                    src.modules.polynomial.Activation(8, n_degree=4, a=-10, b=10),
+                    src.modules.PrototypeSimilarity(d*2, 8, r=3),
+                    src.modules.polynomial.Activation(8, n_degree=16, a=-4, b=4),
                     torch.nn.Conv2d(8, d*4, 1, stride=2),
                     torch.nn.BatchNorm2d(d*4),
                 ),
@@ -134,8 +134,8 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*4, d*4, 3, padding=1),
                     torch.nn.BatchNorm2d(d*4),
 
-                    src.modules.PrototypeSimilarity(d*4, 8, r=10),
-                    src.modules.polynomial.Activation(8, n_degree=4, a=-10, b=10),
+                    src.modules.PrototypeSimilarity(d*4, 8, r=3),
+                    src.modules.polynomial.Activation(8, n_degree=32, a=-4, b=4),
                     torch.nn.Conv2d(8, d*4, 1),
                     torch.nn.BatchNorm2d(d*4),
                 ),
@@ -148,8 +148,8 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*4, d*4, 3, padding=1),
                     torch.nn.BatchNorm2d(d*4),
 
-                    src.modules.PrototypeSimilarity(d*4, 8, r=10),
-                    src.modules.polynomial.Activation(8, n_degree=4, a=-10, b=10),
+                    src.modules.PrototypeSimilarity(d*4, 8, r=3),
+                    src.modules.polynomial.Activation(8, n_degree=32, a=-4, b=4),
                     torch.nn.Conv2d(8, d*8, 1, stride=2),
                     torch.nn.BatchNorm2d(d*8),
                 ),

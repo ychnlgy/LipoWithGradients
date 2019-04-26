@@ -50,12 +50,12 @@ class Activation(torch.nn.Module):
         axes = self._axes
         model = torch.nn.ReLU()
         n = 1000
-        x = torch.linspace(-1, 1, n)
+        x = torch.linspace(*self.r, n)
         y = model(x).cpu().numpy()
         x = x.cpu().numpy()
         for i in range(k):
             axes[i].plot(x, y)
-            axes[i].set_xlim([-1, 1])
+            axes[i].set_xlim(self.r)
             axes[i].set_xlabel("$x_%d$" % i)
         axes[k//2].set_title(title)
         fname = "%s.png" % title
@@ -78,13 +78,13 @@ class Activation(torch.nn.Module):
             
             n = 1000
             for i in range(k):
-                v = torch.linspace(-1, 1, n)
+                v = torch.linspace(*self.r, n)
                 X = torch.zeros(n, self.d)
                 X[:,i] = v
                 Xh = self.forward(X.to(device))
 
                 plot = axes[i]
-                plot.set_xlim([-1, 1])
+                plot.set_xlim(self.r)
                 plot.plot(v.cpu().numpy(), Xh[:,i].cpu().numpy(), label="Interpolated polynomial activation")
 
                 plot.plot(self.basis.nodes.cpu().numpy(), self.weight[0,i].clone().detach().cpu().numpy(), "x", label="Learned Chebyshev node")
