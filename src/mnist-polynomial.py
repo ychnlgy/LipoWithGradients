@@ -63,9 +63,9 @@ def create_midact(d):
     return torch.nn.Sequential(
         torch.nn.Tanh(),
         #src.modules.PrototypeSimilarity(d, 8),
-        Random(p=0.05, a=-1, b=1),
+        #Random(p=0.05, a=-1, b=1),
         src.modules.polynomial.Activation(d, n_degree=3),
-        torch.nn.Dropout(p=0.05),
+        #torch.nn.Dropout(p=0.05),
         #src.modules.PrototypeSimilarity(d, 32),
         #torch.nn.Conv2d(8, d, 1),
         #torch.nn.BatchNorm2d(d),
@@ -161,8 +161,8 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=150, email
     data_X = (data_X-miu)
     test_X = (test_X-miu)
     
-    dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=128, shuffle=True)
-    testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=256)
+    dataloader = src.tensortools.dataset.create_loader([data_X, data_Y], batch_size=32, shuffle=True)
+    testloader = src.tensortools.dataset.create_loader([test_X, test_Y], batch_size=128)
     
     assert IMAGESIZE == (32, 32)
     
