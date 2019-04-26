@@ -61,7 +61,13 @@ class Random(torch.nn.Module):
         return X
 
 def create_midact(d):
-    return src.modules.PrototypeSimilarity(d, d)#torch.nn.ReLU()
+    return torch.nn.Sequential(
+        src.modules.PrototypeSimilarity(d, 8),
+        torch.nn.Conv2d(8, d, 1),
+        torch.nn.BatchNorm2d(d),
+        torch.nn.ReLU()
+    )
+        #torch.nn.ReLU()
 
 def create_baseblock(d):
     return src.modules.ResBlock(
