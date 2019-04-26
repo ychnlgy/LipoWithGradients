@@ -251,19 +251,19 @@ def create_baseline_model(D, C):
                     torch.nn.BatchNorm2d(d*4),
 
                     torch.nn.ReLU(),
-                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
-                    torch.nn.BatchNorm2d(d*4),
+                    torch.nn.Conv2d(d*4, d*8, 3, padding=1, stride=2),
+                    torch.nn.BatchNorm2d(d*8),
                 ),
             ),
             
         ),
-        torch.nn.AvgPool2d(8),
-        src.modules.Reshape(d*4),
+        torch.nn.AvgPool2d(4),
+        src.modules.Reshape(d*8),
         
         torch.nn.ReLU(),
-        torch.nn.Linear(d*4, 256),
+        torch.nn.Linear(d*8, 1024),
         torch.nn.ReLU(),
-        torch.nn.Linear(256, C)
+        torch.nn.Linear(1024, C)
         
     ), act, sim
 
@@ -272,7 +272,7 @@ def create_baseline_model(D, C):
 #GRAD_PRE = []
 #GRAD_PST = []
 
-def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=200, email=""):
+def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=150, email=""):
 
     download = int(download)
     visualize_relu = int(visualize_relu)
