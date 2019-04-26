@@ -56,7 +56,8 @@ class Random(torch.nn.Module):
             r1 = torch.rand_like(X)
             r2 = torch.rand_like(X)
             I = r1 < self.p
-            X[I] = r2[I]*(self.b-self.a)+self.a
+            X[I] *= 0
+            X[I] += r2[I]*(self.b-self.a)+self.a
         return X
 
 def create_baseline_model(D, C):
