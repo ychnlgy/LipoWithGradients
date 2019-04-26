@@ -161,7 +161,7 @@ def create_baseline_model(D, C):
                     act,
                     torch.nn.Dropout2d(p=0.05),
                     
-                    torch.nn.Conv2d(5, d*8, 1, stride=2),
+                    torch.nn.Conv2d(8, d*8, 1, stride=2),
                     torch.nn.BatchNorm2d(d*8),
                 ),
                 shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2)
