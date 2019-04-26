@@ -6,7 +6,7 @@ import src, datasets
 
 def random_crop(X, padding):
     N, C, W, H = X.size()
-    X = torch.nn.functional.pad(X, [padding]*4, mode="reflect")
+    X = torch.nn.functional.pad(X, [padding]*4, mode="constant")
     out = [
         _random_crop(X[i], padding, W, H) for i in range(N)
     ]
