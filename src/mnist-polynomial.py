@@ -63,8 +63,8 @@ def create_baseline_model(D, C):
     
     d = 64
 
-    sim = src.modules.PrototypeSimilarity(d*4, 5)
-    act = src.modules.polynomial.Activation(5, n_degree=16)
+    sim = src.modules.PrototypeSimilarity(d*4, 8)
+    act = src.modules.polynomial.Activation(8, n_degree=32)
     
     return torch.nn.Sequential(
         
@@ -105,9 +105,9 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*2, d*2, 3, padding=1),
                     torch.nn.BatchNorm2d(d*2),
 
-                    src.modules.PrototypeSimilarity(d*2, 4),
+                    src.modules.PrototypeSimilarity(d*2, 8),
                     Random(p=0.05, a=-1, b=1),
-                    src.modules.polynomial.Activation(4, n_degree=16),
+                    src.modules.polynomial.Activation(8, n_degree=16),
                     torch.nn.Dropout2d(p=0.05),
                     
                     torch.nn.Conv2d(4, d*2, 1),
@@ -122,9 +122,9 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*2, d*2, 3, padding=1),
                     torch.nn.BatchNorm2d(d*2),
 
-                    src.modules.PrototypeSimilarity(d*2, 4),
+                    src.modules.PrototypeSimilarity(d*2, 8),
                     Random(p=0.05, a=-1, b=1),
-                    src.modules.polynomial.Activation(4, n_degree=16),
+                    src.modules.polynomial.Activation(8, n_degree=16),
                     torch.nn.Dropout2d(p=0.05),
                     
                     torch.nn.Conv2d(4, d*4, 1, stride=2),
@@ -139,9 +139,9 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*4, d*4, 3, padding=1),
                     torch.nn.BatchNorm2d(d*4),
 
-                    sim,
+                    src.modules.PrototypeSimilarity(d*4, 8),
                     Random(p=0.05, a=-1, b=1),
-                    act,
+                    src.modules.polynomial.Activation(8, n_degree=16),
                     torch.nn.Dropout2d(p=0.05),
                     
                     torch.nn.Conv2d(5, d*4, 1),
