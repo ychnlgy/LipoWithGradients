@@ -62,10 +62,10 @@ class Random(torch.nn.Module):
 
 def create_baseline_model(D, C):
     
-    d = 64
+    d = 16
 
-    sim = src.modules.PrototypeSimilarity(d*4, 8)
-    act = src.modules.polynomial.Activation(8, n_degree=16)
+    sim = src.modules.PrototypeSimilarity(d*4, 8, r=10)
+    act = src.modules.polynomial.Activation(8, n_degree=32, a=-10, b=10)
     
     return torch.nn.Sequential(
         
@@ -73,6 +73,18 @@ def create_baseline_model(D, C):
         torch.nn.BatchNorm2d(d),
         
         src.modules.ResNet(
+
+            src.modules.ResBlock(
+                block = torch.nn.Sequential(
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(d, d, 3, padding=1),
+                    torch.nn.BatchNorm2d(d),
+                    
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(d, d, 3, padding=1),
+                    torch.nn.BatchNorm2d(d),
+                )
+            ),
 
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
@@ -115,6 +127,18 @@ def create_baseline_model(D, C):
 ##                    torch.nn.BatchNorm2d(d*2),
 ##                )
 ##            ),
+
+            src.modules.ResBlock(
+                block = torch.nn.Sequential(
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
+                    torch.nn.BatchNorm2d(d*2),
+
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(d*2, d*2, 3, padding=1),
+                    torch.nn.BatchNorm2d(d*2),
+                )
+            ),
 
             src.modules.ResBlock(
                 block = torch.nn.Sequential(
@@ -189,6 +213,18 @@ def create_baseline_model(D, C):
                 ),
             ),
 
+            src.modules.ResBlock(
+                block = torch.nn.Sequential(
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
+                    torch.nn.BatchNorm2d(d*4),
+
+                    torch.nn.ReLU(),
+                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
+                    torch.nn.BatchNorm2d(d*4),
+                ),
+            ),
+
 ##            # 8 -> 4
 ##            src.modules.ResBlock(
 ##                block = torch.nn.Sequential(
@@ -214,6 +250,9 @@ def create_baseline_model(D, C):
                     torch.nn.Conv2d(d*4, d*4, 3, padding=1),
                     torch.nn.BatchNorm2d(d*4),
 
+                    #torch.nn.Tanh(),
+                    #sim,
+                    #act,
                     torch.nn.ReLU(),
                     torch.nn.Conv2d(d*4, d*8, 3, padding=1, stride=2),
                     torch.nn.BatchNorm2d(d*8),
@@ -226,9 +265,9 @@ def create_baseline_model(D, C):
         src.modules.Reshape(d*8),
         
         torch.nn.ReLU(),
-        torch.nn.Linear(d*8, d*16),
+        torch.nn.Linear(d*8, 1024),
         torch.nn.ReLU(),
-        torch.nn.Linear(d*16, C)
+        torch.nn.Linear(1024, C)
         
     ), act, sim
 
@@ -237,7 +276,7 @@ def create_baseline_model(D, C):
 #GRAD_PRE = []
 #GRAD_PST = []
 
-def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email=""):
+def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=200, email=""):
 
     download = int(download)
     visualize_relu = int(visualize_relu)
@@ -289,8 +328,7 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email
 
     for epoch in range(epochs):
 
-        if cycles > 0 and not epoch % cycles:
-            sim.set_visualization_count(NUM_VISUAL_ACTIVATIONS)
+        
 
         #g_act = []
         #g_sim = []
@@ -298,6 +336,9 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email
         #g_pst = []
         
         with tqdm.tqdm(dataloader, ncols=80) as bar:
+
+            if cycles > 0 and not epoch % cycles:
+                sim.set_visualization_count(NUM_VISUAL_ACTIVATIONS)
             
             model.train()
             for X, Y in bar:
@@ -321,7 +362,14 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email
                 
                 bar.set_description("E%d train loss: %.5f" % (epoch, data_avg.peek()))
 
-            
+            if cycles > 0 and not epoch % cycles:
+                title = "Epoch %d (%.4f train loss)" % (epoch, data_avg.peek())
+                fname = act.visualize(
+                    sim,
+                    k=NUM_VISUAL_ACTIVATIONS,
+                    title=title,
+                    figsize=FIGSIZE
+                )
 
             #GRAD_ACT.append(statistics.mean(g_act))
             #GRAD_SIM.append(statistics.mean(g_sim))
@@ -330,6 +378,9 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email
             
             sched.step(data_avg.peek())
 
+            if cycles > 0 and not epoch % cycles:
+                sim.set_visualization_count(NUM_VISUAL_ACTIVATIONS)
+            
             model.eval()
             with torch.no_grad():
                 for X, Y in testloader:

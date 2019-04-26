@@ -10,16 +10,17 @@ EPS = 1e-16
 
 class Activation(torch.nn.Module):
 
-    def __init__(self, input_size, n_degree):
+    def __init__(self, input_size, n_degree, a=-1, b=1):
         super().__init__()
         self.d = input_size
         self.n = n_degree + 1
         self.basis = LagrangeBasis.create(
-            chebyshev.get_nodes(n_degree+1)
+            chebyshev.get_nodes(n_degree+1, a, b)
         )
         self.weight = torch.nn.Parameter(
             torch.zeros(1, self.d, self.n)
         )
+        self.r = (a, b)
         self._axes = None
 
     def forward(self, X):

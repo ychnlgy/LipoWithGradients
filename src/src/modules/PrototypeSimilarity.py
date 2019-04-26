@@ -9,10 +9,11 @@ DEFAULT = CosineSimilarity(dim=2)
 
 class PrototypeSimilarity(torch.nn.Module):
 
-    def __init__(self, features, classes, similarity=DEFAULT):
+    def __init__(self, features, classes, similarity=DEFAULT, r=1):
         super().__init__()
         self.C = classes
         self.D = features
+        self.r = r
         self.weight = torch.nn.Parameter(torch.zeros(1, classes, features))
         self.similarity = similarity
         self.visualizing = 0
@@ -33,7 +34,7 @@ class PrototypeSimilarity(torch.nn.Module):
         X = X.unsqueeze(1)
         e = len(X.shape) - len(self.weight.shape)
         P = self.weight.view(*self.weight.shape, *([1]*e))
-        output = self.similarity(X, P)
+        output = self.similarity(X, P) * self.r
 
         if self.visualizing > 0:
             self.store_visuals(output)

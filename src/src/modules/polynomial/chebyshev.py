@@ -1,7 +1,8 @@
 import torch, math
 
-def get_nodes(n):
-    return chebyshev_node(torch.arange(1, n+1).float(), n)
+def get_nodes(n, a, b):
+    x = chebyshev_node(torch.arange(1, n+1).float(), n)
+    return 0.5*(a+b)+0.5*(b-a)*x
 
 # === PRIVATE ===
 
