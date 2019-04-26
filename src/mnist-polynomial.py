@@ -65,7 +65,7 @@ def create_midact(d):
         torch.nn.Tanh(),
         #src.modules.PrototypeSimilarity(d, 8),
         
-        src.modules.polynomial.Activation(d, n_degree=3),
+        src.modules.polynomial.Activation(d, n_degree=9),
         #src.modules.PrototypeSimilarity(d, 32),
         #torch.nn.Conv2d(8, d, 1),
         #torch.nn.BatchNorm2d(d),
@@ -76,9 +76,9 @@ def create_midact(d):
 def create_baseblock(d):
     return src.modules.ResBlock(
         block = torch.nn.Sequential(
-            torch.nn.ReLU(),
-            torch.nn.Conv2d(d, d, 3, padding=1),
-            torch.nn.BatchNorm2d(d),
+##            torch.nn.ReLU(),
+##            torch.nn.Conv2d(d, d, 3, padding=1),
+##            torch.nn.BatchNorm2d(d),
             
             create_midact(d),
             torch.nn.Conv2d(d, d, 3, padding=1),
@@ -89,9 +89,9 @@ def create_baseblock(d):
 def create_skipblock(d):
     return src.modules.ResBlock(
         block = torch.nn.Sequential(
-            torch.nn.ReLU(),
-            torch.nn.Conv2d(d, d, 3, padding=1),
-            torch.nn.BatchNorm2d(d),
+##            torch.nn.ReLU(),
+##            torch.nn.Conv2d(d, d, 3, padding=1),
+##            torch.nn.BatchNorm2d(d),
 
             create_midact(d),
             torch.nn.Conv2d(d, d*2,  3, padding=1, stride=2),
