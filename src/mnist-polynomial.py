@@ -254,14 +254,13 @@ def create_baseline_model(D, C):
                     #sim,
                     #act,
                     torch.nn.ReLU(),
-                    torch.nn.Conv2d(d*4, d*8, 3, padding=1, stride=2),
-                    torch.nn.BatchNorm2d(d*8),
+                    torch.nn.Conv2d(d*4, d*4, 3, padding=1),
+                    torch.nn.BatchNorm2d(d*4),
                 ),
-                shortcut = torch.nn.Conv2d(d*4, d*8, 1, stride=2)
             ),
             
         ),
-        torch.nn.AvgPool2d(4),
+        torch.nn.AvgPool2d(8),
         src.modules.Reshape(d*8),
         
         torch.nn.ReLU(),
