@@ -61,28 +61,28 @@ class Random(torch.nn.Module):
 
 def create_midact(d):
     return torch.nn.Sequential(
-        torch.nn.Tanh(),
+        #torch.nn.Tanh(),
         #src.modules.PrototypeSimilarity(d, 8),
         #Random(p=0.05, a=-1, b=1),
-        src.modules.polynomial.Activation(d, n_degree=3),
+        #src.modules.polynomial.Activation(d, n_degree=3),
         #torch.nn.Dropout(p=0.05),
         #src.modules.PrototypeSimilarity(d, 32),
         #torch.nn.Conv2d(8, d, 1),
         #torch.nn.BatchNorm2d(d),
-        #torch.nn.ReLU()
+        torch.nn.ReLU()
     )
         #torch.nn.ReLU()
 
 def create_baseblock(d):
     return src.modules.ResBlock(
         block = torch.nn.Sequential(
-            #torch.nn.ReLU(),
+            torch.nn.ReLU(),
             #create_midact(d),
             torch.nn.Conv2d(d, d, 3, padding=1),
             torch.nn.BatchNorm2d(d),
             
             create_midact(d),
-            torch.nn.Conv2d(d, d, 1),
+            torch.nn.Conv2d(d, d, 3, padding=1),
             torch.nn.BatchNorm2d(d),
         )
     )
@@ -90,13 +90,13 @@ def create_baseblock(d):
 def create_skipblock(d):
     return src.modules.ResBlock(
         block = torch.nn.Sequential(
-            #torch.nn.ReLU(),
+            torch.nn.ReLU(),
             #create_midact(d),
             torch.nn.Conv2d(d, d, 3, padding=1),
             torch.nn.BatchNorm2d(d),
 
             create_midact(d),
-            torch.nn.Conv2d(d, d*2,  1, stride=2),
+            torch.nn.Conv2d(d, d*2,  3, padding=1, stride=2),
             torch.nn.BatchNorm2d(d*2),
         ),
         shortcut = torch.nn.Conv2d(d, d*2, 1, stride=2)
