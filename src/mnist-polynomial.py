@@ -102,7 +102,7 @@ def create_baseblock(d):
         )
     )
 
-def create_skipblock(d, act):
+def create_skipblock(d, act=None):
     return src.modules.ResBlock(
         block = torch.nn.Sequential(
             torch.nn.ReLU(),
