@@ -48,36 +48,13 @@ class Activation(torch.nn.Module):
     def reset_parameters(self):
         self.weight.data.zero_()
 
-    def visualize_relu(self, k, title, figsize):
-        fig, self._axes = matplotlib.pyplot.subplots(
-            nrows=1, ncols=k, sharex=True, sharey=True, figsize=figsize
-        )
-        axes = self._axes
-        model = torch.nn.ReLU()
-        n = 1000
-        x = torch.linspace(*self.r, n)
-        y = model(x).cpu().numpy()
-        x = x.cpu().numpy()
-        for i in range(k):
-            axes[i].plot(x, y)
-            axes[i].set_xlim(self.r)
-            axes[i].set_xlabel("$x_%d$" % i)
-        axes[k//2].set_title(title)
-        fname = "%s.png" % title
-        matplotlib.pyplot.savefig(fname, bbox_inches="tight")
-        print("Saved ReLU activations to %s" % fname)
-
-    def visualize(self, sim, k, title, figsize):
-        mainplot = sim.visualize(title="Prototype outputs count", figsize=figsize)
-        if mainplot is None:
-            if self._axes is None:
-                _, self._axes = pyplot.subplots(nrows=1, ncols=k, sharex=True, sharey="row", figsize=figsize)
-            mainplot = self._axes
-            axes = mainplot
-            top = mainplot
-        else:
-            axes = mainplot[1,:]
-            top = mainplot[0,:]
+    def visualize(self, k, title, figsize):
+        if self._axes is None:
+            _, self._axes = pyplot.subplots(nrows=1, ncols=k, sharex=True, sharey="row", figsize=figsize)
+        mainplot = self._axes
+        axes = mainplot
+        top = mainplot
+        
         device = self.weight.device
         with torch.no_grad():
             
