@@ -243,12 +243,12 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=150, email
             print("Test accuracy: %.5f" % test_avg)
 
             if not epoch % cycles:
-                act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %03d" % epochs, figsize=FIGSIZE)
+                fname = act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %03d" % epochs, figsize=FIGSIZE)
                 if service is not None:
                     title = "Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg*100)
                     try:
                         with service.create(title) as email:
-                            pass
+                            email.attach(fname)
                     except:
                         pass
 

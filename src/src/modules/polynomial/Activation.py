@@ -79,7 +79,7 @@ class Activation(torch.nn.Module):
 
         axes[k//2].legend(bbox_to_anchor=[1.1, -0.1])
         axes[0].set_ylabel("Polynomial output")
-        top[k//2].set_title(title)
+        #top[k//2].set_title(title)
 
         fname = "%s.png" % title
         matplotlib.pyplot.savefig(fname, bbox_inches="tight")
