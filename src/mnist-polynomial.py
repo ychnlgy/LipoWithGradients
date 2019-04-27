@@ -156,7 +156,7 @@ def create_baseline_model(D, C):
 #GRAD_PRE = []
 #GRAD_PST = []
 
-def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=150, email=""):
+def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email=""):
 
     download = int(download)
     visualize_relu = int(visualize_relu)
@@ -243,7 +243,7 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=150, email
             print("Test accuracy: %.5f" % test_avg)
 
             if not epoch % cycles:
-                fname = act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %03d" % epochs, figsize=FIGSIZE)
+                fname = act.visualize(k=NUM_VISUAL_ACTIVATIONS, title="Epoch %03d" % epoch, figsize=FIGSIZE)
                 if service is not None:
                     title = "Epoch %d (%.1f%% test accuracy)" % (epoch, test_avg*100)
                     try:
