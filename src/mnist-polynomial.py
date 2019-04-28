@@ -111,7 +111,7 @@ def create_skipblock(d, act=None):
             torch.nn.BatchNorm2d(d),
 
             create_midact(d, act),
-            torch.nn.Conv2d(d, d*2,  3, padding=1, stride=2),
+            torch.nn.Conv2d(d, d*2, 3, padding=1, stride=2),
             torch.nn.BatchNorm2d(d*2),
         ),
         shortcut = torch.nn.Conv2d(d, d*2, 1, stride=2)
@@ -150,11 +150,6 @@ def create_baseline_model(D, C):
         torch.nn.Linear(1024, C)
         
     ), act
-
-#GRAD_ACT = []
-#GRAD_SIM = []
-#GRAD_PRE = []
-#GRAD_PST = []
 
 def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email=""):
 
@@ -206,7 +201,7 @@ def _main(cycles, download=0, device="cuda", visualize_relu=0, epochs=300, email
             for X, Y in bar:
                 X = random_flip(X)
                 X = random_crop(X, padding=4)
-                X = random_cutout(X, l=8)
+                #X = random_cutout(X, l=8)
                 X = X.to(device)
                 Y = Y.to(device)
                 
